@@ -1,0 +1,28 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: e=N
+  description: |
+    Un agent rebelle a dérobé des informations sur le système de chiffrement du gouvernement totalitaire, mais il n'a pu récupérer que la clé publique (vraiment ?) et un message chiffré.
+    Saurez-vous retrouver le FLAG ?
+
+    Format du flag : NBCTF{FLAG}
+
+    Auteur : [skilo](https://skilo.sh)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  files:
+    - path: dist/chall.py
+    - path: dist/output.txt
+
+  flags:
+    - NBCTF{fb342770cde1aaaad4634af936a3eb3e}
+
+  tags:
+    - Difficile
+    - RSA
+
+  state: visible

@@ -1,0 +1,40 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: Discord Traffic
+  description: |
+    Votre ami a reçu un lien de téléchargement étrange, sûrement un SPAM.
+
+    Toutefois, il sait que vous êtes un apprenti Sherlock. 
+
+    De ce fait, il vous a transmis ce lien pour voir si vous pouviez en tirer quelque chose.
+
+    A vous d'identifier : 
+
+    1. Identifier la date à laquelle le fichier a été envoyé à la victime
+
+    2. Identifier avec quel service Windows le malware interagit in fine pour assurer son déploiement
+
+    Format du flag : `NBCTF{2023-12-30|Cortana}`
+
+    Note : Durant la réalisation de ce challenge, vous allez potentiellement manipuler des samples de malware. 
+    À manipuler dans un système dédié de préférence.
+
+    Auteur : [Shaym](https://twitter.com/0xShaym)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  files:
+    - path: dist/url_bizarre.txt
+
+  flags:
+    - NBCTF{2024-10-27|Windows Update}
+    - NBCTF{2024-10-27|windows update}
+
+  tags:
+    - Moyen
+    - Malware Analysis
+
+  state: visible

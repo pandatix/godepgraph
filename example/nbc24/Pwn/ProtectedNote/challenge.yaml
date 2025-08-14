@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: ProtectedNote
+  description: |
+    Quoi de mieux qu'un système de notes pour un challenge de PWN ?
+
+    Ici, pas de heap, pas de libc, rien que de l'assembleur, cependant des protections sont présentes !
+    À vous de les contourner :)
+
+    Format du flag : `NBCTF{...}`
+    Le flag se trouve à la racine : `/flag.txt`
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{ret2mprotect_W4s_Th1s_H4rd_OR_Ez?}
+
+  files:
+    - dist/protected-notes.s
+    - dist/notes
+    - dist/Makefile
+
+  tags:
+    - Difficile
+    - Pwn
+
+  state: visible
+
+  shared: true
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: pwn/protected-note:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 10206
+          exposeType: NodePort
+          protocol: TCP
+    outputs:
+      connectionInfo: |
+        {{- $hostport := index .URLs "10206/TCP" -}}
+        {{- $parts := splitList ":" $hostport -}}
+        {{- $host := "" -}}
+        {{- $port := "" -}}
+
+        {{- if ge (len $parts) 1 -}}
+          {{- $host = index $parts 0 -}}
+        {{- end -}}
+
+        {{- if ge (len $parts) 2 -}}
+          {{- $port = index $parts 1 -}}
+        {{- end -}}
+
+        {{- if and $host $port -}}
+        nc {{ $host }} {{ $port }}
+        {{- else -}}
+        # Host or port not available: {{ $hostport }}
+        {{- end -}}

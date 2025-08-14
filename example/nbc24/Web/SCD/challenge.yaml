@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: Système Central de Dépot (SCD)
+  description: |
+    L'un de nos concurrent essaye de se lancer dans le cloud souverain et risque de nous faire de l'ombre. 
+    Nous avons réussi à récupérer un accès à leur code source lors d'une fuite depuis leur git... 
+    Nous avons besoin de vous pour compromettre ce concurrent et récupérer des informations sensibles permettant de l'écarter.
+    Nous avons entièrement confiance en vous pour réussir cette mission.
+
+    Format du flag : NBCTF{FLAG}
+  attribution: Al-oxos
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{Th1s_w4s_4_H4rd_0n3_1_h0p3_y0u_3nj0y3d_1t!}
+
+  files:
+    - dist/scd.zip
+
+  tags:
+    - Difficile
+
+  state: visible
+
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: web/scd:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 5000
+          exposeType: Ingress
+          protocol: TCP
+    outputs:
+      connectionInfo: |
+        {{- $hostport := index .URLs "10203/TCP" -}}
+        https://{{ $hostport }}

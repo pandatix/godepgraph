@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: BomberMan
+  description: |
+    Un petit peu de difficulté pour ce challenge, mais rien d'insurmontable ;)
+  
+    Auteur : [K.L.M](https://x.com/Clemhate2)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+  connection_info: http://challenges.nobrackets.fr:10025
+
+  flags:
+    - NBCTF{Un3xP3ct3d_3Th3rrr}
+
+  files:
+    - path: dist/Challenge.sol
+
+  tags:
+    - Moyen
+    - Web3
+    - K.L.M
+
+  state: visible
+
+  shared: true
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: web3/welcome:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 8000
+          exposeType: Ingress
+          protocol: TCP
+    outputs:
+      connectionInfo: https://{{ index .URLs "8000/TCP" }}

@@ -1,0 +1,29 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: RSAdd
+  description: |
+    Nous avons intercepté des communications chiffrées du gouvernement, protégées par le célèbre algorithme RSA.
+    Coup de bol, une source-sûre me confirme que c'est le stagiaire qui a implémenté l'algorithme.
+    Connaissait-il vraiment le [RSA](https://fr.wikipedia.org/wiki/Chiffrement_RSA) ?
+
+    Format du flag : NBCTF{flag}
+
+    Auteur: [skilo](https://skilo.sh)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  files:
+    - path: dist/chall.py
+    - path: dist/output.txt
+
+  flags:
+    - NBCTF{3h_0u1,_l3s_0p3r4t10ns_l0rs_du_ch1ffr3m3nt_RSA_d01v3nt_s3_f41r3_d4ns_un_gr0up3_mult1pl1c4t1f_3t_p4s_4dd1t1f!!!!}
+
+  tags:
+    - Moyen
+    - RSA
+
+  state: visible

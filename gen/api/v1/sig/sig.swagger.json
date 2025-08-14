@@ -1,0 +1,270 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/v1/sig/sig.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "SIG"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/sig": {
+      "delete": {
+        "summary": "Reset the global knowledge of the system under observation.",
+        "operationId": "SIG_Reset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "SIG"
+        ]
+      }
+    },
+    "/api/v1/sig/component": {
+      "get": {
+        "summary": "Retrieve the current knowledge state of a Component of the system under observation.",
+        "operationId": "SIG_RetrieveComponent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sigComponent"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "SIG"
+        ]
+      },
+      "post": {
+        "summary": "Create a Component within the global knowledge of the system under observation.",
+        "operationId": "SIG_CreateComponent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sigComponent"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sigCreateComponentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SIG"
+        ]
+      }
+    },
+    "/api/v1/sig/network-dependency": {
+      "post": {
+        "summary": "Create a Network Dependency between Endpoints that exposes Components together.",
+        "operationId": "SIG_CreateNetworkDependency",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sigCreateNetworkDependencyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SIG"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "sigComponent": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "some-component"
+        },
+        "version": {
+          "type": "string",
+          "example": "v2.3.0"
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The list of all known endpoints of the Component."
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "sigCreateComponentRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "some-component"
+        },
+        "version": {
+          "type": "string",
+          "example": "v2.3.0"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "sigCreateNetworkDependencyEndpointComponentRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "some-component"
+        },
+        "version": {
+          "type": "string",
+          "example": "v2.3.0"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "sigCreateNetworkDependencyEndpointRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "api/vx.SomeMethod",
+          "description": "Name of the Endpoint, for a Component."
+        },
+        "exposes": {
+          "$ref": "#/definitions/sigCreateNetworkDependencyEndpointComponentRequest",
+          "example": "other-component",
+          "description": "The Component the Endpoint exposes."
+        }
+      },
+      "required": [
+        "name",
+        "exposes"
+      ]
+    },
+    "sigCreateNetworkDependencyRequest": {
+      "type": "object",
+      "properties": {
+        "caller": {
+          "$ref": "#/definitions/sigCreateNetworkDependencyEndpointRequest",
+          "description": "The caller component."
+        },
+        "callees": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/sigCreateNetworkDependencyEndpointRequest"
+          },
+          "description": "The callees (API methods called by the component)."
+        }
+      }
+    }
+  }
+}

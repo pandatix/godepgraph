@@ -1,0 +1,253 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/v1/cdn/cdn.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "CDN"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/cdn": {
+      "delete": {
+        "summary": "Reset the global knowledge of a codebase.",
+        "operationId": "CDN_Reset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "CDN"
+        ]
+      },
+      "post": {
+        "operationId": "CDN_CreateLibrary",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cdnLibrary"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cdnCreateLibraryRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CDN"
+        ]
+      }
+    },
+    "/api/v1/cdn/library": {
+      "get": {
+        "summary": "Returns the dependency graph of a Library, composed by the AST dependencies.",
+        "operationId": "CDN_RetrieveLibrary",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cdnLibrary"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "The Go module to retrieve.",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "description": "The Go module's version to retrieve.",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CDN"
+        ]
+      }
+    },
+    "/api/v1/cdn/symbol": {
+      "get": {
+        "summary": "Returns the symbols one depends upon.",
+        "operationId": "CDN_RetrieveSymbolASTDependencies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cdnSymbolDepGraph"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbol.identity",
+            "description": "The symbol identity.",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CDN"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "cdnCreateLibraryRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "github.com/gorilla/mux",
+          "description": "The Go module to analyze."
+        },
+        "version": {
+          "type": "string",
+          "example": "v1.8.1",
+          "description": "The Go module's version."
+        },
+        "test": {
+          "type": "boolean",
+          "example": false,
+          "description": "Whether to include test dependencies."
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "cdnLibrary": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "github.com/gorilla/mux",
+          "description": "The Go module to analyze."
+        },
+        "version": {
+          "type": "string",
+          "example": "v1.8.1",
+          "description": "The Go module's version."
+        },
+        "provide": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cdnSymbol"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "cdnSymbol": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "string",
+          "example": "internal/stringslite.Cut",
+          "description": "The symbol identity."
+        }
+      },
+      "required": [
+        "identity"
+      ]
+    },
+    "cdnSymbolDepGraph": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "$ref": "#/definitions/cdnSymbol"
+        },
+        "to": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cdnSymbol"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

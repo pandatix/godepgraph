@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: SuperCat
+  description: |
+    Quoi de mieux que `cat` ? `SuperCat` ! A vous de lire le fichier `flag.txt` ! Bon courage.
+  
+    Identifiants de connexion **ssh** : `user`:`user`
+
+    Format du flag : `NBCTF{...}`
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{Race_1n_Rust_a1nt_rusty_4t_4ll!}
+
+  files:
+    - dist/super_cat.rs
+    - dist/super_cat
+
+  tags:
+    - Facile
+    - Pwn
+
+  state: visible
+
+  shared: true
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: pwn/supercat:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 10201
+          exposeType: NodePort
+          protocol: TCP
+    outputs:
+      connectionInfo: |
+        {{- $hostport := index .URLs "10201/TCP" -}}
+        {{- $parts := splitList ":" $hostport -}}
+        {{- $host := "" -}}
+        {{- $port := "" -}}
+
+        {{- if ge (len $parts) 1 -}}
+          {{- $host = index $parts 0 -}}
+        {{- end -}}
+
+        {{- if ge (len $parts) 2 -}}
+          {{- $port = index $parts 1 -}}
+        {{- end -}}
+
+        {{- if and $host $port -}}
+        ssh user@{{ $host }} -p {{ $port }}
+        {{- else -}}
+        # Host or port not available: {{ $hostport }}
+        {{- end -}}

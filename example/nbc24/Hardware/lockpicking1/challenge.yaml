@@ -1,0 +1,21 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: Cadenas transparent
+  description: |
+    Allez sur la table des admins et utilisez les outils de crochetage pour ouvrir le cadenas transparent.
+
+    Auteur : ribt
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{L0ck_Unl0ck3d}
+
+  tags:
+    - Facile
+    - Lockpicking
+
+  state: visible

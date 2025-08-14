@@ -1,0 +1,29 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: Geoguessr
+  description: |
+    Agent, vous devez trouver le nom de la ville qu'à pris en photo notre espion ~~en vacances~~ en mission !
+
+    Format du flag : `NBCTF{<Nom_De_La_Ville>}`
+
+    Exemple : `NBCTF{Paris}`
+
+    Auteur : Shynif
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{Palerme}
+    - NBCTF{Palermo}
+
+  files:
+    - path: dist/geoguessr.html
+
+  tags:
+    - Facile
+    - GeoINT
+
+  state: visible

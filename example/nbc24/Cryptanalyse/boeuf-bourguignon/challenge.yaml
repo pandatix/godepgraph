@@ -1,0 +1,27 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: Boeuf bourguignon
+  description: |
+    Le cuistot du gouvernement totalitaire a laissé un message caché dans sa recette de boeuf bourguignon. À vous, hacker rebelle, de "déchiffrer" les ingrédients et récupérer le FLAG !
+
+    Format du flag : NBCTF{FLAG}
+
+    Auteur : [skilo](https://skilo.sh)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  files:
+    - path: dist/chall.py
+    - path: dist/output.txt
+
+  flags:
+    - NBCTF{f68484fe1a0ef9bd28fe64423ac0e5bf}
+
+  tags:
+    - Facile
+    - Encodage
+
+  state: visible

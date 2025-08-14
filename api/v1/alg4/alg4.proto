@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package api.v1.alg4;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/alg4;apiv1alg4";
+
+// Alg4 is the implementation of the 4th algorithm of the paper "Reconstructing
+// System-of-Systems architectures towards analyzing cascading attacks".
+service Alg4 {
+  rpc CreateVulnerability(CreateVulnerabilityRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/alg4/vulnerability"
+      body: "*"
+    };
+  }
+
+  // Create a binding between specializations of a Library, given the model
+  // of Figure 1.
+  rpc CreateBinding(CreateBindingRequest) returns (Binding) {
+    option (google.api.http) = {
+      post: "/api/v1/alg4/binding"
+      body: "*"
+    };
+  }
+
+  rpc CreateServes(CreateServesRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/alg4/serves"
+      body: "*"
+    };
+  }
+}
+
+message CreateVulnerabilityRequest {
+  string identity = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"CVE-1000-01234\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  LibraryOrRefinement treatens = 2;
+}
+
+message CreateServesRequest {
+  CreateServesSymbolRequest symbol = 1;
+  CreateServesEndpointRequest endpoint = 2;
+}
+
+message CreateServesSymbolRequest {
+  // The symbol identity.
+  string identity = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"internal/stringslite.Cut\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message CreateServesEndpointRequest {
+  string name = 1;
+  CreateServesComponentRequest exposes = 2;
+}
+
+message CreateServesComponentRequest {
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"github.com/gorilla/mux\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v1.8.1\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message LibraryOrRefinement {
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"github.com/gorilla/mux\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v1.8.1\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message CreateBindingRequest {
+  optional LibraryOrRefinement library = 1;
+  optional LibraryOrRefinement component = 2;
+  optional LibraryOrRefinement asset = 3;
+}
+
+// A binding represents any specialization of a Library as per
+// proposed model in Figure 1.
+// It depends on the usage of CDN, RDG and SIG, combined together
+// as per proposed model in Figure 3.
+message Binding {
+  optional LibraryOrRefinement library = 1;
+  optional LibraryOrRefinement component = 2;
+  optional LibraryOrRefinement asset = 3;
+}

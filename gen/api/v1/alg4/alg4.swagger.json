@@ -1,0 +1,262 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/v1/alg4/alg4.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Alg4"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/alg4/binding": {
+      "post": {
+        "summary": "Create a binding between specializations of a Library, given the model\nof Figure 1.",
+        "operationId": "Alg4_CreateBinding",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/alg4Binding"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/alg4CreateBindingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Alg4"
+        ]
+      }
+    },
+    "/api/v1/alg4/serves": {
+      "post": {
+        "operationId": "Alg4_CreateServes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/alg4CreateServesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Alg4"
+        ]
+      }
+    },
+    "/api/v1/alg4/vulnerability": {
+      "post": {
+        "operationId": "Alg4_CreateVulnerability",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/alg4CreateVulnerabilityRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Alg4"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "alg4Binding": {
+      "type": "object",
+      "properties": {
+        "library": {
+          "$ref": "#/definitions/alg4LibraryOrRefinement"
+        },
+        "component": {
+          "$ref": "#/definitions/alg4LibraryOrRefinement"
+        },
+        "asset": {
+          "$ref": "#/definitions/alg4LibraryOrRefinement"
+        }
+      },
+      "description": "A binding represents any specialization of a Library as per\nproposed model in Figure 1.\nIt depends on the usage of CDN, RDG and SIG, combined together\nas per proposed model in Figure 3."
+    },
+    "alg4CreateBindingRequest": {
+      "type": "object",
+      "properties": {
+        "library": {
+          "$ref": "#/definitions/alg4LibraryOrRefinement"
+        },
+        "component": {
+          "$ref": "#/definitions/alg4LibraryOrRefinement"
+        },
+        "asset": {
+          "$ref": "#/definitions/alg4LibraryOrRefinement"
+        }
+      }
+    },
+    "alg4CreateServesComponentRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "github.com/gorilla/mux"
+        },
+        "version": {
+          "type": "string",
+          "example": "v1.8.1"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "alg4CreateServesEndpointRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "exposes": {
+          "$ref": "#/definitions/alg4CreateServesComponentRequest"
+        }
+      }
+    },
+    "alg4CreateServesRequest": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "$ref": "#/definitions/alg4CreateServesSymbolRequest"
+        },
+        "endpoint": {
+          "$ref": "#/definitions/alg4CreateServesEndpointRequest"
+        }
+      }
+    },
+    "alg4CreateServesSymbolRequest": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "string",
+          "example": "internal/stringslite.Cut",
+          "description": "The symbol identity."
+        }
+      },
+      "required": [
+        "identity"
+      ]
+    },
+    "alg4CreateVulnerabilityRequest": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "string",
+          "example": "CVE-1000-01234"
+        },
+        "treatens": {
+          "$ref": "#/definitions/alg4LibraryOrRefinement"
+        }
+      },
+      "required": [
+        "identity"
+      ]
+    },
+    "alg4LibraryOrRefinement": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "github.com/gorilla/mux"
+        },
+        "version": {
+          "type": "string",
+          "example": "v1.8.1"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

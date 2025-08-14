@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package api.v1.sig;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/sig;apiv1sig";
+
+service SIG {
+  // Create a Component within the global knowledge of the system under observation.
+  rpc CreateComponent(CreateComponentRequest) returns (Component) {
+    option (google.api.http) = {
+      post: "/api/v1/sig/component"
+      body: "*"
+    };
+  }
+
+  // Retrieve the current knowledge state of a Component of the system under observation.
+  rpc RetrieveComponent(RetrieveComponentRequest) returns (Component) {
+    option (google.api.http) = {get: "/api/v1/sig/component"};
+  }
+
+  // Create a Network Dependency between Endpoints that exposes Components together.
+  rpc CreateNetworkDependency(CreateNetworkDependencyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/sig/network-dependency"
+      body: "*"
+    };
+  }
+
+  // Reset the global knowledge of the system under observation.
+  rpc Reset(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/sig"};
+  }
+}
+
+message CreateComponentRequest {
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-component\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v2.3.0\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message RetrieveComponentRequest {
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-component\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v2.3.0\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message CreateNetworkDependencyRequest {
+  // The caller component.
+  CreateNetworkDependencyEndpointRequest caller = 1;
+
+  // The callees (API methods called by the component).
+  repeated CreateNetworkDependencyEndpointRequest callees = 2;
+}
+
+message CreateNetworkDependencyEndpointRequest {
+  // Name of the Endpoint, for a Component.
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"api/vx.SomeMethod\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // The Component the Endpoint exposes.
+  CreateNetworkDependencyEndpointComponentRequest exposes = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"other-component\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message CreateNetworkDependencyEndpointComponentRequest {
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-component\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v2.3.0\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message Component {
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-component\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v2.3.0\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // The list of all known endpoints of the Component.
+  repeated string endpoints = 3;
+}

@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: Heap-er fort
+  description: |
+    Prouve que tu es le plus fort même si tu n'es qu'un humain !
+
+    La fonction `win` permet de lire le flag (`/flag.txt`).
+
+    Format du flag : `NBCTF{...}`
+  attribution: "[Drahoxx](https://x.com/50mgDrahoxx)"
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{If_Pwn_Is_Magic_Heap_Is_SORCERY!}
+
+  files:
+    - dist/heaper_fort
+    - dist/heaper-fort.c
+    - dist/Makefile
+
+  tags:
+    - Moyen
+    - Heap
+    - Pwn
+
+  state: visible
+
+  timeout: 3600
+  shared: true
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: pwn/heaper-fort:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 10203
+          exposeType: NodePort
+          protocol: TCP
+    outputs:
+      connectionInfo: |
+        {{- $hostport := index .URLs "10203/TCP" -}}
+        {{- $parts := splitList ":" $hostport -}}
+        {{- $host := "" -}}
+        {{- $port := "" -}}
+
+        {{- if ge (len $parts) 1 -}}
+          {{- $host = index $parts 0 -}}
+        {{- end -}}
+
+        {{- if ge (len $parts) 2 -}}
+          {{- $port = index $parts 1 -}}
+        {{- end -}}
+
+        {{- if and $host $port -}}
+        nc {{ $host }} {{ $port }}
+        {{- else -}}
+        # Host or port not available: {{ $hostport }}
+        {{- end -}}

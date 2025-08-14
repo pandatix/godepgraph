@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: Secure Authentication
+  description: |
+    J'ai développé une application d'authentification en PHP.
+    Vu toutes les vérifications que j'ai mises, c'est impossible de la contourner n'est ce pas ?
+
+    Format du flag : NBCTF{FLAG}
+  attribution: Al-oxos
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+  flags:
+    - NBCTF{W0W_PHP_1S_S0_d4mn_Vuln3rable_Plz_Us3_0th3r_L4ngu4g3s}
+  tags:
+    - Moyen
+  state: visible
+
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/manual
+    spec:
+      directory: scenario
+      reference: web/secure_authentication:v0.1.0

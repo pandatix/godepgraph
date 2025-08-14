@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: On vise le sommet
+  description: |
+    Mmmmh, ce chiffrement est très suspect ... Es-tu capable de le casser ?
+
+    Format du flag : NBCTF{FLAG}
+
+    Auteur : [skilo](https://skilo.sh)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  requirements:
+    behavior: anonymized # XXX @pandatix this default value should take place automatically
+    prerequisites:
+      - Cryptanalyse/boeuf-bourguignon
+
+  files:
+    - path: dist/chall.py
+    - path: dist/output.txt
+
+  flags:
+    - NBCTF{0d96297c8e07c84c0a7f635ed033b8eb}
+
+  tags:
+    - Moyen
+
+  state: visible

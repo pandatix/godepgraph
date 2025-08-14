@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: SuiiiiDo
+  description: |
+    Suiiiiiiiiiiiiiiiiiii. Do.
+  
+    Identifiants de connexion **ssh** : `user`:`user`
+    Le flag est dans le répertoire `/home/user-cracked`.
+
+    Format du flag : `NBCTF{...}`
+
+    Auteur : [Drahoxx](https://x.com/50mgDrahoxx)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    -  NBCTF{CR7_doesnt_use_less_he_uses_m0re!}
+
+  tags:
+    - Facile
+    - Pwn
+    - System
+
+  state: visible
+
+  shared: true
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: pwn/suiiiido:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 10200
+          exposeType: NodePort
+          protocol: TCP
+    outputs:
+      connectionInfo: |
+        {{- $hostport := index .URLs "10200/TCP" -}}
+        {{- $parts := splitList ":" $hostport -}}
+        {{- $host := "" -}}
+        {{- $port := "" -}}
+
+        {{- if ge (len $parts) 1 -}}
+          {{- $host = index $parts 0 -}}
+        {{- end -}}
+
+        {{- if ge (len $parts) 2 -}}
+          {{- $port = index $parts 1 -}}
+        {{- end -}}
+
+        {{- if and $host $port -}}
+        ssh user@{{ $host }} -p {{ $port }}
+        {{- else -}}
+        # Host or port not available: {{ $hostport }}
+        {{- end -}}

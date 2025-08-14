@@ -1,0 +1,56 @@
+name: godepgraph
+runtime: go
+description: IaC for a Kubernetes Proof-of-Concept deployment of a GoDepGraph service.
+config:
+  name:
+    type: string
+    description: 'If set, defines a name to incorporate within the namespace''s name for readibility. (Optional)'
+    default: ''
+  registry:
+    type: string
+    description: 'The Docker registry to download images from. (Optional)'
+    default: ''
+  tag:
+    type: string
+    description: 'The Docker image tag to deploy GoDepGraph from. (Optional)'
+    default: ''
+  log-level:
+    type: string
+    description: 'The log level to use. (Optional)'
+    default: 'info'
+  replicas:
+    type: integer
+    description: 'The number of GoDepGraph replicas running in parallel. (Optional)'
+    default: 1
+  requests.cpu:
+    type: string
+    description: 'The number of CPUs to use in GoDepGraph Pods. (Optional)'
+    default: '1.0'
+  requests.memory:
+    type: string
+    description: 'The memory size to use in GoDepGraph Pods. (Optional)'
+    default: '1Gi'
+  limits.cpu:
+    type: string
+    description: 'The maximum number of CPUs to use in GoDepGraph Pods. (Optional)'
+    default: '4.0'
+  limits.memory:
+    type: string
+    description: 'The maximum memory size to use in GoDepGraph Pods. (Optional)'
+    default: '5Gi'
+  swagger:
+    type: boolean
+    description: 'If set to true, turns on the REST API Swagger UI, for development purposes. (Optional)'
+    default: false
+  cold-extract:
+    type: boolean
+    description: 'If set to true, returns the PersistentVolumeClaim name to backup it. (Optional)'
+    default: false
+  expose-godepgraph:
+    type: boolean
+    description: 'If set to true, expose GoDepGraph on a NodePort. (Optional)'
+    default: false
+  expose-neo4j:
+    type: boolean
+    description: 'If set to true, expose Neo4J UI on a NodePort. (Optional)'
+    default: false

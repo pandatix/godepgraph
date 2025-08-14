@@ -1,0 +1,60 @@
+<!-- templates/edit_extensions.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SCD - Modifier les Extensions</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='img/scd.png') }}" width="50" height="50" alt="Logo SCD">
+                SCD
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/upload">Upload de Fichier</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/edit_extensions">Modifier la whitelist d'extensions</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages Flash -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <h2>Modifier les extensions autorisées</h2>
+        <form action="/edit_extensions" method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="extensions" class="form-label">Nouvelles extensions (en JSON) :</label>
+                <textarea id="extensions" name="extensions" class="form-control" rows="5" placeholder='{"image": ["png", "jpg"], "video": ["mp4"]}' required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Mettre à jour les extensions</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash_messages.js') }}"></script>
+</body>
+</html>

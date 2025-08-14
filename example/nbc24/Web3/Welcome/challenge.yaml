@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: Welcome
+  description: |
+    Bravo pour votre qualification, un challenge simple pour commencer :))
+  attribution: "[K.L.M](https://x.com/Clemhate2)"
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{w3lc0m3_t0_th3_F1n4l}
+
+  files:
+    - path: dist/Challenge.sol
+
+  tags:
+    - Facile
+    - Web3
+    - K.L.M
+
+  state: visible
+
+  timeout: 3600
+  shared: true
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: web3/welcome:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 8000
+          exposeType: Ingress
+          protocol: TCP
+    outputs:
+      connectionInfo: https://{{ index .URLs "8000/TCP" }}

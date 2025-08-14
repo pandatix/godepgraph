@@ -1,0 +1,24 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: Colis Amazone
+  description: |
+    Vous avez réussi à infiltrer le réseau d'un entrepôt de traitement de colis. Vous avez accès à la video-surveillance, à la documentation et aux automates industriels. Parviendrez-vous à prendre le contrôle de la chaîne de traitement ?
+
+    **Si cela ne fonctionne plus, vous pouvez demander à un admin de redémarrer la chaîne de traitement.**
+
+    Auteur : ribt
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+  connection_info: http://amazone.challenges.nobrackets.fr
+
+  flags:
+    - NBCTF{Y0u_4r3_an_1ndustri4l_h4ck3r}
+
+  tags:
+    - Moyen
+    - Modbus
+
+  state: visible

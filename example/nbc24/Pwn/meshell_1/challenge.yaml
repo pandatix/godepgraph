@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
+apiVersion: v1alpha1
+kind: ctfer.io/DynamicIaC
+spec:
+  name: MeShell - 1
+  description: |
+    Vous avez oublié de verrouiller votre session pendant une pause café et
+    Michel, votre collègue, en a profité pour remplacer votre shell préféré.
+
+    Trouvez un moyen d'afficher le flag.
+
+    Format du flag : `NBCTF{...}`
+
+    Auteur : Tek
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+  connection_info: nc challenges.nobrackets.fr 10203
+
+  flags:
+    - NBCTF{7b92bd825e6a4903d3fe82b28867f7f2d63a6723}
+
+  files:
+    - path: dist/meshell.sh
+
+  tags:
+    - Facile
+    - Jail
+    - Bash
+
+  state: visible
+
+  shared: true
+  scenario:
+    apiVersion: v1alpha1
+    kind: sdk.ctfer.io/kubernetes.ExposedMonopod
+    version: v0.2.13
+    spec:
+      image: pwn/meshell-1:v0.1.0
+      build:
+        context: infra
+        dockerfile: Dockerfile
+      hostname: challenges.nobrackets.fr
+      ports:
+        - port: 1337
+          exposeType: NodePort
+          protocol: TCP
+    outputs:
+      connectionInfo: |
+        {{- $hostport := index .URLs "1337/TCP" -}}
+        {{- $parts := splitList ":" $hostport -}}
+        {{- $host := "" -}}
+        {{- $port := "" -}}
+
+        {{- if ge (len $parts) 1 -}}
+          {{- $host = index $parts 0 -}}
+        {{- end -}}
+
+        {{- if ge (len $parts) 2 -}}
+          {{- $port = index $parts 1 -}}
+        {{- end -}}
+
+        {{- if and $host $port -}}
+        nc {{ $host }} {{ $port }}
+        {{- else -}}
+        # Host or port not available: {{ $hostport }}
+        {{- end -}}

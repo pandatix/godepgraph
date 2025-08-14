@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package api.v1.cdn;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/cdn;apiv1cdn";
+
+service CDN {
+  rpc CreateLibrary(CreateLibraryRequest) returns (Library) {
+    option (google.api.http) = {
+      post: "/api/v1/cdn"
+      body: "*"
+    };
+  }
+
+  // Returns the dependency graph of a Library, composed by the AST dependencies.
+  rpc RetrieveLibrary(RetrieveLibraryRequest) returns (Library) {
+    option (google.api.http) = {get: "/api/v1/cdn/library"};
+  }
+
+  // Returns the symbols one depends upon.
+  rpc RetrieveSymbolASTDependencies(RetrieveSymbolASTDependenciesRequest) returns (SymbolDepGraph) {
+    option (google.api.http) = {get: "/api/v1/cdn/symbol"};
+  }
+
+  // Reset the global knowledge of a codebase.
+  rpc Reset(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/cdn"};
+  }
+}
+
+message CreateLibraryRequest {
+  // The Go module to analyze.
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"github.com/gorilla/mux\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // The Go module's version.
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v1.8.1\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // Whether to include test dependencies.
+  optional bool test = 3 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "false"},
+    (google.api.field_behavior) = OPTIONAL
+  ];
+}
+
+message RetrieveLibraryRequest {
+  // The Go module to retrieve.
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"github.com/gorilla/mux\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // The Go module's version to retrieve.
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v1.8.1\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message RetrieveSymbolASTDependenciesRequest {
+  Symbol symbol = 1;
+}
+
+message SymbolDepGraph {
+  Symbol from = 1;
+
+  repeated Symbol to = 2;
+}
+
+message DependencyGraph {
+  // The Go module to retrieve.
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"github.com/gorilla/mux\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // The Go module's version to retrieve.
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v1.8.1\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  repeated Symbol provide = 3;
+
+  repeated ASTDependency dependencies = 4;
+}
+
+message Symbol {
+  // The symbol identity.
+  string identity = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"internal/stringslite.Cut\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message ASTDependency {
+  // The symbol identity it depends from.
+  string from = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"internal/stringslite.Cut\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // The symbol identites it depends upon.
+  repeated string to = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"internal/stringslite.Cut\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message Library {
+  // The Go module to analyze.
+  string name = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"github.com/gorilla/mux\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // The Go module's version.
+  string version = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"v1.8.1\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  repeated Symbol provide = 3;
+}

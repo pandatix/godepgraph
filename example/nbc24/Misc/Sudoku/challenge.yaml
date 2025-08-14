@@ -1,0 +1,24 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: Sudoku Live
+  description: |
+    http://forum.enjoysudoku.com/sky-one-vorderman-s-sudoku-live-t725.html
+
+    Format du flag : `NBCTF{...}`
+
+    Auteur : TheoR
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+  connection_info: nc challenges.nobrackets.fr 10301
+
+  flags:
+    - NBCTF{C35t_1mp0rTan1_d3_54v01R_COmp1eR_jUsQu4_9}
+
+  tags:
+    - Facile
+    - Programmation
+
+  state: visible

@@ -1,0 +1,78 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>SCD - Accueil</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{{ url_for('static', filename='img/scd.png') }}" width="50" height="50" alt="Logo SCD">
+                SCD
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/upload">Upload de Fichier</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/edit_extensions">Modifier la whitelist d'extensions</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages Flash -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="container text-center my-5">
+        <h1>Bienvenue sur le Système Central de Dépôt (SCD)</h1>
+        <h4>Gérez et enregistrez vos fichiers en toute simplicité grâce à notre cloud souverain Français !</h4>
+        <h4>Bientôt, nous serons protégé par un XPTDR permettant d'empêcher toutes les attaques contre nous :D</h4>
+        <br>
+        {% if files %}
+            <p class="lead">Cliquez sur un fichier pour le télécharger :</p>
+            <ul class="list-group">
+                {% for file in files %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('download_file', filename=file) }}">{{ file }}</a>
+                    <form action="{{ url_for('delete_file', filename=file) }}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm" title="Supprimer le fichier">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                              </svg>
+                        </button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="lead">Pas de fichiers disponibles pour le moment.</p>
+            <p class="lead">Utilisez la barre de navigation pour accéder aux différentes fonctionnalités du système.</p>
+            <img src="{{ url_for('static', filename='img/rick.gif') }}" alt="Never Gonna Give You Up" class="img-fluid mt-4" style="max-width: 400px;">
+        {% endif %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash_messages.js') }}"></script>
+</body>
+</html>

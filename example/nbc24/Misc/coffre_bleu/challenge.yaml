@@ -1,0 +1,36 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: coffre BLEu
+  description: |
+    Votre tâche est simple : vous devrez scanner, interagir et découvrir le secret du coffre BLEu.
+    Armez-vous d'un équipement compatible BLE (votre ordinateur, votre téléphone portable...). 
+
+    Attention, il n'y a qu'un seul device pour toutes les équipes !
+    Une fois que vous avez maîtrisé la documentation (ou si vous êtes déjà un crack du BLE), venez voir Philippe_Katerine (envoyez un ping sur Discord) pour commencer le challenge. Vous aurez alors 20 minutes pour accéder au secret du coffre.
+
+    Si, après ces 20 minutes, vous n'avez pas réussi à obtenir le flag, et pour assurer l'équité entre les équipes, nous ferons tourner le challenge. Vous pourrez réessayer, mais uniquement quand votre tour viendra !"
+
+
+    Format du flag : `NBCTF{flag}`
+
+    Auteur : [Philippe_Katerine](https://github.com/polo-le-rigolo)
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+  connection_info: nc challenges.nobrackets.fr 10301
+
+  flags:
+    - NBCTF{W0w_y0uR_@_BL3_pR0}
+
+  files:
+    - path: dist/ble_introduction.md
+
+  tags:
+    - Moyen
+    - Misc
+    - IoT
+    - Bluetooth
+
+  state: visible

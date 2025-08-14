@@ -1,0 +1,97 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/v1/rdg/rdg.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "RDG"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/rdg": {
+      "post": {
+        "operationId": "RDG_CreateStack",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rdgStack"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/rdgCreateStackRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RDG"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rdgCreateStackRequest": {
+      "type": "object",
+      "properties": {
+        "downloadUri": {
+          "type": "string",
+          "example": "https://webserver.tld/state.json"
+        }
+      },
+      "required": [
+        "downloadUri"
+      ]
+    },
+    "rdgStack": {
+      "type": "object"
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+apiVersion: v1alpha1
+kind: ctfer.io/Dynamic
+spec:
+  name: Crochetage antivol
+  description: |
+    Allez sur la table des admins et utilisez les outils de crochetage pour ouvrir l'anti-vole de vélo.
+
+    Auteur : ribt
+  value:   500
+  decay:   5
+  minimum: 100
+  function: logarithmic
+
+  flags:
+    - NBCTF{In_R3al_L1fe_You_C4n_g0_to_jail}
+
+  tags:
+    - Difficile
+    - Lockpicking
+
+  state: visible
