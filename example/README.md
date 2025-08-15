@@ -102,10 +102,22 @@ The following are example ciphers to use when analyzing the data.
 
 **Q**: The `kind.sh` script does not seem to work.
 
-**R**: Make sure your port 5000 is available (`sudo ss -laptn | grep 5000`), and no other docker container is named `registry` (`docker ps | grep registry`) else it will be erased (the same holds for kind). Also, make sure you have a stable and good internet connection to download all required Docker images. Most images are copied locally to limit bandwidth impact, but not all.
+**A**: Make sure your port 5000 is available (`sudo ss -laptn | grep 5000`), and no other docker container is named `registry` (`docker ps | grep registry`) else it will be erased (the same holds for kind). Also, make sure you have a stable and good internet connection to download all required Docker images. Most images are copied locally to limit bandwidth impact, but not all.
 
 ---
 
 **Q**: I see error message on challenges failing to get created, by the end of `exp.sh`. Does it impact the results ?
 
-**R**: Yes it has impact, but we are not focusing on the result but more on the interactions between components. Seeing errors is a sign of interactions between the components (and a bug in timeout handling in Chall-Manager), so is completly fine. Through the analysis step, we won't see much difference if there are errors or not.
+**A**: Yes it has impact, but we are not focusing on the result but more on the interactions between components. Seeing errors is a sign of interactions between the components (and a bug in timeout handling in Chall-Manager), so is completly fine. Through the analysis step, we won't see much difference if there are errors or not.
+
+---
+
+**Q**: The `exp.sh` seems to end with a failure, after a long wait. What happens ?
+
+**A**: It might be because your machine has trouble running everything, and in this case, running the Pod used to extract the OpenTelemetry data. This would be a problem for the next steps. You can run the following to run just this step, from the root directory of the project in your terminal.
+
+```bash
+export PULUMI_CONFIG_PASSPHRASE=""
+export URL="localhost:$(cd deploy && pulumi stack output godepgraph-port)"
+./bin/godepgraph-cli --url $URL sig create --file example/extract/otel_traces
+```
