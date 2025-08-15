@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=file:///home/pandatix/Documents/ctfer.io/ctfops/schema.json
 apiVersion: v1alpha1
 kind: ctfer.io/DynamicIaC
 spec:
