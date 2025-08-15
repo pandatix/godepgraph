@@ -17,6 +17,28 @@
   ],
   "paths": {
     "/api/v1/rdg": {
+      "delete": {
+        "summary": "Reset the global knowledge of a state.",
+        "operationId": "RDG_Reset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "RDG"
+        ]
+      },
       "post": {
         "operationId": "RDG_CreateStack",
         "responses": {
@@ -62,13 +84,13 @@
     "rdgCreateStackRequest": {
       "type": "object",
       "properties": {
-        "downloadUri": {
+        "uri": {
           "type": "string",
           "example": "https://webserver.tld/state.json"
         }
       },
       "required": [
-        "downloadUri"
+        "uri"
       ]
     },
     "rdgStack": {
