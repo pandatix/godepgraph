@@ -160,8 +160,9 @@ func allReachingSymbols(ctx context.Context, man *neo4jSvc.Manager) error {
 			res, err := tx.Run(ctx,
 				`
 				MATCH (s:Symbol {mark: true})
-				MATCH (s2:Symbol)<-[:CALLER]-(:ASTDependency)-[:CALLEES]->(s)
+				MATCH (s2:Symbol)<-[:CALLER]-(a:ASTDependency)-[:CALLEES]->(s)
 				WHERE s2.mark <> true OR s2.mark IS NULL
+				SET a.mark = true
 				SET s2.mark = true
 				RETURN count(*) AS newlyMarked
 				`,
@@ -216,8 +217,9 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 			`
 			MATCH (l:Library {mark: true})
 			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(l)
-			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(c:Component)
-			WITH DISTINCT c
+			MATCH (b)-[:SPECIALIZES_INTO]->(c:Component)
+			WITH DISTINCT b, c
+			SET b.mark = true
 			SET c.mark = true
 			`,
 			nil,
@@ -231,8 +233,9 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 			`
 			MATCH (l:Library {mark: true})
 			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(l)
-			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(a:Asset)
-			WITH DISTINCT a
+			MATCH (b)-[:SPECIALIZES_INTO]->(a:Asset)
+			WITH DISTINCT b, a
+			SET b.mark = true
 			SET a.mark = true
 			`,
 			nil,
@@ -247,8 +250,9 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 			`
 			MATCH (c:Component {mark: true})
 			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(c)
-			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(a:Asset)
-			WITH DISTINCT a
+			MATCH (b)-[:SPECIALIZES_INTO]->(a:Asset)
+			WITH DISTINCT b, a
+			SET b.mark = true
 			SET a.mark = true
 			`,
 			nil,

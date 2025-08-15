@@ -82,20 +82,32 @@ All the following require your terminal to be in [example](/example/) context.
         --threatens "github.com/ctfer-io/chall-manager/pkg/scenario.DecodeOCI"
     ```
 
-6.  You can now open Neo4J in your browser and travel through the processed data, using [ciphers](https://neo4j.com/docs/getting-started/cypher/).
+6.  You can now open Neo4J in your browser and travel through the processed data, using [example ciphers](#ciphers) or [create your own](https://neo4j.com/docs/getting-started/cypher/).
     ```bash
     open "http://localhost:$(cd deploy && pulumi stack output neo4j-ui-port)"
     ```
 
     Don't forget the settings to connect:
-    - url: `bolt://$(cd deploy && pulumi stack output neo4j-user)`
-    - username: `(cd deploy && pulumi stack output neo4j-user)`
-    - password: `(cd deploy && pulumi stack output neo4j-pass)`
-    - db name: `(cd deploy && pulumi stack output neo4j-dbname)`
+    - Connect URL: `neo4j://localhost:$(cd deploy && pulumi stack output neo4j-api-port)`
+    - Database: `(cd deploy && pulumi stack output neo4j-dbname)`
+    - Authentication type: Username / Password
+    - Username: `(cd deploy && pulumi stack output neo4j-user)`
+    - Password: `(cd deploy && pulumi stack output neo4j-pass)`
 
 ## Ciphers
 
 The following are example ciphers to use when analyzing the data.
+
+### All symbols potentially vulnerable
+
+> [!WARNING]
+> This may result in **a lot** of nodes.
+> It is one limitation of the current approach, which should be improved in future work with Data Flow Analysis (DFA) to narrow down the propagation.
+
+```cypher
+MATCH (v1 {mark: true})<-[:CALLER]-(a1:ASTDependency)-[:CALLEES]->(v2 {mark: true})
+RETURN v1, v2, a1
+```
 
 ### All vulnerable nodes, once propagated
 
@@ -142,6 +154,19 @@ OPTIONAL MATCH (c2:Component)<-[:EXPOSES]-(e2:Endpoint)<-[:CALLER]-(n:NetworkDep
 
 // Return everything
 RETURN v, s, a, s2, l, b, c, e, c2, n, e2
+```
+
+### All objects that are potentially vulnerable
+
+We filter out `Library` objects that are not `Component` objects, and avoid `Symbol` and `ASTDependency` objects to simplify understanding of the potential blast radius of the vulnerability.
+
+```cypher
+MATCH (n {mark: true})
+WHERE NOT (n:Symbol OR n:ASTDependency)
+  AND (NOT n:Library OR EXISTS {
+    MATCH (:Binding)-[:SPECIALIZES_INTO]->(n)
+  })
+RETURN n
 ```
 
 ## Troubleshoot
