@@ -42,7 +42,10 @@ message CreateVulnerabilityRequest {
     (google.api.field_behavior) = REQUIRED
   ];
 
-  LibraryOrRefinement treatens = 2;
+  string treatens = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"internal/stringslite.Cut\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 message CreateServesRequest {

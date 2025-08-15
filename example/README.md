@@ -67,10 +67,12 @@ All the following require your terminal to be in [example](/example/) context.
         --library.name github.com/ctfer-io/chall-manager \
         --library.version v0.5.1 \
         --component.name tmp-chall-manager \
-        --component.version v0.5.1 \
+        --component.version dev \
         --asset.name chall-manager \
         --asset.version v0.5.1
     ```
+
+    Due to a bug in Chall-Manager we have to bind the component to the version `dev` rather than `v0.5.1`.
 
 5.  Then add the vulnerability in the source code.
     ```bash
@@ -95,7 +97,52 @@ All the following require your terminal to be in [example](/example/) context.
 
 The following are example ciphers to use when analyzing the data.
 
-<!-- TODO @lucas add ciphers -->
+### All vulnerable nodes, once propagated
+
+```cypher
+MATCH (v:Vulnerability)
+MATCH (v)-[:THREATENS]->(s:Symbol)
+OPTIONAL MATCH (s2:Symbol)<-[:CALLER]-(a:ASTDependency)-[:CALLEES]->(s)
+MATCH (l:Library)
+WHERE (l)-[:PROVIDES]->(s) OR (l)-[:PROVIDES]->(s2)
+OPTIONAL MATCH (c:Component)<-[:SPECIALIZES_INTO]-(b:Binding)-[:SPECIALIZES_INTO]->(l)
+OPTIONAL MATCH (e:Endpoint)-[:EXPOSES]->(s)
+RETURN v, s, a, s2, l, b, c, e
+```
+
+### All Components that interact with a Component embedding a vulnerable symbol
+
+> [!WARNING]
+> The following cypher is not generic and works in the case of this example.
+> Rationale is that API endpoints makes direct call to the vulnerable symbol, thus we don't need to look for all paths from an endpoint to a vulnerable symbol.
+
+```cypher
+// Get the vulnerability, and the symbol it threatens
+MATCH (v:Vulnerability)
+MATCH (v)-[:THREATENS]->(s:Symbol)
+
+// Then the symbols that calls it (Chall-Manager has no wrapper around it,
+// so 1 hop is enough -> it is not a generic query)
+OPTIONAL MATCH (s2:Symbol)<-[:CALLER]-(a:ASTDependency)-[:CALLEES]->(s)
+
+// Get the vulnerable library that provides the threatened symbols
+MATCH (l:Library)
+WHERE (l)-[:PROVIDES]->(s) OR (l)-[:PROVIDES]->(s2)
+
+// Then look for the Component that represent the Library -> it is more than a
+// simple library, it is a running app
+OPTIONAL MATCH (c:Component)<-[:SPECIALIZES_INTO]-(b:Binding)-[:SPECIALIZES_INTO]->(l)
+
+// Get the endpoints that serves symbols of the Library/Component
+OPTIONAL MATCH (e:Endpoint)
+WHERE (e)-[:SERVES]->(s) OR (e)-[:SERVES]->(s2)
+
+// Then get the adjacent components that interacts with these endpoints
+OPTIONAL MATCH (c2:Component)<-[:EXPOSES]-(e2:Endpoint)<-[:CALLER]-(n:NetworkDependency)-[:CALLEES]->(e)
+
+// Return everything
+RETURN v, s, a, s2, l, b, c, e, c2, n, e2
+```
 
 ## Troubleshoot
 

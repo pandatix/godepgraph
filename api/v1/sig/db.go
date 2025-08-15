@@ -44,7 +44,7 @@ func upsertComponent(ctx context.Context, man *neo4jSvc.Manager, name, version s
 		return err
 	}
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
-		// If the module already exist, don't duplicate it
+		// If the component already exist, don't duplicate it
 		res, err := tx.Run(ctx,
 			`
 			MATCH (c:Component)

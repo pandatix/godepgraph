@@ -206,11 +206,13 @@
           "example": "CVE-1000-01234"
         },
         "treatens": {
-          "$ref": "#/definitions/alg4LibraryOrRefinement"
+          "type": "string",
+          "example": "internal/stringslite.Cut"
         }
       },
       "required": [
-        "identity"
+        "identity",
+        "treatens"
       ]
     },
     "alg4LibraryOrRefinement": {

@@ -375,6 +375,34 @@ func main() {
 								},
 							},
 						},
+					}, {
+						Name: "vulnerability",
+						Commands: []*cli.Command{
+							{
+								Name: "create",
+								Flags: []cli.Flag{
+									&cli.StringFlag{
+										Name:     "identity",
+										Usage:    "The vulnerability identity. Example: CVE-1000-01234",
+										Required: true,
+									},
+									&cli.StringFlag{
+										Name:     "threatens",
+										Usage:    "The symbol it threatens, i.e. the vulnerable function. Example: internal/stringslite.Cut",
+										Required: true,
+									},
+								},
+								Action: func(ctx context.Context, cmd *cli.Command) error {
+									cliAlg4 := ctx.Value(cliAlg4Key{}).(apiv1alg4.Alg4Client)
+
+									_, err := cliAlg4.CreateVulnerability(ctx, &apiv1alg4.CreateVulnerabilityRequest{
+										Identity: cmd.String("identity"),
+										Treatens: cmd.String("threatens"),
+									})
+									return err
+								},
+							},
+						},
 					},
 				},
 			},

@@ -246,26 +246,26 @@ func bulkUpsertASTDependencies(ctx context.Context, man *neo4jSvc.Manager, lib *
 		_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 			return tx.Run(ctx,
 				`
-			UNWIND $astDependencies AS astd
-				// Match the "from" and "to" Symbol nodes by their identity
-				MATCH (from:Symbol {identity: astd.from})
-				MATCH (to:Symbol {identity: astd.to})
+				UNWIND $astDependencies AS astd
+					// Match the "from" and "to" Symbol nodes by their identity
+					MATCH (from:Symbol {identity: astd.from})
+					MATCH (to:Symbol {identity: astd.to})
 
-				// Check if an ASTDependency already exists for the given "from" Symbol
-				OPTIONAL MATCH (existingDep:ASTDependency)-[:CALLER]->(from)
+					// Check if an ASTDependency already exists for the given "from" Symbol
+					OPTIONAL MATCH (existingDep:ASTDependency)-[:CALLER]->(from)
 
-				// If no existing ASTDependency, create one and link it to both "from" and "to"
-				FOREACH (_ IN CASE WHEN existingDep IS NULL THEN [1] ELSE [] END |
-					CREATE (a:ASTDependency)
-					CREATE (a)-[:CALLER]->(from)
-					CREATE (a)-[:CALLEES]->(to)
-				)
+					// If no existing ASTDependency, create one and link it to both "from" and "to"
+					FOREACH (_ IN CASE WHEN existingDep IS NULL THEN [1] ELSE [] END |
+						CREATE (a:ASTDependency)
+						CREATE (a)-[:CALLER]->(from)
+						CREATE (a)-[:CALLEES]->(to)
+					)
 
-				// If an existing ASTDependency exists, ensure it is connected to the "to" Symbol
-				FOREACH (_ IN CASE WHEN existingDep IS NOT NULL THEN [1] ELSE [] END |
-					MERGE (existingDep)-[:CALLEES]->(to)
-				)
-			`,
+					// If an existing ASTDependency exists, ensure it is connected to the "to" Symbol
+					FOREACH (_ IN CASE WHEN existingDep IS NOT NULL THEN [1] ELSE [] END |
+						MERGE (existingDep)-[:CALLEES]->(to)
+					)
+				`,
 				map[string]any{
 					"astDependencies": func() []map[string]string {
 						out := []map[string]string{}

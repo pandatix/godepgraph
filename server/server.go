@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"github.com/soheilhy/cmux"
@@ -124,6 +125,8 @@ func (s *Server) newGRPCServer() *grpc.Server {
 		grpc.MaxRecvMsgSize(math.MaxInt64),
 		grpc.MaxSendMsgSize(math.MaxInt64),
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
+		grpc.UnaryInterceptor(recovery.UnaryServerInterceptor()),
+		grpc.StreamInterceptor(recovery.StreamServerInterceptor()),
 	}
 	grpcServer := grpc.NewServer(opts...)
 

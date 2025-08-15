@@ -27,7 +27,7 @@ const (
 type CreateVulnerabilityRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Identity      string                 `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
-	Treatens      *LibraryOrRefinement   `protobuf:"bytes,2,opt,name=treatens,proto3" json:"treatens,omitempty"`
+	Treatens      string                 `protobuf:"bytes,2,opt,name=treatens,proto3" json:"treatens,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -69,11 +69,11 @@ func (x *CreateVulnerabilityRequest) GetIdentity() string {
 	return ""
 }
 
-func (x *CreateVulnerabilityRequest) GetTreatens() *LibraryOrRefinement {
+func (x *CreateVulnerabilityRequest) GetTreatens() string {
 	if x != nil {
 		return x.Treatens
 	}
-	return nil
+	return ""
 }
 
 type CreateServesRequest struct {
@@ -457,10 +457,10 @@ var File_api_v1_alg4_alg4_proto protoreflect.FileDescriptor
 
 const file_api_v1_alg4_alg4_proto_rawDesc = "" +
 	"\n" +
-	"\x16api/v1/alg4/alg4.proto\x12\vapi.v1.alg4\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x91\x01\n" +
+	"\x16api/v1/alg4/alg4.proto\x12\vapi.v1.alg4\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x94\x01\n" +
 	"\x1aCreateVulnerabilityRequest\x125\n" +
-	"\bidentity\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"CVE-1000-01234\"\xe2A\x01\x02R\bidentity\x12<\n" +
-	"\btreatens\x18\x02 \x01(\v2 .api.v1.alg4.LibraryOrRefinementR\btreatens\"\x9b\x01\n" +
+	"\bidentity\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"CVE-1000-01234\"\xe2A\x01\x02R\bidentity\x12?\n" +
+	"\btreatens\x18\x02 \x01(\tB#\x92A\x1cJ\x1a\"internal/stringslite.Cut\"\xe2A\x01\x02R\btreatens\"\x9b\x01\n" +
 	"\x13CreateServesRequest\x12>\n" +
 	"\x06symbol\x18\x01 \x01(\v2&.api.v1.alg4.CreateServesSymbolRequestR\x06symbol\x12D\n" +
 	"\bendpoint\x18\x02 \x01(\v2(.api.v1.alg4.CreateServesEndpointRequestR\bendpoint\"\\\n" +
@@ -525,27 +525,26 @@ var file_api_v1_alg4_alg4_proto_goTypes = []any{
 	(*emptypb.Empty)(nil),                // 8: google.protobuf.Empty
 }
 var file_api_v1_alg4_alg4_proto_depIdxs = []int32{
-	5,  // 0: api.v1.alg4.CreateVulnerabilityRequest.treatens:type_name -> api.v1.alg4.LibraryOrRefinement
-	2,  // 1: api.v1.alg4.CreateServesRequest.symbol:type_name -> api.v1.alg4.CreateServesSymbolRequest
-	3,  // 2: api.v1.alg4.CreateServesRequest.endpoint:type_name -> api.v1.alg4.CreateServesEndpointRequest
-	4,  // 3: api.v1.alg4.CreateServesEndpointRequest.exposes:type_name -> api.v1.alg4.CreateServesComponentRequest
-	5,  // 4: api.v1.alg4.CreateBindingRequest.library:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 5: api.v1.alg4.CreateBindingRequest.component:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 6: api.v1.alg4.CreateBindingRequest.asset:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 7: api.v1.alg4.Binding.library:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 8: api.v1.alg4.Binding.component:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 9: api.v1.alg4.Binding.asset:type_name -> api.v1.alg4.LibraryOrRefinement
-	0,  // 10: api.v1.alg4.Alg4.CreateVulnerability:input_type -> api.v1.alg4.CreateVulnerabilityRequest
-	6,  // 11: api.v1.alg4.Alg4.CreateBinding:input_type -> api.v1.alg4.CreateBindingRequest
-	1,  // 12: api.v1.alg4.Alg4.CreateServes:input_type -> api.v1.alg4.CreateServesRequest
-	8,  // 13: api.v1.alg4.Alg4.CreateVulnerability:output_type -> google.protobuf.Empty
-	7,  // 14: api.v1.alg4.Alg4.CreateBinding:output_type -> api.v1.alg4.Binding
-	8,  // 15: api.v1.alg4.Alg4.CreateServes:output_type -> google.protobuf.Empty
-	13, // [13:16] is the sub-list for method output_type
-	10, // [10:13] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	2,  // 0: api.v1.alg4.CreateServesRequest.symbol:type_name -> api.v1.alg4.CreateServesSymbolRequest
+	3,  // 1: api.v1.alg4.CreateServesRequest.endpoint:type_name -> api.v1.alg4.CreateServesEndpointRequest
+	4,  // 2: api.v1.alg4.CreateServesEndpointRequest.exposes:type_name -> api.v1.alg4.CreateServesComponentRequest
+	5,  // 3: api.v1.alg4.CreateBindingRequest.library:type_name -> api.v1.alg4.LibraryOrRefinement
+	5,  // 4: api.v1.alg4.CreateBindingRequest.component:type_name -> api.v1.alg4.LibraryOrRefinement
+	5,  // 5: api.v1.alg4.CreateBindingRequest.asset:type_name -> api.v1.alg4.LibraryOrRefinement
+	5,  // 6: api.v1.alg4.Binding.library:type_name -> api.v1.alg4.LibraryOrRefinement
+	5,  // 7: api.v1.alg4.Binding.component:type_name -> api.v1.alg4.LibraryOrRefinement
+	5,  // 8: api.v1.alg4.Binding.asset:type_name -> api.v1.alg4.LibraryOrRefinement
+	0,  // 9: api.v1.alg4.Alg4.CreateVulnerability:input_type -> api.v1.alg4.CreateVulnerabilityRequest
+	6,  // 10: api.v1.alg4.Alg4.CreateBinding:input_type -> api.v1.alg4.CreateBindingRequest
+	1,  // 11: api.v1.alg4.Alg4.CreateServes:input_type -> api.v1.alg4.CreateServesRequest
+	8,  // 12: api.v1.alg4.Alg4.CreateVulnerability:output_type -> google.protobuf.Empty
+	7,  // 13: api.v1.alg4.Alg4.CreateBinding:output_type -> api.v1.alg4.Binding
+	8,  // 14: api.v1.alg4.Alg4.CreateServes:output_type -> google.protobuf.Empty
+	12, // [12:15] is the sub-list for method output_type
+	9,  // [9:12] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_alg4_alg4_proto_init() }
