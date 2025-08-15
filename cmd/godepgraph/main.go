@@ -7,7 +7,7 @@ import (
 	"syscall"
 
 	"github.com/pkg/errors"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -24,7 +24,7 @@ var (
 )
 
 func main() {
-	app := &cli.App{
+	app := &cli.Command{
 		Name:  "GoDepGraph",
 		Usage: "Toolbox for Reconstructing Systems-of-Systems architectures towards analyzing cascading attacks, in Go.",
 		Flags: []cli.Flag{
@@ -33,24 +33,24 @@ func main() {
 			&cli.IntFlag{
 				Name:     "port",
 				Aliases:  []string{"p"},
-				EnvVars:  []string{"PORT"},
+				Sources:  cli.EnvVars("PORT"),
 				Category: "global",
 				Value:    8080,
 				Usage:    "Define the API server port to listen on (gRPC+HTTP).",
 			},
 			&cli.BoolFlag{
 				Name:     "swagger",
-				EnvVars:  []string{"SWAGGER"},
+				Sources:  cli.EnvVars("SWAGGER"),
 				Category: "global",
 				Value:    false,
 				Usage:    "If set, turns on the API gateway swagger on `/swagger`.",
 			},
 			&cli.StringFlag{
 				Name:     "log-level",
-				EnvVars:  []string{"LOG_LEVEL"},
+				Sources:  cli.EnvVars("LOG_LEVEL"),
 				Category: "global",
 				Value:    "info",
-				Action: func(_ *cli.Context, lvl string) error {
+				Action: func(_ context.Context, _ *cli.Command, lvl string) error {
 					_, err := zapcore.ParseLevel(lvl)
 					return err
 				},
@@ -59,14 +59,14 @@ func main() {
 			},
 			&cli.BoolFlag{
 				Name:        "otlp.tracing",
-				EnvVars:     []string{"OTLP_TRACING"},
+				Sources:     cli.EnvVars("OTLP_TRACING"),
 				Category:    "otlp",
 				Destination: &global.Conf.Otlp.Tracing,
 				Usage:       "If set, turns on tracing through OpenTelemetry (see https://opentelemetry.io for more info).",
 			},
 			&cli.StringFlag{
 				Name:        "otlp.service-name",
-				EnvVars:     []string{"OTLP_SERVICE_NAME"},
+				Sources:     cli.EnvVars("OTLP_SERVICE_NAME"),
 				Category:    "otlp",
 				Value:       "godepgraph",
 				Destination: &global.Conf.Otlp.ServiceName,
@@ -74,7 +74,7 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:        "neo4j.uri",
-				EnvVars:     []string{"NEO4J_URI"},
+				Sources:     cli.EnvVars("NEO4J_URI"),
 				Category:    "neo4j",
 				Required:    true,
 				Destination: &global.Conf.Neo4J.URL,
@@ -82,7 +82,7 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:        "neo4j.user",
-				EnvVars:     []string{"NEO4J_USER"},
+				Sources:     cli.EnvVars("NEO4J_USER"),
 				Category:    "neo4j",
 				Required:    true,
 				Destination: &global.Conf.Neo4J.User,
@@ -90,7 +90,7 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:        "neo4j.pass",
-				EnvVars:     []string{"NEO4J_PASS"},
+				Sources:     cli.EnvVars("NEO4J_PASS"),
 				Category:    "neo4j",
 				Required:    true,
 				Destination: &global.Conf.Neo4J.Pass,
@@ -98,20 +98,14 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:        "neo4j.dbname",
-				EnvVars:     []string{"NEO4J_DBNAME"},
+				Sources:     cli.EnvVars("NEO4J_DBNAME"),
 				Category:    "neo4j",
 				Value:       "godepgraph",
 				Destination: &global.Conf.Neo4J.DBName,
 				Usage:       "The Neo4J database name in which to export data.",
 			},
 		},
-		Action: run,
-		Authors: []*cli.Author{
-			{
-				Name:  "Lucas Tesson - PandatiX",
-				Email: "lucastesson@protonmail.com",
-			},
-		},
+		Action:  run,
 		Version: version,
 		Metadata: map[string]any{
 			"version": version,
@@ -121,43 +115,44 @@ func main() {
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
-		global.Log().Error(context.Background(), "fatal error",
+	ctx := context.Background()
+	if err := app.Run(ctx, os.Args); err != nil {
+		global.Log().Error(ctx, "fatal error",
 			zap.Error(err),
 		)
 		os.Exit(1)
 	}
 }
 
-func run(c *cli.Context) error {
+func run(ctx context.Context, cmd *cli.Command) error {
 	// Pre-flight global configuration
 	global.Version = version
 
-	port := c.Int("port")
-	sw := c.Bool("swagger")
+	port := cmd.Int("port")
+	sw := cmd.Bool("swagger")
 
 	// Initialize tracing and handle the tracer provider shutdown
 	if global.Conf.Otlp.Tracing {
 		// Set up OpenTelemetry.
-		otelShutdown, err := global.SetupOtelSDK(c.Context)
+		otelShutdown, err := global.SetupOtelSDK(ctx)
 		if err != nil {
 			return err
 		}
 		// Handle shutdown properly so nothing leaks.
 		defer func() {
-			err = multierr.Append(err, otelShutdown(c.Context))
+			err = multierr.Append(err, otelShutdown(ctx))
 		}()
 	}
 
 	logger := global.Log()
-	logger.Info(c.Context, "starting API server",
+	logger.Info(ctx, "starting API server",
 		zap.Int("port", port),
 		zap.Bool("swagger", sw),
 		zap.Bool("tracing", global.Conf.Otlp.Tracing),
 	)
 
 	// Create context that listens for the interrupt signal from the OS
-	ctx, stop := signal.NotifyContext(c.Context, syscall.SIGINT, syscall.SIGTERM)
+	ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
 	ctx, cancel := context.WithCancel(ctx)

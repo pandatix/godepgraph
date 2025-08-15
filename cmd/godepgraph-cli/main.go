@@ -6,12 +6,12 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"time"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 	"go.opentelemetry.io/collector/pdata/ptrace"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
@@ -19,6 +19,7 @@ import (
 	apiv1cdn "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/cdn"
 	apiv1rdg "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/rdg"
 	apiv1sig "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/sig"
+	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
 )
 
 type (
@@ -29,7 +30,7 @@ type (
 )
 
 func main() {
-	app := &cli.App{
+	app := &cli.Command{
 		Name:  "godepgraph-cli",
 		Usage: "CLI for GoDepGraph, for test purposes.",
 		Flags: []cli.Flag{
@@ -42,19 +43,18 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name: "cdn",
-				Before: func(ctx *cli.Context) error {
-					conn, err := grpc.NewClient(ctx.String("url"),
+				Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+					conn, err := grpc.NewClient(cmd.String("url"),
 						grpc.WithTransportCredentials(insecure.NewCredentials()),
 					)
 					if err != nil {
-						return err
+						return ctx, err
 					}
 					cliCdn := apiv1cdn.NewCDNClient(conn)
 
-					ctx.Context = context.WithValue(ctx.Context, cliCdnKey{}, cliCdn)
-					return nil
+					return context.WithValue(ctx, cliCdnKey{}, cliCdn), nil
 				},
-				Subcommands: []*cli.Command{
+				Commands: []*cli.Command{
 					{
 						Name: "create",
 						Flags: []cli.Flag{
@@ -70,16 +70,16 @@ func main() {
 								Name: "test",
 							},
 						},
-						Action: func(ctx *cli.Context) error {
-							cliCdn := ctx.Context.Value(cliCdnKey{}).(apiv1cdn.CDNClient)
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							cliCdn := ctx.Value(cliCdnKey{}).(apiv1cdn.CDNClient)
 
 							fmt.Println("    Creating library...")
-							name, ver := ctx.String("name"), ctx.String("version")
+							name, ver := cmd.String("name"), cmd.String("version")
 							before := time.Now()
-							_, err := cliCdn.CreateLibrary(ctx.Context, &apiv1cdn.CreateLibraryRequest{
+							_, err := cliCdn.CreateLibrary(ctx, &apiv1cdn.CreateLibraryRequest{
 								Name:    name,
 								Version: ver,
-								Test:    ptr(ctx.Bool("test")),
+								Test:    ptr(cmd.Bool("test")),
 							})
 							dur := time.Since(before)
 							if err != nil {
@@ -92,11 +92,11 @@ func main() {
 					}, {
 						Name:  "reset",
 						Usage: "Reset the global knowledge of a codebase.",
-						Action: func(ctx *cli.Context) error {
-							cliCdn := ctx.Context.Value(cliCdnKey{}).(apiv1cdn.CDNClient)
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							cliCdn := ctx.Value(cliCdnKey{}).(apiv1cdn.CDNClient)
 
 							fmt.Println("    Reseting CDN...")
-							if _, err := cliCdn.Reset(ctx.Context, nil); err != nil {
+							if _, err := cliCdn.Reset(ctx, nil); err != nil {
 								return err
 							}
 
@@ -107,19 +107,18 @@ func main() {
 				},
 			}, {
 				Name: "rdg",
-				Before: func(ctx *cli.Context) error {
-					conn, err := grpc.NewClient(ctx.String("url"),
+				Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+					conn, err := grpc.NewClient(cmd.String("url"),
 						grpc.WithTransportCredentials(insecure.NewCredentials()),
 					)
 					if err != nil {
-						return err
+						return ctx, err
 					}
 					cliRdg := apiv1rdg.NewRDGClient(conn)
 
-					ctx.Context = context.WithValue(ctx.Context, cliRdgKey{}, cliRdg)
-					return nil
+					return context.WithValue(ctx, cliRdgKey{}, cliRdg), nil
 				},
-				Subcommands: []*cli.Command{
+				Commands: []*cli.Command{
 					{
 						Name:  "create",
 						Usage: "Create a RDG from a Pulumi state file.",
@@ -130,14 +129,14 @@ func main() {
 								Required: true,
 							},
 						},
-						Action: func(ctx *cli.Context) error {
-							cliRdg := ctx.Context.Value(cliRdgKey{}).(apiv1rdg.RDGClient)
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							cliRdg := ctx.Value(cliRdgKey{}).(apiv1rdg.RDGClient)
 
 							fmt.Println("    Creating stack...")
 
 							before := time.Now()
-							_, err := cliRdg.CreateStack(ctx.Context, &apiv1rdg.CreateStackRequest{
-								Uri: ctx.String("uri"),
+							_, err := cliRdg.CreateStack(ctx, &apiv1rdg.CreateStackRequest{
+								Uri: cmd.String("uri"),
 							})
 							dur := time.Since(before)
 							if err != nil {
@@ -151,11 +150,11 @@ func main() {
 					}, {
 						Name:  "reset",
 						Usage: "Resets existing RDG(s).",
-						Action: func(ctx *cli.Context) error {
-							cliRdg := ctx.Context.Value(cliRdgKey{}).(apiv1rdg.RDGClient)
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							cliRdg := ctx.Value(cliRdgKey{}).(apiv1rdg.RDGClient)
 
 							fmt.Println("    Reseting RDG...")
-							if _, err := cliRdg.Reset(ctx.Context, nil); err != nil {
+							if _, err := cliRdg.Reset(ctx, nil); err != nil {
 								return err
 							}
 
@@ -166,19 +165,18 @@ func main() {
 				},
 			}, {
 				Name: "sig",
-				Before: func(ctx *cli.Context) error {
-					conn, err := grpc.NewClient(ctx.String("url"),
+				Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+					conn, err := grpc.NewClient(cmd.String("url"),
 						grpc.WithTransportCredentials(insecure.NewCredentials()),
 					)
 					if err != nil {
-						return err
+						return ctx, err
 					}
 					cliSig := apiv1sig.NewSIGClient(conn)
 
-					ctx.Context = context.WithValue(ctx.Context, cliSigKey{}, cliSig)
-					return nil
+					return context.WithValue(ctx, cliSigKey{}, cliSig), nil
 				},
-				Subcommands: []*cli.Command{
+				Commands: []*cli.Command{
 					{
 						Name: "create",
 						Flags: []cli.Flag{
@@ -187,11 +185,11 @@ func main() {
 								Required: true,
 							},
 						},
-						Action: func(ctx *cli.Context) error {
-							cliSig := ctx.Context.Value(cliSigKey{}).(apiv1sig.SIGClient)
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							cliSig := ctx.Value(cliSigKey{}).(apiv1sig.SIGClient)
 
 							fmt.Println("    Parsing OTEL dump...")
-							f, err := os.Open(ctx.String("file"))
+							f, err := os.Open(cmd.String("file"))
 							if err != nil {
 								return err
 							}
@@ -207,7 +205,7 @@ func main() {
 							fmt.Println("    Creating observed architecture...")
 							before := time.Now()
 							for _, comp := range ana.components {
-								if _, err := cliSig.CreateComponent(ctx.Context, &apiv1sig.CreateComponentRequest{
+								if _, err := cliSig.CreateComponent(ctx, &apiv1sig.CreateComponentRequest{
 									Name:    comp.Name,
 									Version: comp.Version,
 								}); err != nil {
@@ -217,7 +215,7 @@ func main() {
 
 							for _, comp := range ana.components {
 								for _, it := range comp.Interactions {
-									if _, err := cliSig.CreateNetworkDependency(ctx.Context, &apiv1sig.CreateNetworkDependencyRequest{
+									if _, err := cliSig.CreateNetworkDependency(ctx, &apiv1sig.CreateNetworkDependencyRequest{
 										Caller: &apiv1sig.CreateNetworkDependencyEndpointRequest{
 											Name: it.From,
 											Exposes: &apiv1sig.CreateNetworkDependencyEndpointComponentRequest{
@@ -248,11 +246,11 @@ func main() {
 					}, {
 						Name:  "reset",
 						Usage: "Reset the global knowledge of the system under observation.",
-						Action: func(ctx *cli.Context) error {
-							cliSig := ctx.Context.Value(cliSigKey{}).(apiv1sig.SIGClient)
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							cliSig := ctx.Value(cliSigKey{}).(apiv1sig.SIGClient)
 
 							fmt.Println("    Reseting SIG...")
-							if _, err := cliSig.Reset(ctx.Context, nil); err != nil {
+							if _, err := cliSig.Reset(ctx, nil); err != nil {
 								return err
 							}
 
@@ -263,22 +261,21 @@ func main() {
 				},
 			}, {
 				Name: "alg4",
-				Before: func(ctx *cli.Context) error {
-					conn, err := grpc.NewClient(ctx.String("url"),
+				Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
+					conn, err := grpc.NewClient(cmd.String("url"),
 						grpc.WithTransportCredentials(insecure.NewCredentials()),
 					)
 					if err != nil {
-						return err
+						return ctx, err
 					}
 					cliAlg4 := apiv1alg4.NewAlg4Client(conn)
 
-					ctx.Context = context.WithValue(ctx.Context, cliAlg4Key{}, cliAlg4)
-					return nil
+					return context.WithValue(ctx, cliAlg4Key{}, cliAlg4), nil
 				},
-				Subcommands: []*cli.Command{
+				Commands: []*cli.Command{
 					{
 						Name: "binding",
-						Subcommands: []*cli.Command{
+						Commands: []*cli.Command{
 							{
 								Name: "create",
 								Flags: []cli.Flag{
@@ -301,31 +298,31 @@ func main() {
 										Name: "asset.version",
 									},
 								},
-								Action: func(ctx *cli.Context) error {
-									cliAlg4 := ctx.Context.Value(cliAlg4Key{}).(apiv1alg4.Alg4Client)
+								Action: func(ctx context.Context, cmd *cli.Command) error {
+									cliAlg4 := ctx.Value(cliAlg4Key{}).(apiv1alg4.Alg4Client)
 
 									req := &apiv1alg4.CreateBindingRequest{}
 
-									if ctx.IsSet("library.name") || ctx.IsSet("library.version") {
+									if cmd.IsSet("library.name") || cmd.IsSet("library.version") {
 										req.Library = &apiv1alg4.LibraryOrRefinement{
-											Name:    ctx.String("library.name"),
-											Version: ctx.String("library.version"),
+											Name:    cmd.String("library.name"),
+											Version: cmd.String("library.version"),
 										}
 									}
-									if ctx.IsSet("component.name") || ctx.IsSet("component.version") {
+									if cmd.IsSet("component.name") || cmd.IsSet("component.version") {
 										req.Component = &apiv1alg4.LibraryOrRefinement{
-											Name:    ctx.String("component.name"),
-											Version: ctx.String("component.version"),
+											Name:    cmd.String("component.name"),
+											Version: cmd.String("component.version"),
 										}
 									}
-									if ctx.IsSet("asset.name") || ctx.IsSet("asset.version") {
+									if cmd.IsSet("asset.name") || cmd.IsSet("asset.version") {
 										req.Asset = &apiv1alg4.LibraryOrRefinement{
-											Name:    ctx.String("asset.name"),
-											Version: ctx.String("asset.version"),
+											Name:    cmd.String("asset.name"),
+											Version: cmd.String("asset.version"),
 										}
 									}
 
-									if _, err := cliAlg4.CreateBinding(ctx.Context, req); err != nil {
+									if _, err := cliAlg4.CreateBinding(ctx, req); err != nil {
 										return err
 									}
 
@@ -335,7 +332,7 @@ func main() {
 						},
 					}, {
 						Name: "serves",
-						Subcommands: []*cli.Command{
+						Commands: []*cli.Command{
 							{
 								Name: "create",
 								Flags: []cli.Flag{
@@ -356,18 +353,18 @@ func main() {
 										Required: true,
 									},
 								},
-								Action: func(ctx *cli.Context) error {
-									cliAlg4 := ctx.Context.Value(cliAlg4Key{}).(apiv1alg4.Alg4Client)
+								Action: func(ctx context.Context, cmd *cli.Command) error {
+									cliAlg4 := ctx.Value(cliAlg4Key{}).(apiv1alg4.Alg4Client)
 
-									if _, err := cliAlg4.CreateServes(ctx.Context, &apiv1alg4.CreateServesRequest{
+									if _, err := cliAlg4.CreateServes(ctx, &apiv1alg4.CreateServesRequest{
 										Symbol: &apiv1alg4.CreateServesSymbolRequest{
-											Identity: ctx.String("symbol.identity"),
+											Identity: cmd.String("symbol.identity"),
 										},
 										Endpoint: &apiv1alg4.CreateServesEndpointRequest{
-											Name: ctx.String("endpoint.name"),
+											Name: cmd.String("endpoint.name"),
 											Exposes: &apiv1alg4.CreateServesComponentRequest{
-												Name:    ctx.String("component.name"),
-												Version: ctx.String("component.version"),
+												Name:    cmd.String("component.name"),
+												Version: cmd.String("component.version"),
 											},
 										},
 									}); err != nil {
@@ -384,8 +381,12 @@ func main() {
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+	ctx := context.Background()
+	if err := app.Run(ctx, os.Args); err != nil {
+		global.Log().Error(ctx, "fatal error",
+			zap.Error(err),
+		)
+		os.Exit(1)
 	}
 }
 
@@ -410,6 +411,7 @@ type (
 
 type sigAnalysis struct {
 	components map[string]*Component
+	notFound   map[string]map[string]struct{}
 }
 
 func newSigAnalysis(f io.Reader) (*sigAnalysis, error) {
@@ -421,6 +423,7 @@ func newSigAnalysis(f io.Reader) (*sigAnalysis, error) {
 
 	ana := &sigAnalysis{
 		components: map[string]*Component{},
+		notFound:   map[string]map[string]struct{}{},
 	}
 	for _, trace := range traces {
 		for _, span := range trace.Spans {
@@ -441,7 +444,11 @@ func newSigAnalysis(f io.Reader) (*sigAnalysis, error) {
 			}
 			parent, ok := trace.Spans[hex.EncodeToString(pid[:])]
 			if !ok {
-				fmt.Printf("Span %x in trace %s not found\n", pid, trace.ID)
+				if _, ok := ana.notFound[trace.ID]; !ok {
+					ana.notFound[trace.ID] = map[string]struct{}{}
+				}
+				ana.notFound[trace.ID][fmt.Sprintf("%x", pid)] = struct{}{}
+
 				// Incomplete traces, accept to lose this interaction
 				continue
 			}
@@ -469,7 +476,10 @@ func newSigAnalysis(f io.Reader) (*sigAnalysis, error) {
 			from, found := getFrom(trace, parent)
 			switch found {
 			case STATUS_PARENT_NOT_FOUND:
-				fmt.Printf("Span %x in trace %s not found\n", pid, trace.ID)
+				if _, ok := ana.notFound[trace.ID]; !ok {
+					ana.notFound[trace.ID] = map[string]struct{}{}
+				}
+				ana.notFound[trace.ID][fmt.Sprintf("%x", pid)] = struct{}{}
 
 				// TODO if case STATUS_NO_CALLER_FOUND then we might create another endpoint rather than assigning an empty endpoint that aggregates every known interactions from outside our scope
 			}
@@ -484,6 +494,16 @@ func newSigAnalysis(f io.Reader) (*sigAnalysis, error) {
 				}(), // It is the parent who emitted the RPC
 				From: from,
 			})
+		}
+	}
+
+	if len(ana.notFound) > 0 {
+		fmt.Println("The following traces are incomplete.")
+		for trace, spans := range ana.notFound {
+			fmt.Printf("- Trace %s:\n", trace)
+			for span := range spans {
+				fmt.Printf("  Span %s not found\n", span)
+			}
 		}
 	}
 
@@ -507,8 +527,6 @@ func getFrom(trace Trace, span Span) (from string, status Status) {
 	}
 	parent, ok := trace.Spans[hex.EncodeToString(pid[:])]
 	if !ok {
-		fmt.Printf("Span %x in trace %s not found\n", pid, trace.ID)
-
 		// Incomplete traces, accept to lose this information
 		return "unknown", STATUS_PARENT_NOT_FOUND
 	}
