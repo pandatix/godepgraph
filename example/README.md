@@ -74,7 +74,6 @@ All the following require your terminal to be in [example](/example/) context.
 
 5.  Then add the vulnerability in the source code.
     ```bash
-    # TODO @lucas add the symbol identity
     go run cmd/godepgraph-cli/main.go --url $URL \
         alg4 vulnerability create \
         --identity "CVE-2025-53632 altered" \
