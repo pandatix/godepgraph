@@ -453,11 +453,8 @@ func newSigAnalysis(f io.Reader) (*sigAnalysis, error) {
 				continue
 			}
 
-			// A parent is interesting if it is has a non-empty attribute rpc.system or http.scheme
-			// -> it was issued from one service to another, this one is the targetted system
-			_, hasRPCSystem := parent.Sub.Attributes().Get("rpc.system")
-			_, hasHTTPURL := parent.Sub.Attributes().Get("http.url")
-			if !(hasRPCSystem || hasHTTPURL) {
+			// A parent is interesting if it comes from another service
+			if parent.SVCName == span.SVCName {
 				continue
 			}
 
@@ -487,11 +484,14 @@ func newSigAnalysis(f io.Reader) (*sigAnalysis, error) {
 				Timestamp: span.Sub.StartTimestamp().AsTime(),
 				To:        span.SVCName,
 				Name: func() string {
+					// Thanks to RPC instrumentation the parent has a good name
+					// as it emitted the call, so we prefer it.
+					_, hasRPCSystem := parent.Sub.Attributes().Get("rpc.system")
 					if hasRPCSystem {
 						return parent.Sub.Name()
 					}
-					return fmt.Sprintf("%s %s", parent.Sub.Name(), span.Sub.Attributes().AsRaw()["url.path"]) // XXX should be in CM span
-				}(), // It is the parent who emitted the RPC
+					return span.Sub.Name()
+				}(),
 				From: from,
 			})
 		}
