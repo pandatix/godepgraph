@@ -2,10 +2,8 @@ module git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation
 
 go 1.24.5
 
-replace github.com/ctfer-io/chall-manager/deploy => /home/pandatix/Documents/ctfer.io/chall-manager/deploy
-
 require (
-	github.com/ctfer-io/chall-manager/deploy v0.5.0
+	github.com/ctfer-io/chall-manager/deploy v0.5.1
 	github.com/ctfer-io/monitoring v0.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.23.0

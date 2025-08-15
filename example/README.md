@@ -15,9 +15,9 @@ Requirements:
 - [`pulumi`](https://www.pulumi.com/docs/iac/download-install/).
 
 This experiment focuses on the potential impact of [CVE-2025-53632](https://nvd.nist.gov/vuln/detail/CVE-2025-53632), affecting the component [Chall-Manager](https://github.com/tfer-io/chall-manager).
-The version we are using is patched to this vulnerability, but we will simulate it over the latest version to illustrate propagation. Indeed, older versions had issues with OpenTelemetry support and trace propagation over the various components within Constituent Systems.
+The version we are using is patched to this vulnerability, but we will simulate it over the latest version to illustrate propagation, and on a similar symbol (same functionality, different name and prototype). Indeed, older versions had issues with OpenTelemetry support and trace propagation, so could not be used as part of this example.
 
-To summarize, the vulnerability is a zip-slip. Given the way Chall-Manager works internally, a tampered version of Pulumi or its providers could be overwritten in live, or cached dependencies. This could lead to arbitrary code execution, which in turn could propagate to subsequent systems through tampered responses.
+To keep it short, the vulnerability is a zip-slip. Given the way Chall-Manager works internally, a tampered version of Pulumi or its providers could be overwritten in live, or a cached dependencies. This could lead to arbitrary code execution, which in turn could propagate to subsequent systems through tampered responses.
 
 > [!WARNING]
 > We won't provide an actual exploit of CVE-2025-53632, and will work on the hypothesis of one.
@@ -26,7 +26,7 @@ To summarize, the vulnerability is a zip-slip. Given the way Chall-Manager works
 
 This example's goal is to illustrate how a vulnerability laying in source code can propagate through Constituent Systems and affect the security posture of the overall System of Systems.
 
-A complexity in this scenario is in the essence of the infrastructure: it has been made to host cybersecurity training, so is hardened to host vulnerable services adjacently to sensitive systems (e.g. the CTF platform).
+A complexity in this scenario is in the essence of the infrastructure: it is hosting a cybersecurity platform, so has been hardened to host vulnerable services adjacently to sensitive systems (e.g. the CTF platform). In this context, we also expect to evaluate the quality of the analysis through pivots by hosting components.
 
 ## Step-by-step
 
@@ -42,14 +42,17 @@ All the following require your terminal to be in [example](/example/) context.
     ./kind.sh
     ```
 
+    Please wait up to 5 minutes for Kind to be up & running. After this time, it should be fine passing to step 2.
+
 2.  Then, deploy the CTF System of Systems.
+    This step is optional if you already have extracted data.
     ```bash
     ./exp.sh
     ```
 
-    At the end, it extracts all the input data for the next step.
+    At the end, it extracts all the input data for the next step into directory [`extract`](extract/).
 
-3.  Analyze the results.
+3.  Analyze the results of step 2, i.e. creating the CDN, RDG and SIG of the simulated infrastructure.
     ```bash
     ./analysis.sh
     ```
@@ -74,8 +77,8 @@ All the following require your terminal to be in [example](/example/) context.
     # TODO @lucas add the symbol identity
     go run cmd/godepgraph-cli/main.go --url $URL \
         alg4 vulnerability create \
-        --identity "CVE-2025-53632" \
-        --threatens ""
+        --identity "CVE-2025-53632 altered" \
+        --threatens "github.com/ctfer-io/chall-manager/pkg/scenario.DecodeOCI"
     ```
 
 6.  You can now open Neo4J in your browser and travel through the processed data, using [ciphers](https://neo4j.com/docs/getting-started/cypher/).
