@@ -61,34 +61,50 @@ All the following require your terminal to be in [example](/example/) context.
     This step is required as we cannot guess what library correspond to which components, and which asset in the knowledge graphs.
     It could nonetheless leverage additional data in a CI/CD workflow to infer this binding.
     ```bash
-    URL="localhost:$(cd deploy && pulumi stack output godepgraph-port)"
-    go run cmd/godepgraph-cli/main.go --url $URL \
+    cd ..
+    export PULUMI_CONFIG_PASSPHRASE=""
+    export URL="localhost:$(cd deploy && pulumi stack output godepgraph-port)"
+    ./bin/godepgraph-cli --url $URL \
         alg4 binding create \
         --library.name github.com/ctfer-io/chall-manager \
         --library.version v0.5.1 \
         --component.name tmp-chall-manager \
-        --component.version dev \
-        --asset.name chall-manager \
-        --asset.version v0.5.1
+        --component.version dev
     ```
+
+    The component under analysis does not host Components, so we don't bind an `Asset`.
 
     Due to a bug in Chall-Manager we have to bind the component to the version `dev` rather than `v0.5.1`.
 
-5.  Then add the vulnerability in the source code.
+5. We also bind the Endpoints to Symbols, which could also be leveraged by naming conventions in a controlled environment (e.g. a framework, conventions in a SoS). Here, we use `api/v1` as the endpoint, which shadows lower-level functions due to the use of the HTTP gateway, another server running in the same process that translates HTTP requests to gRPC ones for compatibility and adoption purposes.
     ```bash
-    go run cmd/godepgraph-cli/main.go --url $URL \
+    ./bin/godepgraph-cli --url $URL alg4 serves create \
+        --symbol.identity "(*github.com/ctfer-io/chall-manager/api/v1/challenge.Store).CreateChallenge" \
+        --endpoint.name "api/v1" \
+        --component.name tmp-chall-manager \
+        --component.version dev
+
+    ./bin/godepgraph-cli --url $URL alg4 serves create \
+        --symbol.identity "(*github.com/ctfer-io/chall-manager/api/v1/challenge.Store).UpdateChallenge" \
+        --endpoint.name "api/v1" \
+        --component.name tmp-chall-manager \
+        --component.version dev
+    ```
+6.  Then add the vulnerability in the source code.
+    ```bash
+    ./bin/godepgraph-cli --url $URL \
         alg4 vulnerability create \
         --identity "CVE-2025-53632 altered" \
         --threatens "github.com/ctfer-io/chall-manager/pkg/scenario.DecodeOCI"
     ```
 
-6.  You can now open Neo4J in your browser and travel through the processed data, using [example ciphers](#ciphers) or [create your own](https://neo4j.com/docs/getting-started/cypher/).
+7.  You can now open Neo4J in your browser and travel through the processed data, using [example ciphers](#ciphers) or [create your own](https://neo4j.com/docs/getting-started/cypher/).
     ```bash
-    open "http://localhost:$(cd deploy && pulumi stack output neo4j-ui-port)"
+    open "http://localhost:$(cd deploy && pulumi stack output neo4j-ui-port)" &
     ```
 
     Don't forget the settings to connect:
-    - Connect URL: `neo4j://localhost:$(cd deploy && pulumi stack output neo4j-api-port)`
+    - Connect URL: `echo "neo4j://localhost:$(cd deploy && pulumi stack output neo4j-api-port)"`
     - Database: `(cd deploy && pulumi stack output neo4j-dbname)`
     - Authentication type: Username / Password
     - Username: `(cd deploy && pulumi stack output neo4j-user)`
@@ -168,6 +184,12 @@ WHERE NOT (n:Symbol OR n:ASTDependency)
   })
 RETURN n
 ```
+
+Using the simulation, you should end up with something like the following image.
+
+<div align="center">
+    <img src="res/cypher-blast.png" width="800px">
+</div>
 
 ## Troubleshoot
 
