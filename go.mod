@@ -1,6 +1,6 @@
 module git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph
 
-go 1.24.4
+go 1.24.5
 
 require (
 	github.com/docker/buildx v0.23.0
