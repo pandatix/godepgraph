@@ -40,11 +40,13 @@ URL="localhost:$(cd deploy && pulumi stack output godepgraph-port)"
 
 go build -o bin/godepgraph-cli cmd/godepgraph-cli/main.go
 
+echo ""
 echo "=== Creating CDN ==="
 ./bin/godepgraph-cli --url $URL cdn create \
   --name github.com/ctfer-io/chall-manager \
   --version v0.5.1
 
+echo ""
 echo "=== Creating RDG ==="
 # Simulate a state management server, close to what we would see in reality
 docker run -d --name rdg \
@@ -62,6 +64,7 @@ sleep 5 # make sure the Python server is up & running
 docker network disconnect kind rdg
 docker stop rdg && docker rm $_ # don't need it anymore
 
+echo ""
 echo "=== Creating SIG ==="
 ./bin/godepgraph-cli --url $URL sig create \
   --file example/extract/otel_traces

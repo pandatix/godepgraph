@@ -43,8 +43,7 @@ export OTEL_EXPORTER_OTLP_ENDPOINT="dns://localhost:$(cd simulation && pulumi st
 export OTEL_EXPORTER_OTLP_INSECURE="true"
 
 # Configure the challenges
-(
-  ./bin/ctfops challenges \
+./bin/ctfops challenges \
   --verbose \
   --one-shot \
   --tracing \
@@ -54,7 +53,6 @@ export OTEL_EXPORTER_OTLP_INSECURE="true"
   --oci.insecure \
   --oci.address "localhost:$(cd simulation && pulumi stack output registry.nodeport)" \
   --oci.distant "$(kubectl get svc registry -n fullchain -o jsonpath='{.spec.clusterIP}'):5000"
-)
 
 # Extract OpenTelemetry Collector signals (traces, metrics, logs ; for the SIG)
 go install github.com/ctfer-io/monitoring/cmd/extractor@v0.1.0
