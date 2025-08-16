@@ -607,6 +607,8 @@ github.com/hashicorp/vault/api v1.15.0 h1:O24FYQCWwhwKnF7CuSqP30S51rTV7vz1iACXE/
 github.com/hashicorp/vault/api v1.15.0/go.mod h1:+5YTO09JGn0u+b6ySD/LLVf8WkJCPLAL2Vkmrn2+CM8=
 github.com/hellofresh/health-go/v5 v5.5.4 h1:aOCIf1eHSRrPegRUJ2rzc7avck/lFSFLn+Zl3qKJcjc=
 github.com/hellofresh/health-go/v5 v5.5.4/go.mod h1:W+6uiWHS/m9jaB0aYBVlUBTeyE98yom6f+0ewLoBPYQ=
+github.com/hellofresh/health-go/v5 v5.5.5 h1:JZwZ8kZzAgjdGCvjgrIJTcu1sImvZoHbwAj7CK19fpw=
+github.com/hellofresh/health-go/v5 v5.5.5/go.mod h1:W+6uiWHS/m9jaB0aYBVlUBTeyE98yom6f+0ewLoBPYQ=
 github.com/howeyc/gopass v0.0.0-20210920133722-c8aef6fb66ef h1:A9HsByNhogrvm9cWb28sjiS3i7tcKCkflWFEkHfuAgM=
 github.com/howeyc/gopass v0.0.0-20210920133722-c8aef6fb66ef/go.mod h1:lADxMC39cJJqL93Duh1xhAs4I2Zs8mKS89XWXFGp9cs=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
