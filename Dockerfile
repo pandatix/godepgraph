@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.24.5@sha256:ef5b4be1f94b36c90385abd9b6b4f201723ae28e71acacb76d00687333c17282 AS builder
+FROM golang:1.25.0@sha256:91e2cd436f7adbfad0a0cbb7bf8502fa863ed8461414ceebe36c6304731e0fd9 AS builder
 
 WORKDIR /go/src
 COPY go.mod go.sum ./
@@ -23,7 +23,7 @@ RUN go build -cover -o /go/bin/godepgraph cmd/godepgraph/main.go
 
 
 # Prod stage
-FROM golang:1.24.5@sha256:ef5b4be1f94b36c90385abd9b6b4f201723ae28e71acacb76d00687333c17282
+FROM golang:1.25.0@sha256:91e2cd436f7adbfad0a0cbb7bf8502fa863ed8461414ceebe36c6304731e0fd9
 COPY --from=builder /go/bin/godepgraph /godepgraph/godepgraph
 COPY --from=builder /go/src/gen /godepgraph/gen
 ENTRYPOINT [ "/godepgraph/godepgraph" ]
