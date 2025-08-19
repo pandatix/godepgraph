@@ -5,7 +5,7 @@ go 1.24.5
 require (
 	github.com/docker/buildx v0.23.0
 	github.com/docker/cli v28.1.1+incompatible
-	github.com/eapache/go-resiliency v1.1.0
+	github.com/eapache/go-resiliency v1.7.0
 	github.com/goccy/go-json v0.10.5
 	github.com/google/go-containerregistry v0.20.3
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
