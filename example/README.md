@@ -12,9 +12,10 @@ Requirements:
 - [`kind`](https://kind.sigs.k8s.io/docs/user/quick-start/#installation) ;
 - [`helm`](https://helm.sh/docs/intro/install/) ;
 - [`go`](https://go.dev/doc/install) ;
-- [`pulumi`](https://www.pulumi.com/docs/iac/download-install/).
+- [`pulumi`](https://www.pulumi.com/docs/iac/download-install/) ;
+- [`kubectl`](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/).
 
-This experiment focuses on the potential impact of [CVE-2025-53632](https://nvd.nist.gov/vuln/detail/CVE-2025-53632), affecting the component [Chall-Manager](https://github.com/tfer-io/chall-manager).
+This experiment focuses on the potential impact of [CVE-2025-53632](https://nvd.nist.gov/vuln/detail/CVE-2025-53632), affecting the component [Chall-Manager](https://github.com/ctfer-io/chall-manager).
 The version we are using is patched to this vulnerability, but we will simulate it over the latest version to illustrate propagation, and on a similar symbol (same functionality, different name and prototype). Indeed, older versions had issues with OpenTelemetry support and trace propagation, so could not be used as part of this example.
 
 To keep it short, the vulnerability is a zip-slip. Given the way Chall-Manager works internally, a tampered version of Pulumi or its providers could be overwritten in live, or a cached dependencies. This could lead to arbitrary code execution, which in turn could propagate to subsequent systems through tampered responses.
@@ -51,6 +52,8 @@ All the following require your terminal to be in [example](/example/) context.
     ```
 
     At the end, it extracts all the input data for the next step into directory [`extract`](extract/).
+    
+    Note that the system may issue errors with a message that looks like `error: Client Error: Unable to create challenge, got error: CTFd responded with errors: map[:[An exception occurred while sending challenge ...]]`. These errors can be safely ignored.
 
 3.  Analyze the results of step 2, i.e. creating the CDN, RDG and SIG of the simulated infrastructure.
     ```bash
@@ -100,8 +103,10 @@ All the following require your terminal to be in [example](/example/) context.
 
 7.  You can now open Neo4J in your browser and travel through the processed data, using [example ciphers](#ciphers) or [create your own](https://neo4j.com/docs/getting-started/cypher/).
     ```bash
-    open "http://localhost:$(cd deploy && pulumi stack output neo4j-ui-port)" &
+    echo "http://localhost:$(cd deploy && pulumi stack output neo4j-ui-port)" &
     ```
+
+    Then open the displayed URL in your favorite web browser.
 
     Don't forget the settings to connect:
     - Connect URL: `echo "neo4j://localhost:$(cd deploy && pulumi stack output neo4j-api-port)"`
@@ -109,6 +114,15 @@ All the following require your terminal to be in [example](/example/) context.
     - Authentication type: Username / Password
     - Username: `(cd deploy && pulumi stack output neo4j-user)`
     - Password: `(cd deploy && pulumi stack output neo4j-pass)`
+
+Here is an example showing what these connection settings may look like:
+
+<table>
+<tr><td>Connect URL</td><td><code>neo4j://localhost:30009</code></td></tr>
+<tr><td>Database   </td><td><code>neo4j</code></td></tr>
+<tr><td>Username   </td><td><code>neo4j</code></td></tr>
+<tr><td>Password   </td><td><code>a7YDEIe1f3CwXokP</code></td></tr>
+</table>
 
 ## Ciphers
 

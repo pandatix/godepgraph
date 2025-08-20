@@ -12,6 +12,9 @@ ds registry
 
 # Create a basic OTEL setup and a local registry (avoid rate limiting due to intensive testing)
 docker network create kind
+
+set -e
+
 docker run -d --restart=always -p 16686:16686 --name jaeger --network kind jaegertracing/jaeger:2.8.0
 
 docker run -d --restart=always -p 4317:4317 -v ./otel-collector.yaml:/otel-local-config.yaml --name collector --network kind \

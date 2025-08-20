@@ -42,7 +42,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [debug, otlp, jaeger_storage_exporter, spanmetrics{{ if .External }}, otlp/external{{ end}}{{ if .ColdExtract }}, file/traces{{ end }}]
+      exporters: [debug, otlp, spanmetrics{{ if .External }}, otlp/external{{ end}}{{ if .ColdExtract }}, file/traces{{ end }}]
     metrics:
       receivers: [otlp, spanmetrics]
       exporters: [debug, prometheusremotewrite{{ if .ColdExtract }}, file/metrics{{ end }}]
