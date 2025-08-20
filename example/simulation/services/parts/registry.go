@@ -280,7 +280,8 @@ func (reg *Registry) provision(ctx *pulumi.Context, args *RegistryArgs, opts ...
 			},
 		},
 		Spec: corev1.ServiceSpecArgs{
-			Type: pulumi.String("NodePort"),
+			Type:      pulumi.String("NodePort"),
+			ClusterIP: pulumi.String("10.96.219.72"), // XXX hardcoded to skip TLS verification by kind
 			Ports: corev1.ServicePortArray{
 				corev1.ServicePortArgs{
 					Name: pulumi.String("api"),

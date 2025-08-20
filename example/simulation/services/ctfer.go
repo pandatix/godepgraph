@@ -1,11 +1,8 @@
 package services
 
 import (
-	"net/url"
-	"strconv"
 	"sync"
 
-	"github.com/pkg/errors"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	netwv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/networking/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -273,20 +270,4 @@ func (ctfer *CTFer) outputs(ctx *pulumi.Context) error {
 		"url":       ctfer.URL,
 		"podLabels": ctfer.PodLabels,
 	})
-}
-
-// parseURLPort parses the input endpoint formatted as a URL to return its port.
-// Example: http://some.thing:port -> port
-func parseURLPort(edp pulumi.StringOutput) pulumi.IntOutput {
-	return edp.ToStringOutput().ApplyT(func(edp string) (int, error) {
-		u, err := url.Parse(edp)
-		if err != nil {
-			return 0, errors.Wrapf(err, "parsing endpoint %s as a URL", edp)
-		}
-		p, err := strconv.Atoi(u.Port())
-		if err != nil {
-			return 0, errors.Wrapf(err, "parsing endpoint %s for port", edp)
-		}
-		return p, nil
-	}).(pulumi.IntOutput)
 }

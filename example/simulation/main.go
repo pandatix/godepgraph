@@ -13,7 +13,6 @@ import (
 
 	cm "github.com/ctfer-io/chall-manager/deploy/services"
 	cmparts "github.com/ctfer-io/chall-manager/deploy/services/parts"
-	monitoring "github.com/ctfer-io/monitoring/services"
 
 	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation/services"
 	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation/services/parts"
@@ -28,9 +27,10 @@ func main() {
 		}
 
 		// => Monitoring
-		mon, err := monitoring.NewMonitoring(ctx, "monitoring", &monitoring.MonitoringArgs{
+		mon, err := services.NewMonitoring(ctx, "monitoring", &services.MonitoringArgs{
 			ColdExtract: true, // We want to extract the OpenTelemetry traces for SIG
 			Registry:    pulumi.String(cfg.Registry),
+			External:    pulumi.String(cfg.External),
 		})
 		if err != nil {
 			return err
@@ -438,12 +438,14 @@ func main() {
 
 type Config struct {
 	Registry string
+	External string
 }
 
 func InitConfig(ctx *pulumi.Context) (*Config, error) {
 	cfg := config.New(ctx, "")
 	return &Config{
 		Registry: cfg.Require("registry"),
+		External: cfg.Get("external"),
 	}, nil
 }
 

@@ -1,28 +1,60 @@
 #!/bin/bash
 
-# Delete previous iterations
-kind delete cluster | true
-docker stop registry && docker rm $_
+ds() {
+    docker stop "$1" && docker rm $_
+}
 
-# Create local registry
-docker run -d --restart=always -p 5000:5000 --name registry registry:3
+# Delete previous iterations
+kind delete cluster
+ds collector
+ds jaeger
+ds registry
+
+# Create a basic OTEL setup and a local registry (avoid rate limiting due to intensive testing)
+docker network create kind
+docker run -d --restart=always -p 16686:16686 --name jaeger --network kind jaegertracing/jaeger:2.8.0
+
+docker run -d --restart=always -p 4317:4317 -v ./otel-collector.yaml:/otel-local-config.yaml --name collector --network kind \
+    otel/opentelemetry-collector:0.54.0 --config=/otel-local-config.yaml
+
+docker run -d --restart=always -p 5000:5000 --name registry --network kind registry:3
 
 # Run Kind
+# Configuration for local registry from https://github.com/ctfer-io/chall-manager/blob/main/.github/workflows/e2e.yaml
+# Configuration for tracing from https://github.com/kyverno/kyverno/blob/main/scripts/config/kind/tracing.yaml
 cat <<EOF > kind-config.yaml
 apiVersion: kind.x-k8s.io/v1alpha4
 kind: Cluster
 containerdConfigPatches:
 # Local host registry
+# TODO migrate to this https://kind.sigs.k8s.io/docs/user/local-registry/
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:5000"]
     endpoint = ["http://registry:5000"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."10.96.219.72:5000"]
+    endpoint = ["http://10.96.219.72:5000"]
 
 kubeadmConfigPatches:
-- |
+- |-
   kind: ClusterConfiguration
   apiServer:
+    extraVolumes:
+      - name: tracing-configuration
+        hostPath: /etc/kube-tracing/apiserver-tracing.yaml
+        mountPath: /etc/kube-tracing/apiserver-tracing.yaml
+        readOnly: true
+        pathType: File
     extraArgs:
-      "service-node-port-range": "30000-30010"
+      service-node-port-range: "30000-30010"
+      tracing-config-file: /etc/kube-tracing/apiserver-tracing.yaml
+
+- |-
+  kind: KubeletConfiguration
+  featureGates:
+    KubeletTracing: true
+  tracing:
+    endpoint: collector:4317
+    samplingRatePerMillion: 1000000
 
 nodes:
 - role: control-plane
@@ -49,12 +81,15 @@ nodes:
     hostPort: 30009
   - containerPort: 30010
     hostPort: 30010
+  extraMounts:
+  - hostPath: ./apiserver-tracing.yaml
+    containerPath: /etc/kube-tracing/apiserver-tracing.yaml
+    readOnly: true
 networking:
   disableDefaultCNI: true
 EOF
 kind create cluster --config=kind-config.yaml
 rm kind-config.yaml
-docker network connect kind registry
 
 # Enable storageclass "standard" RWO/RWX
 # From https://github.com/kubernetes-sigs/kind/issues/1487#issuecomment-2211072952

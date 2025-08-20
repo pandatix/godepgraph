@@ -33,6 +33,7 @@ wait
   cd simulation
   pulumi stack init tmp
   pulumi config set registry localhost:5000
+  pulumi config set external "$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' collector):4317" # redirect traces to low-level OTEL collector
   pulumi up -y
 
   # ... and extract the state (for the RDG)
