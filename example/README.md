@@ -60,6 +60,11 @@ All the following require your terminal to be in [example](/example/) context.
     ./analysis.sh
     ```
 
+    Curious readers are invited to review each script that mimics a Software Development Life Cycle step, in our simulated environment:
+    - CDN: [`analysis-cdn.sh`](./analysis-cdn.sh)
+    - RDG: [`analysis-rdg.sh`](./analysis-rdg.sh)
+    - SIG: [`analysis-sig.sh`](./analysis-sig.sh)
+
 4.  Bind Chall-Manager between the CDN, RDG and SIG infos.
     This step is required as we cannot guess what library correspond to which components, and which asset in the knowledge graphs.
     It could nonetheless leverage additional data in a CI/CD workflow to infer this binding.
