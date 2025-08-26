@@ -6,7 +6,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 func (*CDN) CreateLibrary(ctx context.Context, req *CreateLibraryRequest) (*Library, error) {

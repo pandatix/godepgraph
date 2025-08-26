@@ -14,9 +14,9 @@ import (
 	cm "github.com/ctfer-io/chall-manager/deploy/services"
 	cmparts "github.com/ctfer-io/chall-manager/deploy/services/parts"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation/services"
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation/services/parts"
 	"github.com/ctfer-io/chall-manager/deploy/common"
+	"github.com/pandatix/godepgraph/example/simulation/services"
+	"github.com/pandatix/godepgraph/example/simulation/services/parts"
 )
 
 func main() {

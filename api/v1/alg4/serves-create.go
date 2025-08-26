@@ -3,7 +3,7 @@ package apiv1alg4
 import (
 	"context"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 	"go.uber.org/zap"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )

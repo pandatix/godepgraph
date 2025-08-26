@@ -79,7 +79,7 @@ func NewGoDepGraph(ctx *pulumi.Context, name string, args *GoDepGraphArgs, opts 
 	gdg := &GoDepGraph{}
 
 	args = gdg.defaults(args)
-	if err := ctx.RegisterComponentResource("something:godepgraph:godepgraph", name, gdg, opts...); err != nil {
+	if err := ctx.RegisterComponentResource("pandatix:godepgraph:godepgraph", name, gdg, opts...); err != nil {
 		return nil, err
 	}
 	opts = append(opts, pulumi.Parent(gdg))
@@ -192,7 +192,7 @@ func (gdg *GoDepGraph) provision(ctx *pulumi.Context, args *GoDepGraphArgs, opts
 		"app.kubernetes.io/version":   args.tag,
 		"app.kubernetes.io/component": pulumi.String("godepgraph"),
 		"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-		"something/stack-name":        pulumi.String(ctx.Stack()),
+		"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 	}.ToStringMapOutput()
 	gdg.dep, err = appsv1.NewDeployment(ctx, "godepgraph-deployment", &appsv1.DeploymentArgs{
 		Metadata: metav1.ObjectMetaArgs{
@@ -247,7 +247,7 @@ echo "Neo4j is ready!"
 					Containers: corev1.ContainerArray{
 						corev1.ContainerArgs{
 							Name:            pulumi.String("godepgraph"),
-							Image:           pulumi.Sprintf("%ssomething/godepgraph:%s", args.registry, args.tag),
+							Image:           pulumi.Sprintf("%spandatix/godepgraph:%s", args.registry, args.tag),
 							Env:             envs,
 							ImagePullPolicy: pulumi.String("Always"),
 							Ports: corev1.ContainerPortArray{
@@ -283,7 +283,7 @@ echo "Neo4j is ready!"
 			Labels: pulumi.StringMap{
 				"app.kubernetes.io/component": pulumi.String("godepgraph"),
 				"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-				"something/stack-name":        pulumi.String(ctx.Stack()),
+				"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 			},
 		},
 		Spec: corev1.ServiceSpecArgs{

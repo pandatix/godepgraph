@@ -1,4 +1,4 @@
-module git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/deploy
+module github.com/pandatix/godepgraph/deploy
 
 go 1.24.4
 

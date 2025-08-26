@@ -382,7 +382,7 @@ const file_api_v1_sig_sig_proto_rawDesc = "" +
 	"\x0fCreateComponent\x12\".api.v1.sig.CreateComponentRequest\x1a\x15.api.v1.sig.Component\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/sig/component\x12o\n" +
 	"\x11RetrieveComponent\x12$.api.v1.sig.RetrieveComponentRequest\x1a\x15.api.v1.sig.Component\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/sig/component\x12\x9e\x01\n" +
 	"\x1eCreateInterComponentDependency\x121.api.v1.sig.CreateInterComponentDependencyRequest\x1a\x16.google.protobuf.Empty\"1\x82\xd3\xe4\x93\x02+:\x01*\"&/api/v1/sig/inter-component-dependency\x12L\n" +
-	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/sigBFZDgit.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/sig;apiv1sigb\x06proto3"
+	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/sigB4Z2github.com/pandatix/godepgraph/api/v1/sig;apiv1sigb\x06proto3"
 
 var (
 	file_api_v1_sig_sig_proto_rawDescOnce sync.Once

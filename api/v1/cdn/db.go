@@ -8,9 +8,9 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"go.uber.org/multierr"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/common"
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
-	neo4jSvc "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/pkg/services/neo4j"
+	"github.com/pandatix/godepgraph/api/v1/common"
+	"github.com/pandatix/godepgraph/global"
+	neo4jSvc "github.com/pandatix/godepgraph/pkg/services/neo4j"
 )
 
 func init() {

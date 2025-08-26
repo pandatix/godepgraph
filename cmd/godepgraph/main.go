@@ -12,8 +12,8 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/server"
+	"github.com/pandatix/godepgraph/global"
+	"github.com/pandatix/godepgraph/server"
 )
 
 var (

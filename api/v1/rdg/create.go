@@ -10,7 +10,7 @@ import (
 
 	"go.opentelemetry.io/otel/trace"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 func (*RDG) CreateStack(ctx context.Context, req *CreateStackRequest) (*Stack, error) {

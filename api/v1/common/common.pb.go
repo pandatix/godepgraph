@@ -25,9 +25,9 @@ var File_api_v1_common_common_proto protoreflect.FileDescriptor
 
 const file_api_v1_common_common_proto_rawDesc = "" +
 	"\n" +
-	"\x1aapi/v1/common/common.proto\x12\rapi.v1.common\x1a.protoc-gen-openapiv2/options/annotations.protoB\xb7\x01\x92Am\x12D\n" +
+	"\x1aapi/v1/common/common.proto\x12\rapi.v1.common\x1a.protoc-gen-openapiv2/options/annotations.protoB\xa5\x01\x92Am\x12D\n" +
 	"\n" +
-	"GoDepGraph\x126The gRPC-gateway generated REST API OpenAPIv2 swagger.*\x01\x012\x10application/json:\x10application/jsonZEgit.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/common;commonb\x06proto3"
+	"GoDepGraph\x126The gRPC-gateway generated REST API OpenAPIv2 swagger.*\x01\x012\x10application/json:\x10application/jsonZ3github.com/pandatix/godepgraph/api/v1/common;commonb\x06proto3"
 
 var file_api_v1_common_common_proto_goTypes = []any{}
 var file_api_v1_common_common_proto_depIdxs = []int32{

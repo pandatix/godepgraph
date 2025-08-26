@@ -42,7 +42,7 @@ func NewNeo4J(ctx *pulumi.Context, name string, args *Neo4JArgs, opts ...pulumi.
 	n4j := &Neo4J{}
 
 	args = n4j.defaults(args)
-	if err := ctx.RegisterComponentResource("something:godepgraph:neo4j", name, n4j, opts...); err != nil {
+	if err := ctx.RegisterComponentResource("pandatix:godepgraph:neo4j", name, n4j, opts...); err != nil {
 		return nil, err
 	}
 	opts = append(opts, pulumi.Parent(n4j))
@@ -97,7 +97,7 @@ func (n4j *Neo4J) provision(ctx *pulumi.Context, args *Neo4JArgs, opts ...pulumi
 				"app.kubernetes.io/name":      pulumi.String("neo4j"),
 				"app.kubernetes.io/component": pulumi.String("neo4j"),
 				"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-				"something/stack-name":        pulumi.String(ctx.Stack()),
+				"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 			},
 		},
 		Spec: appsv1.DeploymentSpecArgs{
@@ -107,7 +107,7 @@ func (n4j *Neo4J) provision(ctx *pulumi.Context, args *Neo4JArgs, opts ...pulumi
 					"app.kubernetes.io/name":      pulumi.String("neo4j"),
 					"app.kubernetes.io/component": pulumi.String("neo4j"),
 					"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-					"something/stack-name":        pulumi.String(ctx.Stack()),
+					"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 				},
 			},
 			Template: corev1.PodTemplateSpecArgs{
@@ -117,7 +117,7 @@ func (n4j *Neo4J) provision(ctx *pulumi.Context, args *Neo4JArgs, opts ...pulumi
 						"app.kubernetes.io/name":      pulumi.String("neo4j"),
 						"app.kubernetes.io/component": pulumi.String("neo4j"),
 						"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-						"something/stack-name":        pulumi.String(ctx.Stack()),
+						"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 					},
 				},
 				Spec: corev1.PodSpecArgs{
@@ -163,7 +163,7 @@ func (n4j *Neo4J) provision(ctx *pulumi.Context, args *Neo4JArgs, opts ...pulumi
 			Labels: pulumi.StringMap{
 				"app.kubernetes.io/component": pulumi.String("neo4j"),
 				"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-				"something/stack-name":        pulumi.String(ctx.Stack()),
+				"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 			},
 		},
 		Spec: corev1.ServiceSpecArgs{

@@ -7,8 +7,8 @@ import (
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/multierr"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/common"
-	neo4jSvc "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/pkg/services/neo4j"
+	"github.com/pandatix/godepgraph/api/v1/common"
+	neo4jSvc "github.com/pandatix/godepgraph/pkg/services/neo4j"
 )
 
 func (ana *Analysis) Export(ctx context.Context, man *neo4jSvc.Manager) error {

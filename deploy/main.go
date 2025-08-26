@@ -1,8 +1,8 @@
 package main
 
 import (
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/deploy/services"
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/deploy/services/parts"
+	"github.com/pandatix/godepgraph/deploy/services"
+	"github.com/pandatix/godepgraph/deploy/services/parts"
 	"github.com/pkg/errors"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"

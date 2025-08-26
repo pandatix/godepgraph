@@ -6,7 +6,7 @@ import (
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 
-	neo4jSvc "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/pkg/services/neo4j"
+	neo4jSvc "github.com/pandatix/godepgraph/pkg/services/neo4j"
 )
 
 const (

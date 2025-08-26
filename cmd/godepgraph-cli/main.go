@@ -15,11 +15,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	apiv1alg4 "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/alg4"
-	apiv1cdn "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/cdn"
-	apiv1rdg "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/rdg"
-	apiv1sig "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/sig"
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	apiv1alg4 "github.com/pandatix/godepgraph/api/v1/alg4"
+	apiv1cdn "github.com/pandatix/godepgraph/api/v1/cdn"
+	apiv1rdg "github.com/pandatix/godepgraph/api/v1/rdg"
+	apiv1sig "github.com/pandatix/godepgraph/api/v1/sig"
+	"github.com/pandatix/godepgraph/global"
 )
 
 type (

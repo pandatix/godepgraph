@@ -498,7 +498,7 @@ const file_api_v1_alg4_alg4_proto_rawDesc = "" +
 	"\x04Alg4\x12}\n" +
 	"\x13CreateVulnerability\x12'.api.v1.alg4.CreateVulnerabilityRequest\x1a\x16.google.protobuf.Empty\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/alg4/vulnerability\x12i\n" +
 	"\rCreateBinding\x12!.api.v1.alg4.CreateBindingRequest\x1a\x14.api.v1.alg4.Binding\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/alg4/binding\x12h\n" +
-	"\fCreateServes\x12 .api.v1.alg4.CreateServesRequest\x1a\x16.google.protobuf.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/alg4/servesBHZFgit.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/alg4;apiv1alg4b\x06proto3"
+	"\fCreateServes\x12 .api.v1.alg4.CreateServesRequest\x1a\x16.google.protobuf.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/alg4/servesB6Z4github.com/pandatix/godepgraph/api/v1/alg4;apiv1alg4b\x06proto3"
 
 var (
 	file_api_v1_alg4_alg4_proto_rawDescOnce sync.Once

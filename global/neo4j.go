@@ -8,7 +8,7 @@ import (
 	"go.uber.org/multierr"
 	"go.uber.org/zap"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/pkg/services/neo4j"
+	"github.com/pandatix/godepgraph/pkg/services/neo4j"
 )
 
 var (

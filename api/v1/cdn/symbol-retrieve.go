@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 func (*CDN) RetrieveSymbolCallGraphDependencies(ctx context.Context, req *RetrieveSymbolCallGraphDependenciesRequest) (*SymbolDepGraph, error) {

@@ -49,7 +49,7 @@ func NewNamespace(ctx *pulumi.Context, name string, args *NamespaceArgs, opts ..
 	ns := &Namespace{}
 
 	args = ns.defaults(args)
-	if err := ctx.RegisterComponentResource("something:godepgraph:namespace", name, ns, opts...); err != nil {
+	if err := ctx.RegisterComponentResource("pandatix:godepgraph:namespace", name, ns, opts...); err != nil {
 		return nil, err
 	}
 	opts = append(opts, pulumi.Parent(ns))

@@ -5,7 +5,7 @@ import (
 	_ "embed"
 	"testing"
 
-	apiv1rdg "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/rdg"
+	apiv1rdg "github.com/pandatix/godepgraph/api/v1/rdg"
 	"github.com/stretchr/testify/require"
 )
 

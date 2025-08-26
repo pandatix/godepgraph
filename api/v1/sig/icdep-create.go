@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 func (*SIG) CreateInterComponentDependency(ctx context.Context, req *CreateInterComponentDependencyRequest) (*emptypb.Empty, error) {

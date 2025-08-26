@@ -509,7 +509,7 @@ const file_api_v1_cdn_cdn_proto_rawDesc = "" +
 	"\rCreateLibrary\x12 .api.v1.cdn.CreateLibraryRequest\x1a\x13.api.v1.cdn.Library\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/api/v1/cdn\x12g\n" +
 	"\x0fRetrieveLibrary\x12\".api.v1.cdn.RetrieveLibraryRequest\x1a\x13.api.v1.cdn.Library\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/cdn/library\x12\x95\x01\n" +
 	"#RetrieveSymbolCallGraphDependencies\x126.api.v1.cdn.RetrieveSymbolCallGraphDependenciesRequest\x1a\x1a.api.v1.cdn.SymbolDepGraph\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/cdn/symbol\x12L\n" +
-	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/cdnBFZDgit.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/cdn;apiv1cdnb\x06proto3"
+	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/cdnB4Z2github.com/pandatix/godepgraph/api/v1/cdn;apiv1cdnb\x06proto3"
 
 var (
 	file_api_v1_cdn_cdn_proto_rawDescOnce sync.Once

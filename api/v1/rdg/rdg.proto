@@ -7,7 +7,7 @@ import "google/api/field_behavior.proto";
 import "google/protobuf/empty.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package = "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/rdg;apiv1rdg";
+option go_package = "github.com/pandatix/godepgraph/api/v1/rdg;apiv1rdg";
 
 service RDG {
   rpc CreateStack(CreateStackRequest) returns (Stack) {

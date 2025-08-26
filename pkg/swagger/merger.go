@@ -5,7 +5,7 @@ import (
 
 	json "github.com/goccy/go-json"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 type Merger struct {

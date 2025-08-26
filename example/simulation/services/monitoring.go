@@ -1,7 +1,7 @@
 package services
 
 import (
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation/services/parts"
+	"github.com/pandatix/godepgraph/example/simulation/services/parts"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	netwv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/networking/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"

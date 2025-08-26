@@ -115,7 +115,7 @@ const file_api_v1_rdg_rdg_proto_rawDesc = "" +
 	"\x05Stack2\xad\x01\n" +
 	"\x03RDG\x12X\n" +
 	"\vCreateStack\x12\x1e.api.v1.rdg.CreateStackRequest\x1a\x11.api.v1.rdg.Stack\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/api/v1/rdg\x12L\n" +
-	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/rdgBFZDgit.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/rdg;apiv1rdgb\x06proto3"
+	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/rdgB4Z2github.com/pandatix/godepgraph/api/v1/rdg;apiv1rdgb\x06proto3"
 
 var (
 	file_api_v1_rdg_rdg_proto_rawDescOnce sync.Once

@@ -5,7 +5,7 @@ import (
 
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 func (*SIG) Reset(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {

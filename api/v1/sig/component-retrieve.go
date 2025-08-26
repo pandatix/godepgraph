@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 func (*SIG) RetrieveComponent(ctx context.Context, req *RetrieveComponentRequest) (*Component, error) {

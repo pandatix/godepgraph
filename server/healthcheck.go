@@ -7,7 +7,7 @@ import (
 
 	"github.com/hellofresh/health-go/v5"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 )
 
 func healthcheck() http.Handler {

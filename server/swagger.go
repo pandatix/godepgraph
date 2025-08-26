@@ -6,9 +6,9 @@ import (
 	"os"
 	"sort"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/pkg/swagger"
-	swaggerui "git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/swagger-ui"
+	"github.com/pandatix/godepgraph/global"
+	"github.com/pandatix/godepgraph/pkg/swagger"
+	swaggerui "github.com/pandatix/godepgraph/swagger-ui"
 )
 
 func addSwagger(mux *http.ServeMux) {

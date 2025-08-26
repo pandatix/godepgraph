@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/deploy/services/parts"
+	"github.com/pandatix/godepgraph/deploy/services/parts"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	netwv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/networking/v1"
@@ -59,7 +59,7 @@ func NewGoDepGraph(ctx *pulumi.Context, name string, args *GoDepGraphArgs, opts 
 	gdg := &GoDepGraph{}
 
 	args = gdg.defaults(args)
-	if err := ctx.RegisterComponentResource("something:godepgraph", name, gdg, opts...); err != nil {
+	if err := ctx.RegisterComponentResource("pandatix:godepgraph", name, gdg, opts...); err != nil {
 		return nil, err
 	}
 	opts = append(opts, pulumi.Parent(gdg))
@@ -239,7 +239,7 @@ func (gdg *GoDepGraph) provision(ctx *pulumi.Context, args *GoDepGraphArgs, opts
 			Labels: pulumi.StringMap{
 				"app.kubernetes.io/component": pulumi.String("neo4j"),
 				"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-				"something/stack-name":        pulumi.String(ctx.Stack()),
+				"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 			},
 		},
 		Spec: netwv1.NetworkPolicySpecArgs{
@@ -287,7 +287,7 @@ func (gdg *GoDepGraph) provision(ctx *pulumi.Context, args *GoDepGraphArgs, opts
 			Labels: pulumi.StringMap{
 				"app.kubernetes.io/component": pulumi.String("neo4j"),
 				"app.kubernetes.io/part-of":   pulumi.String("godepgraph"),
-				"something/stack-name":        pulumi.String(ctx.Stack()),
+				"pandatix/stack-name":         pulumi.String(ctx.Stack()),
 			},
 		},
 		Spec: netwv1.NetworkPolicySpecArgs{

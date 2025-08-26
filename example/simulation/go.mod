@@ -1,4 +1,4 @@
-module git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation
+module github.com/pandatix/godepgraph/example/simulation
 
 go 1.24.5
 

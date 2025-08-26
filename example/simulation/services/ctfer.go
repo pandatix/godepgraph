@@ -8,7 +8,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"go.uber.org/multierr"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/example/simulation/services/parts"
+	"github.com/pandatix/godepgraph/example/simulation/services/parts"
 )
 
 // CTFer is a pulumi Component that deploy a pre-configured CTFd stack

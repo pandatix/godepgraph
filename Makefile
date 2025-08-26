@@ -12,7 +12,7 @@ update-swagger:
 TAG?=dev
 .PHONY: docker
 docker:
-	docker build -t $(REGISTRY)something/godepgraph:$(TAG) . && docker push $(REGISTRY)something/godepgraph:$(TAG)
+	docker build -t $(REGISTRY)pandatix/godepgraph:$(TAG) . && docker push $(REGISTRY)pandatix/godepgraph:$(TAG)
 
 .PHONY: build
 build:

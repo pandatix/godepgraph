@@ -3,7 +3,7 @@ package apiv1rdg
 import (
 	"context"
 
-	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
+	"github.com/pandatix/godepgraph/global"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
