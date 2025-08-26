@@ -30,6 +30,7 @@ spec:
   state: visible
 
   shared: true
+  start: true
   scenario:
     apiVersion: v1alpha1
     kind: sdk.ctfer.io/kubernetes.ExposedMonopod
