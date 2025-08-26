@@ -23,10 +23,10 @@ service SIG {
     option (google.api.http) = {get: "/api/v1/sig/component"};
   }
 
-  // Create a Network Dependency between Endpoints that exposes Components together.
-  rpc CreateNetworkDependency(CreateNetworkDependencyRequest) returns (google.protobuf.Empty) {
+  // Create an Inter-Component Dependency between Endpoints that exposes Components together.
+  rpc CreateInterComponentDependency(CreateInterComponentDependencyRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/api/v1/sig/network-dependency"
+      post: "/api/v1/sig/inter-component-dependency"
       body: "*"
     };
   }
@@ -61,15 +61,15 @@ message RetrieveComponentRequest {
   ];
 }
 
-message CreateNetworkDependencyRequest {
+message CreateInterComponentDependencyRequest {
   // The caller component.
-  CreateNetworkDependencyEndpointRequest caller = 1;
+  CreateInterComponentDependencyEndpointRequest caller = 1;
 
   // The callees (API methods called by the component).
-  repeated CreateNetworkDependencyEndpointRequest callees = 2;
+  repeated CreateInterComponentDependencyEndpointRequest callees = 2;
 }
 
-message CreateNetworkDependencyEndpointRequest {
+message CreateInterComponentDependencyEndpointRequest {
   // Name of the Endpoint, for a Component.
   string name = 1 [
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"api/vx.SomeMethod\""},
@@ -77,13 +77,13 @@ message CreateNetworkDependencyEndpointRequest {
   ];
 
   // The Component the Endpoint exposes.
-  CreateNetworkDependencyEndpointComponentRequest exposes = 2 [
+  CreateInterComponentDependencyEndpointComponentRequest exposes = 2 [
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"other-component\""},
     (google.api.field_behavior) = REQUIRED
   ];
 }
 
-message CreateNetworkDependencyEndpointComponentRequest {
+message CreateInterComponentDependencyEndpointComponentRequest {
   string name = 1 [
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-component\""},
     (google.api.field_behavior) = REQUIRED

@@ -10,11 +10,11 @@ import (
 	"git.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/global"
 )
 
-func (*SIG) CreateNetworkDependency(ctx context.Context, req *CreateNetworkDependencyRequest) (*emptypb.Empty, error) {
+func (*SIG) CreateInterComponentDependency(ctx context.Context, req *CreateInterComponentDependencyRequest) (*emptypb.Empty, error) {
 	logger := global.Log()
 	man := global.GetNeo4JManager()
 
-	logger.Info(ctx, "creating network dependency",
+	logger.Info(ctx, "creating inter-component dependency",
 		zap.String("caller", req.Caller.Name),
 	)
 
@@ -31,7 +31,7 @@ func (*SIG) CreateNetworkDependency(ctx context.Context, req *CreateNetworkDepen
 			continue // best effort
 		}
 	}
-	if err := upsertNetworkDependencies(ctx, man, req); err != nil {
+	if err := upsertInterComponentDependencies(ctx, man, req); err != nil {
 		merr = multierr.Append(merr, err)
 	}
 	if merr != nil {

@@ -20,10 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	SIG_CreateComponent_FullMethodName         = "/api.v1.sig.SIG/CreateComponent"
-	SIG_RetrieveComponent_FullMethodName       = "/api.v1.sig.SIG/RetrieveComponent"
-	SIG_CreateNetworkDependency_FullMethodName = "/api.v1.sig.SIG/CreateNetworkDependency"
-	SIG_Reset_FullMethodName                   = "/api.v1.sig.SIG/Reset"
+	SIG_CreateComponent_FullMethodName                = "/api.v1.sig.SIG/CreateComponent"
+	SIG_RetrieveComponent_FullMethodName              = "/api.v1.sig.SIG/RetrieveComponent"
+	SIG_CreateInterComponentDependency_FullMethodName = "/api.v1.sig.SIG/CreateInterComponentDependency"
+	SIG_Reset_FullMethodName                          = "/api.v1.sig.SIG/Reset"
 )
 
 // SIGClient is the client API for SIG service.
@@ -34,8 +34,8 @@ type SIGClient interface {
 	CreateComponent(ctx context.Context, in *CreateComponentRequest, opts ...grpc.CallOption) (*Component, error)
 	// Retrieve the current knowledge state of a Component of the system under observation.
 	RetrieveComponent(ctx context.Context, in *RetrieveComponentRequest, opts ...grpc.CallOption) (*Component, error)
-	// Create a Network Dependency between Endpoints that exposes Components together.
-	CreateNetworkDependency(ctx context.Context, in *CreateNetworkDependencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Create an Inter-Component Dependency between Endpoints that exposes Components together.
+	CreateInterComponentDependency(ctx context.Context, in *CreateInterComponentDependencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Reset the global knowledge of the system under observation.
 	Reset(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -68,10 +68,10 @@ func (c *sIGClient) RetrieveComponent(ctx context.Context, in *RetrieveComponent
 	return out, nil
 }
 
-func (c *sIGClient) CreateNetworkDependency(ctx context.Context, in *CreateNetworkDependencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *sIGClient) CreateInterComponentDependency(ctx context.Context, in *CreateInterComponentDependencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, SIG_CreateNetworkDependency_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, SIG_CreateInterComponentDependency_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -96,8 +96,8 @@ type SIGServer interface {
 	CreateComponent(context.Context, *CreateComponentRequest) (*Component, error)
 	// Retrieve the current knowledge state of a Component of the system under observation.
 	RetrieveComponent(context.Context, *RetrieveComponentRequest) (*Component, error)
-	// Create a Network Dependency between Endpoints that exposes Components together.
-	CreateNetworkDependency(context.Context, *CreateNetworkDependencyRequest) (*emptypb.Empty, error)
+	// Create an Inter-Component Dependency between Endpoints that exposes Components together.
+	CreateInterComponentDependency(context.Context, *CreateInterComponentDependencyRequest) (*emptypb.Empty, error)
 	// Reset the global knowledge of the system under observation.
 	Reset(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedSIGServer()
@@ -116,8 +116,8 @@ func (UnimplementedSIGServer) CreateComponent(context.Context, *CreateComponentR
 func (UnimplementedSIGServer) RetrieveComponent(context.Context, *RetrieveComponentRequest) (*Component, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RetrieveComponent not implemented")
 }
-func (UnimplementedSIGServer) CreateNetworkDependency(context.Context, *CreateNetworkDependencyRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateNetworkDependency not implemented")
+func (UnimplementedSIGServer) CreateInterComponentDependency(context.Context, *CreateInterComponentDependencyRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateInterComponentDependency not implemented")
 }
 func (UnimplementedSIGServer) Reset(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Reset not implemented")
@@ -179,20 +179,20 @@ func _SIG_RetrieveComponent_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SIG_CreateNetworkDependency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateNetworkDependencyRequest)
+func _SIG_CreateInterComponentDependency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateInterComponentDependencyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SIGServer).CreateNetworkDependency(ctx, in)
+		return srv.(SIGServer).CreateInterComponentDependency(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SIG_CreateNetworkDependency_FullMethodName,
+		FullMethod: SIG_CreateInterComponentDependency_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SIGServer).CreateNetworkDependency(ctx, req.(*CreateNetworkDependencyRequest))
+		return srv.(SIGServer).CreateInterComponentDependency(ctx, req.(*CreateInterComponentDependencyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -231,8 +231,8 @@ var SIG_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SIG_RetrieveComponent_Handler,
 		},
 		{
-			MethodName: "CreateNetworkDependency",
-			Handler:    _SIG_CreateNetworkDependency_Handler,
+			MethodName: "CreateInterComponentDependency",
+			Handler:    _SIG_CreateInterComponentDependency_Handler,
 		},
 		{
 			MethodName: "Reset",

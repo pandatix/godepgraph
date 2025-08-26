@@ -98,9 +98,9 @@ func local_request_SIG_RetrieveComponent_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
-func request_SIG_CreateNetworkDependency_0(ctx context.Context, marshaler runtime.Marshaler, client SIGClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_SIG_CreateInterComponentDependency_0(ctx context.Context, marshaler runtime.Marshaler, client SIGClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq CreateNetworkDependencyRequest
+		protoReq CreateInterComponentDependencyRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -109,19 +109,19 @@ func request_SIG_CreateNetworkDependency_0(ctx context.Context, marshaler runtim
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.CreateNetworkDependency(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.CreateInterComponentDependency(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_SIG_CreateNetworkDependency_0(ctx context.Context, marshaler runtime.Marshaler, server SIGServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_SIG_CreateInterComponentDependency_0(ctx context.Context, marshaler runtime.Marshaler, server SIGServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq CreateNetworkDependencyRequest
+		protoReq CreateInterComponentDependencyRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.CreateNetworkDependency(ctx, &protoReq)
+	msg, err := server.CreateInterComponentDependency(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -192,25 +192,25 @@ func RegisterSIGHandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 		}
 		forward_SIG_RetrieveComponent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_SIG_CreateNetworkDependency_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_SIG_CreateInterComponentDependency_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.sig.SIG/CreateNetworkDependency", runtime.WithHTTPPathPattern("/api/v1/sig/network-dependency"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.sig.SIG/CreateInterComponentDependency", runtime.WithHTTPPathPattern("/api/v1/sig/inter-component-dependency"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_SIG_CreateNetworkDependency_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_SIG_CreateInterComponentDependency_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_SIG_CreateNetworkDependency_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_SIG_CreateInterComponentDependency_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodDelete, pattern_SIG_Reset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -306,22 +306,22 @@ func RegisterSIGHandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 		}
 		forward_SIG_RetrieveComponent_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_SIG_CreateNetworkDependency_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_SIG_CreateInterComponentDependency_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.sig.SIG/CreateNetworkDependency", runtime.WithHTTPPathPattern("/api/v1/sig/network-dependency"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.sig.SIG/CreateInterComponentDependency", runtime.WithHTTPPathPattern("/api/v1/sig/inter-component-dependency"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_SIG_CreateNetworkDependency_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_SIG_CreateInterComponentDependency_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_SIG_CreateNetworkDependency_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_SIG_CreateInterComponentDependency_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodDelete, pattern_SIG_Reset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -344,15 +344,15 @@ func RegisterSIGHandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 }
 
 var (
-	pattern_SIG_CreateComponent_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sig", "component"}, ""))
-	pattern_SIG_RetrieveComponent_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sig", "component"}, ""))
-	pattern_SIG_CreateNetworkDependency_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sig", "network-dependency"}, ""))
-	pattern_SIG_Reset_0                   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sig"}, ""))
+	pattern_SIG_CreateComponent_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sig", "component"}, ""))
+	pattern_SIG_RetrieveComponent_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sig", "component"}, ""))
+	pattern_SIG_CreateInterComponentDependency_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "sig", "inter-component-dependency"}, ""))
+	pattern_SIG_Reset_0                          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "sig"}, ""))
 )
 
 var (
-	forward_SIG_CreateComponent_0         = runtime.ForwardResponseMessage
-	forward_SIG_RetrieveComponent_0       = runtime.ForwardResponseMessage
-	forward_SIG_CreateNetworkDependency_0 = runtime.ForwardResponseMessage
-	forward_SIG_Reset_0                   = runtime.ForwardResponseMessage
+	forward_SIG_CreateComponent_0                = runtime.ForwardResponseMessage
+	forward_SIG_RetrieveComponent_0              = runtime.ForwardResponseMessage
+	forward_SIG_CreateInterComponentDependency_0 = runtime.ForwardResponseMessage
+	forward_SIG_Reset_0                          = runtime.ForwardResponseMessage
 )

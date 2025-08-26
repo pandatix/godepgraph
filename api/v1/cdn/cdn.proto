@@ -17,13 +17,13 @@ service CDN {
     };
   }
 
-  // Returns the dependency graph of a Library, composed by the AST dependencies.
+  // Returns the dependency graph of a Library, along the call-graph dependencies.
   rpc RetrieveLibrary(RetrieveLibraryRequest) returns (Library) {
     option (google.api.http) = {get: "/api/v1/cdn/library"};
   }
 
   // Returns the symbols one depends upon.
-  rpc RetrieveSymbolASTDependencies(RetrieveSymbolASTDependenciesRequest) returns (SymbolDepGraph) {
+  rpc RetrieveSymbolCallGraphDependencies(RetrieveSymbolCallGraphDependenciesRequest) returns (SymbolDepGraph) {
     option (google.api.http) = {get: "/api/v1/cdn/symbol"};
   }
 
@@ -67,7 +67,7 @@ message RetrieveLibraryRequest {
   ];
 }
 
-message RetrieveSymbolASTDependenciesRequest {
+message RetrieveSymbolCallGraphDependenciesRequest {
   Symbol symbol = 1;
 }
 
@@ -92,7 +92,7 @@ message DependencyGraph {
 
   repeated Symbol provide = 3;
 
-  repeated ASTDependency dependencies = 4;
+  repeated CallGraphDependency dependencies = 4;
 }
 
 message Symbol {
@@ -103,7 +103,7 @@ message Symbol {
   ];
 }
 
-message ASTDependency {
+message CallGraphDependency {
   // The symbol identity it depends from.
   string from = 1 [
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"internal/stringslite.Cut\""},

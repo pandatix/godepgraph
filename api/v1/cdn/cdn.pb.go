@@ -141,27 +141,27 @@ func (x *RetrieveLibraryRequest) GetVersion() string {
 	return ""
 }
 
-type RetrieveSymbolASTDependenciesRequest struct {
+type RetrieveSymbolCallGraphDependenciesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Symbol        *Symbol                `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RetrieveSymbolASTDependenciesRequest) Reset() {
-	*x = RetrieveSymbolASTDependenciesRequest{}
+func (x *RetrieveSymbolCallGraphDependenciesRequest) Reset() {
+	*x = RetrieveSymbolCallGraphDependenciesRequest{}
 	mi := &file_api_v1_cdn_cdn_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RetrieveSymbolASTDependenciesRequest) String() string {
+func (x *RetrieveSymbolCallGraphDependenciesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RetrieveSymbolASTDependenciesRequest) ProtoMessage() {}
+func (*RetrieveSymbolCallGraphDependenciesRequest) ProtoMessage() {}
 
-func (x *RetrieveSymbolASTDependenciesRequest) ProtoReflect() protoreflect.Message {
+func (x *RetrieveSymbolCallGraphDependenciesRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_v1_cdn_cdn_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -173,12 +173,12 @@ func (x *RetrieveSymbolASTDependenciesRequest) ProtoReflect() protoreflect.Messa
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RetrieveSymbolASTDependenciesRequest.ProtoReflect.Descriptor instead.
-func (*RetrieveSymbolASTDependenciesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use RetrieveSymbolCallGraphDependenciesRequest.ProtoReflect.Descriptor instead.
+func (*RetrieveSymbolCallGraphDependenciesRequest) Descriptor() ([]byte, []int) {
 	return file_api_v1_cdn_cdn_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *RetrieveSymbolASTDependenciesRequest) GetSymbol() *Symbol {
+func (x *RetrieveSymbolCallGraphDependenciesRequest) GetSymbol() *Symbol {
 	if x != nil {
 		return x.Symbol
 	}
@@ -242,9 +242,9 @@ type DependencyGraph struct {
 	// The Go module to retrieve.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// The Go module's version to retrieve.
-	Version       string           `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
-	Provide       []*Symbol        `protobuf:"bytes,3,rep,name=provide,proto3" json:"provide,omitempty"`
-	Dependencies  []*ASTDependency `protobuf:"bytes,4,rep,name=dependencies,proto3" json:"dependencies,omitempty"`
+	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
+	Provide       []*Symbol              `protobuf:"bytes,3,rep,name=provide,proto3" json:"provide,omitempty"`
+	Dependencies  []*CallGraphDependency `protobuf:"bytes,4,rep,name=dependencies,proto3" json:"dependencies,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -300,7 +300,7 @@ func (x *DependencyGraph) GetProvide() []*Symbol {
 	return nil
 }
 
-func (x *DependencyGraph) GetDependencies() []*ASTDependency {
+func (x *DependencyGraph) GetDependencies() []*CallGraphDependency {
 	if x != nil {
 		return x.Dependencies
 	}
@@ -352,7 +352,7 @@ func (x *Symbol) GetIdentity() string {
 	return ""
 }
 
-type ASTDependency struct {
+type CallGraphDependency struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The symbol identity it depends from.
 	From string `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
@@ -362,20 +362,20 @@ type ASTDependency struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ASTDependency) Reset() {
-	*x = ASTDependency{}
+func (x *CallGraphDependency) Reset() {
+	*x = CallGraphDependency{}
 	mi := &file_api_v1_cdn_cdn_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ASTDependency) String() string {
+func (x *CallGraphDependency) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ASTDependency) ProtoMessage() {}
+func (*CallGraphDependency) ProtoMessage() {}
 
-func (x *ASTDependency) ProtoReflect() protoreflect.Message {
+func (x *CallGraphDependency) ProtoReflect() protoreflect.Message {
 	mi := &file_api_v1_cdn_cdn_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -387,19 +387,19 @@ func (x *ASTDependency) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ASTDependency.ProtoReflect.Descriptor instead.
-func (*ASTDependency) Descriptor() ([]byte, []int) {
+// Deprecated: Use CallGraphDependency.ProtoReflect.Descriptor instead.
+func (*CallGraphDependency) Descriptor() ([]byte, []int) {
 	return file_api_v1_cdn_cdn_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *ASTDependency) GetFrom() string {
+func (x *CallGraphDependency) GetFrom() string {
 	if x != nil {
 		return x.From
 	}
 	return ""
 }
 
-func (x *ASTDependency) GetTo() []string {
+func (x *CallGraphDependency) GetTo() []string {
 	if x != nil {
 		return x.To
 	}
@@ -483,32 +483,32 @@ const file_api_v1_cdn_cdn_proto_rawDesc = "" +
 	"\x16RetrieveLibraryRequest\x125\n" +
 	"\x04name\x18\x01 \x01(\tB!\x92A\x1aJ\x18\"github.com/gorilla/mux\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
-	"J\b\"v1.8.1\"\xe2A\x01\x02R\aversion\"R\n" +
-	"$RetrieveSymbolASTDependenciesRequest\x12*\n" +
+	"J\b\"v1.8.1\"\xe2A\x01\x02R\aversion\"X\n" +
+	"*RetrieveSymbolCallGraphDependenciesRequest\x12*\n" +
 	"\x06symbol\x18\x01 \x01(\v2\x12.api.v1.cdn.SymbolR\x06symbol\"\\\n" +
 	"\x0eSymbolDepGraph\x12&\n" +
 	"\x04from\x18\x01 \x01(\v2\x12.api.v1.cdn.SymbolR\x04from\x12\"\n" +
-	"\x02to\x18\x02 \x03(\v2\x12.api.v1.cdn.SymbolR\x02to\"\xe2\x01\n" +
+	"\x02to\x18\x02 \x03(\v2\x12.api.v1.cdn.SymbolR\x02to\"\xe8\x01\n" +
 	"\x0fDependencyGraph\x125\n" +
 	"\x04name\x18\x01 \x01(\tB!\x92A\x1aJ\x18\"github.com/gorilla/mux\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
 	"J\b\"v1.8.1\"\xe2A\x01\x02R\aversion\x12,\n" +
-	"\aprovide\x18\x03 \x03(\v2\x12.api.v1.cdn.SymbolR\aprovide\x12=\n" +
-	"\fdependencies\x18\x04 \x03(\v2\x19.api.v1.cdn.ASTDependencyR\fdependencies\"I\n" +
+	"\aprovide\x18\x03 \x03(\v2\x12.api.v1.cdn.SymbolR\aprovide\x12C\n" +
+	"\fdependencies\x18\x04 \x03(\v2\x1f.api.v1.cdn.CallGraphDependencyR\fdependencies\"I\n" +
 	"\x06Symbol\x12?\n" +
-	"\bidentity\x18\x01 \x01(\tB#\x92A\x1cJ\x1a\"internal/stringslite.Cut\"\xe2A\x01\x02R\bidentity\"}\n" +
-	"\rASTDependency\x127\n" +
+	"\bidentity\x18\x01 \x01(\tB#\x92A\x1cJ\x1a\"internal/stringslite.Cut\"\xe2A\x01\x02R\bidentity\"\x83\x01\n" +
+	"\x13CallGraphDependency\x127\n" +
 	"\x04from\x18\x01 \x01(\tB#\x92A\x1cJ\x1a\"internal/stringslite.Cut\"\xe2A\x01\x02R\x04from\x123\n" +
 	"\x02to\x18\x02 \x03(\tB#\x92A\x1cJ\x1a\"internal/stringslite.Cut\"\xe2A\x01\x02R\x02to\"\x9b\x01\n" +
 	"\aLibrary\x125\n" +
 	"\x04name\x18\x01 \x01(\tB!\x92A\x1aJ\x18\"github.com/gorilla/mux\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
 	"J\b\"v1.8.1\"\xe2A\x01\x02R\aversion\x12,\n" +
-	"\aprovide\x18\x03 \x03(\v2\x12.api.v1.cdn.SymbolR\aprovide2\xa8\x03\n" +
+	"\aprovide\x18\x03 \x03(\v2\x12.api.v1.cdn.SymbolR\aprovide2\xb4\x03\n" +
 	"\x03CDN\x12^\n" +
 	"\rCreateLibrary\x12 .api.v1.cdn.CreateLibraryRequest\x1a\x13.api.v1.cdn.Library\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/api/v1/cdn\x12g\n" +
-	"\x0fRetrieveLibrary\x12\".api.v1.cdn.RetrieveLibraryRequest\x1a\x13.api.v1.cdn.Library\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/cdn/library\x12\x89\x01\n" +
-	"\x1dRetrieveSymbolASTDependencies\x120.api.v1.cdn.RetrieveSymbolASTDependenciesRequest\x1a\x1a.api.v1.cdn.SymbolDepGraph\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/cdn/symbol\x12L\n" +
+	"\x0fRetrieveLibrary\x12\".api.v1.cdn.RetrieveLibraryRequest\x1a\x13.api.v1.cdn.Library\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/cdn/library\x12\x95\x01\n" +
+	"#RetrieveSymbolCallGraphDependencies\x126.api.v1.cdn.RetrieveSymbolCallGraphDependenciesRequest\x1a\x1a.api.v1.cdn.SymbolDepGraph\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/cdn/symbol\x12L\n" +
 	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/cdnBFZDgit.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/cdn;apiv1cdnb\x06proto3"
 
 var (
@@ -525,30 +525,30 @@ func file_api_v1_cdn_cdn_proto_rawDescGZIP() []byte {
 
 var file_api_v1_cdn_cdn_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_api_v1_cdn_cdn_proto_goTypes = []any{
-	(*CreateLibraryRequest)(nil),                 // 0: api.v1.cdn.CreateLibraryRequest
-	(*RetrieveLibraryRequest)(nil),               // 1: api.v1.cdn.RetrieveLibraryRequest
-	(*RetrieveSymbolASTDependenciesRequest)(nil), // 2: api.v1.cdn.RetrieveSymbolASTDependenciesRequest
-	(*SymbolDepGraph)(nil),                       // 3: api.v1.cdn.SymbolDepGraph
-	(*DependencyGraph)(nil),                      // 4: api.v1.cdn.DependencyGraph
-	(*Symbol)(nil),                               // 5: api.v1.cdn.Symbol
-	(*ASTDependency)(nil),                        // 6: api.v1.cdn.ASTDependency
-	(*Library)(nil),                              // 7: api.v1.cdn.Library
-	(*emptypb.Empty)(nil),                        // 8: google.protobuf.Empty
+	(*CreateLibraryRequest)(nil),                       // 0: api.v1.cdn.CreateLibraryRequest
+	(*RetrieveLibraryRequest)(nil),                     // 1: api.v1.cdn.RetrieveLibraryRequest
+	(*RetrieveSymbolCallGraphDependenciesRequest)(nil), // 2: api.v1.cdn.RetrieveSymbolCallGraphDependenciesRequest
+	(*SymbolDepGraph)(nil),                             // 3: api.v1.cdn.SymbolDepGraph
+	(*DependencyGraph)(nil),                            // 4: api.v1.cdn.DependencyGraph
+	(*Symbol)(nil),                                     // 5: api.v1.cdn.Symbol
+	(*CallGraphDependency)(nil),                        // 6: api.v1.cdn.CallGraphDependency
+	(*Library)(nil),                                    // 7: api.v1.cdn.Library
+	(*emptypb.Empty)(nil),                              // 8: google.protobuf.Empty
 }
 var file_api_v1_cdn_cdn_proto_depIdxs = []int32{
-	5,  // 0: api.v1.cdn.RetrieveSymbolASTDependenciesRequest.symbol:type_name -> api.v1.cdn.Symbol
+	5,  // 0: api.v1.cdn.RetrieveSymbolCallGraphDependenciesRequest.symbol:type_name -> api.v1.cdn.Symbol
 	5,  // 1: api.v1.cdn.SymbolDepGraph.from:type_name -> api.v1.cdn.Symbol
 	5,  // 2: api.v1.cdn.SymbolDepGraph.to:type_name -> api.v1.cdn.Symbol
 	5,  // 3: api.v1.cdn.DependencyGraph.provide:type_name -> api.v1.cdn.Symbol
-	6,  // 4: api.v1.cdn.DependencyGraph.dependencies:type_name -> api.v1.cdn.ASTDependency
+	6,  // 4: api.v1.cdn.DependencyGraph.dependencies:type_name -> api.v1.cdn.CallGraphDependency
 	5,  // 5: api.v1.cdn.Library.provide:type_name -> api.v1.cdn.Symbol
 	0,  // 6: api.v1.cdn.CDN.CreateLibrary:input_type -> api.v1.cdn.CreateLibraryRequest
 	1,  // 7: api.v1.cdn.CDN.RetrieveLibrary:input_type -> api.v1.cdn.RetrieveLibraryRequest
-	2,  // 8: api.v1.cdn.CDN.RetrieveSymbolASTDependencies:input_type -> api.v1.cdn.RetrieveSymbolASTDependenciesRequest
+	2,  // 8: api.v1.cdn.CDN.RetrieveSymbolCallGraphDependencies:input_type -> api.v1.cdn.RetrieveSymbolCallGraphDependenciesRequest
 	8,  // 9: api.v1.cdn.CDN.Reset:input_type -> google.protobuf.Empty
 	7,  // 10: api.v1.cdn.CDN.CreateLibrary:output_type -> api.v1.cdn.Library
 	7,  // 11: api.v1.cdn.CDN.RetrieveLibrary:output_type -> api.v1.cdn.Library
-	3,  // 12: api.v1.cdn.CDN.RetrieveSymbolASTDependencies:output_type -> api.v1.cdn.SymbolDepGraph
+	3,  // 12: api.v1.cdn.CDN.RetrieveSymbolCallGraphDependencies:output_type -> api.v1.cdn.SymbolDepGraph
 	8,  // 13: api.v1.cdn.CDN.Reset:output_type -> google.protobuf.Empty
 	10, // [10:14] is the sub-list for method output_type
 	6,  // [6:10] is the sub-list for method input_type

@@ -160,7 +160,7 @@ func allReachingSymbols(ctx context.Context, man *neo4jSvc.Manager) error {
 			res, err := tx.Run(ctx,
 				`
 				MATCH (s:Symbol {mark: true})
-				MATCH (s2:Symbol)<-[:CALLER]-(a:ASTDependency)-[:CALLEES]->(s)
+				MATCH (s2:Symbol)<-[:CALLER]-(a:CallGraphDependency)-[:CALLEES]->(s)
 				WHERE s2.mark <> true OR s2.mark IS NULL
 				SET a.mark = true
 				SET s2.mark = true
@@ -279,7 +279,7 @@ func allReachingComponents(ctx context.Context, man *neo4jSvc.Manager) error {
 
 			// Find NetworkDependencies that call these Endpoints
 			WITH e
-			OPTIONAL MATCH (d:NetworkDependency)-[:CALLEES]->(e)
+			OPTIONAL MATCH (d:InterComponentDependency)-[:CALLEES]->(e)
 			SET d.mark = true
 
 			// Find Components exposed by Endpoints called by these NetworkDependencies

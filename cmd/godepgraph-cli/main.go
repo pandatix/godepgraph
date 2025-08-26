@@ -215,18 +215,18 @@ func main() {
 
 							for _, comp := range ana.components {
 								for _, it := range comp.Interactions {
-									if _, err := cliSig.CreateNetworkDependency(ctx, &apiv1sig.CreateNetworkDependencyRequest{
-										Caller: &apiv1sig.CreateNetworkDependencyEndpointRequest{
+									if _, err := cliSig.CreateInterComponentDependency(ctx, &apiv1sig.CreateInterComponentDependencyRequest{
+										Caller: &apiv1sig.CreateInterComponentDependencyEndpointRequest{
 											Name: it.From,
-											Exposes: &apiv1sig.CreateNetworkDependencyEndpointComponentRequest{
+											Exposes: &apiv1sig.CreateInterComponentDependencyEndpointComponentRequest{
 												Name:    comp.Name,
 												Version: comp.Version,
 											},
 										},
-										Callees: []*apiv1sig.CreateNetworkDependencyEndpointRequest{
+										Callees: []*apiv1sig.CreateInterComponentDependencyEndpointRequest{
 											{
 												Name: it.Name,
-												Exposes: &apiv1sig.CreateNetworkDependencyEndpointComponentRequest{
+												Exposes: &apiv1sig.CreateInterComponentDependencyEndpointComponentRequest{
 													Name:    it.To,
 													Version: ana.components[it.To].Version,
 												},

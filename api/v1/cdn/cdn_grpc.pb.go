@@ -20,10 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CDN_CreateLibrary_FullMethodName                 = "/api.v1.cdn.CDN/CreateLibrary"
-	CDN_RetrieveLibrary_FullMethodName               = "/api.v1.cdn.CDN/RetrieveLibrary"
-	CDN_RetrieveSymbolASTDependencies_FullMethodName = "/api.v1.cdn.CDN/RetrieveSymbolASTDependencies"
-	CDN_Reset_FullMethodName                         = "/api.v1.cdn.CDN/Reset"
+	CDN_CreateLibrary_FullMethodName                       = "/api.v1.cdn.CDN/CreateLibrary"
+	CDN_RetrieveLibrary_FullMethodName                     = "/api.v1.cdn.CDN/RetrieveLibrary"
+	CDN_RetrieveSymbolCallGraphDependencies_FullMethodName = "/api.v1.cdn.CDN/RetrieveSymbolCallGraphDependencies"
+	CDN_Reset_FullMethodName                               = "/api.v1.cdn.CDN/Reset"
 )
 
 // CDNClient is the client API for CDN service.
@@ -31,10 +31,10 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CDNClient interface {
 	CreateLibrary(ctx context.Context, in *CreateLibraryRequest, opts ...grpc.CallOption) (*Library, error)
-	// Returns the dependency graph of a Library, composed by the AST dependencies.
+	// Returns the dependency graph of a Library, along the call-graph dependencies.
 	RetrieveLibrary(ctx context.Context, in *RetrieveLibraryRequest, opts ...grpc.CallOption) (*Library, error)
 	// Returns the symbols one depends upon.
-	RetrieveSymbolASTDependencies(ctx context.Context, in *RetrieveSymbolASTDependenciesRequest, opts ...grpc.CallOption) (*SymbolDepGraph, error)
+	RetrieveSymbolCallGraphDependencies(ctx context.Context, in *RetrieveSymbolCallGraphDependenciesRequest, opts ...grpc.CallOption) (*SymbolDepGraph, error)
 	// Reset the global knowledge of a codebase.
 	Reset(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -67,10 +67,10 @@ func (c *cDNClient) RetrieveLibrary(ctx context.Context, in *RetrieveLibraryRequ
 	return out, nil
 }
 
-func (c *cDNClient) RetrieveSymbolASTDependencies(ctx context.Context, in *RetrieveSymbolASTDependenciesRequest, opts ...grpc.CallOption) (*SymbolDepGraph, error) {
+func (c *cDNClient) RetrieveSymbolCallGraphDependencies(ctx context.Context, in *RetrieveSymbolCallGraphDependenciesRequest, opts ...grpc.CallOption) (*SymbolDepGraph, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(SymbolDepGraph)
-	err := c.cc.Invoke(ctx, CDN_RetrieveSymbolASTDependencies_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CDN_RetrieveSymbolCallGraphDependencies_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,10 +92,10 @@ func (c *cDNClient) Reset(ctx context.Context, in *emptypb.Empty, opts ...grpc.C
 // for forward compatibility.
 type CDNServer interface {
 	CreateLibrary(context.Context, *CreateLibraryRequest) (*Library, error)
-	// Returns the dependency graph of a Library, composed by the AST dependencies.
+	// Returns the dependency graph of a Library, along the call-graph dependencies.
 	RetrieveLibrary(context.Context, *RetrieveLibraryRequest) (*Library, error)
 	// Returns the symbols one depends upon.
-	RetrieveSymbolASTDependencies(context.Context, *RetrieveSymbolASTDependenciesRequest) (*SymbolDepGraph, error)
+	RetrieveSymbolCallGraphDependencies(context.Context, *RetrieveSymbolCallGraphDependenciesRequest) (*SymbolDepGraph, error)
 	// Reset the global knowledge of a codebase.
 	Reset(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedCDNServer()
@@ -114,8 +114,8 @@ func (UnimplementedCDNServer) CreateLibrary(context.Context, *CreateLibraryReque
 func (UnimplementedCDNServer) RetrieveLibrary(context.Context, *RetrieveLibraryRequest) (*Library, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RetrieveLibrary not implemented")
 }
-func (UnimplementedCDNServer) RetrieveSymbolASTDependencies(context.Context, *RetrieveSymbolASTDependenciesRequest) (*SymbolDepGraph, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RetrieveSymbolASTDependencies not implemented")
+func (UnimplementedCDNServer) RetrieveSymbolCallGraphDependencies(context.Context, *RetrieveSymbolCallGraphDependenciesRequest) (*SymbolDepGraph, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetrieveSymbolCallGraphDependencies not implemented")
 }
 func (UnimplementedCDNServer) Reset(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Reset not implemented")
@@ -177,20 +177,20 @@ func _CDN_RetrieveLibrary_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CDN_RetrieveSymbolASTDependencies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RetrieveSymbolASTDependenciesRequest)
+func _CDN_RetrieveSymbolCallGraphDependencies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RetrieveSymbolCallGraphDependenciesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CDNServer).RetrieveSymbolASTDependencies(ctx, in)
+		return srv.(CDNServer).RetrieveSymbolCallGraphDependencies(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CDN_RetrieveSymbolASTDependencies_FullMethodName,
+		FullMethod: CDN_RetrieveSymbolCallGraphDependencies_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CDNServer).RetrieveSymbolASTDependencies(ctx, req.(*RetrieveSymbolASTDependenciesRequest))
+		return srv.(CDNServer).RetrieveSymbolCallGraphDependencies(ctx, req.(*RetrieveSymbolCallGraphDependenciesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -229,8 +229,8 @@ var CDN_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CDN_RetrieveLibrary_Handler,
 		},
 		{
-			MethodName: "RetrieveSymbolASTDependencies",
-			Handler:    _CDN_RetrieveSymbolASTDependencies_Handler,
+			MethodName: "RetrieveSymbolCallGraphDependencies",
+			Handler:    _CDN_RetrieveSymbolCallGraphDependencies_Handler,
 		},
 		{
 			MethodName: "Reset",

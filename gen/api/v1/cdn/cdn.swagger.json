@@ -72,7 +72,7 @@
     },
     "/api/v1/cdn/library": {
       "get": {
-        "summary": "Returns the dependency graph of a Library, composed by the AST dependencies.",
+        "summary": "Returns the dependency graph of a Library, along the call-graph dependencies.",
         "operationId": "CDN_RetrieveLibrary",
         "responses": {
           "200": {
@@ -112,7 +112,7 @@
     "/api/v1/cdn/symbol": {
       "get": {
         "summary": "Returns the symbols one depends upon.",
-        "operationId": "CDN_RetrieveSymbolASTDependencies",
+        "operationId": "CDN_RetrieveSymbolCallGraphDependencies",
         "responses": {
           "200": {
             "description": "A successful response.",

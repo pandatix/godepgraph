@@ -108,10 +108,10 @@
         ]
       }
     },
-    "/api/v1/sig/network-dependency": {
+    "/api/v1/sig/inter-component-dependency": {
       "post": {
-        "summary": "Create a Network Dependency between Endpoints that exposes Components together.",
-        "operationId": "SIG_CreateNetworkDependency",
+        "summary": "Create an Inter-Component Dependency between Endpoints that exposes Components together.",
+        "operationId": "SIG_CreateInterComponentDependency",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -133,7 +133,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/sigCreateNetworkDependencyRequest"
+              "$ref": "#/definitions/sigCreateInterComponentDependencyRequest"
             }
           }
         ],
@@ -213,7 +213,7 @@
         "version"
       ]
     },
-    "sigCreateNetworkDependencyEndpointComponentRequest": {
+    "sigCreateInterComponentDependencyEndpointComponentRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -230,7 +230,7 @@
         "version"
       ]
     },
-    "sigCreateNetworkDependencyEndpointRequest": {
+    "sigCreateInterComponentDependencyEndpointRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -239,7 +239,7 @@
           "description": "Name of the Endpoint, for a Component."
         },
         "exposes": {
-          "$ref": "#/definitions/sigCreateNetworkDependencyEndpointComponentRequest",
+          "$ref": "#/definitions/sigCreateInterComponentDependencyEndpointComponentRequest",
           "example": "other-component",
           "description": "The Component the Endpoint exposes."
         }
@@ -249,18 +249,18 @@
         "exposes"
       ]
     },
-    "sigCreateNetworkDependencyRequest": {
+    "sigCreateInterComponentDependencyRequest": {
       "type": "object",
       "properties": {
         "caller": {
-          "$ref": "#/definitions/sigCreateNetworkDependencyEndpointRequest",
+          "$ref": "#/definitions/sigCreateInterComponentDependencyEndpointRequest",
           "description": "The caller component."
         },
         "callees": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/sigCreateNetworkDependencyEndpointRequest"
+            "$ref": "#/definitions/sigCreateInterComponentDependencyEndpointRequest"
           },
           "description": "The callees (API methods called by the component)."
         }

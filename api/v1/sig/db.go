@@ -125,7 +125,7 @@ func retrieveComponent(ctx context.Context, man *neo4jSvc.Manager, name, version
 	return res.(*Component), nil
 }
 
-func upsertEndpoint(ctx context.Context, man *neo4jSvc.Manager, component *CreateNetworkDependencyEndpointComponentRequest, edp string) error {
+func upsertEndpoint(ctx context.Context, man *neo4jSvc.Manager, component *CreateInterComponentDependencyEndpointComponentRequest, edp string) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -151,7 +151,7 @@ func upsertEndpoint(ctx context.Context, man *neo4jSvc.Manager, component *Creat
 	return multierr.Append(err, session.Close(ctx))
 }
 
-func upsertNetworkDependencies(ctx context.Context, man *neo4jSvc.Manager, req *CreateNetworkDependencyRequest) error {
+func upsertInterComponentDependencies(ctx context.Context, man *neo4jSvc.Manager, req *CreateInterComponentDependencyRequest) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -166,8 +166,8 @@ func upsertNetworkDependencies(ctx context.Context, man *neo4jSvc.Manager, req *
 				// Find callee component and endpoint
 				MATCH (endpointCallee:Endpoint {name: callee.edpName})-[:EXPOSES]->(:Component {name: callee.componentName, version: callee.componentVersion})
 
-				// Merge a NetworkDependency uniquely identified by caller and callee
-				MERGE (endpointCaller)<-[:CALLER]-(:NetworkDependency)-[:CALLEES]->(endpointCallee)
+				// Merge a InterComponentDependency uniquely identified by caller and callee
+				MERGE (endpointCaller)<-[:CALLER]-(:InterComponentDependency)-[:CALLEES]->(endpointCallee)
 			`,
 			map[string]any{
 				"callerEdpName":          req.GetCaller().GetName(),
@@ -193,8 +193,8 @@ func upsertNetworkDependencies(ctx context.Context, man *neo4jSvc.Manager, req *
 func reset(ctx context.Context, man *neo4jSvc.Manager) error {
 	return multierr.Combine(
 		common.Trash(ctx, man, `MATCH (:Component)<-[r:EXPOSES]-(:Endpoint)`, "r"),
-		common.Trash(ctx, man, `MATCH (:Endpoint)<-[r:CALLER]-(:NetworkDependency)`, "r"),
-		common.Trash(ctx, man, `MATCH (:Endpoint)<-[r:CALLEES]-(:NetworkDependency)`, "r"),
-		common.Trash(ctx, man, `MATCH (n) WHERE n:Component OR n:Endpoint OR n:NetworkDependency`, "n"),
+		common.Trash(ctx, man, `MATCH (:Endpoint)<-[r:CALLER]-(:InterComponentDependency)`, "r"),
+		common.Trash(ctx, man, `MATCH (:Endpoint)<-[r:CALLEES]-(:InterComponentDependency)`, "r"),
+		common.Trash(ctx, man, `MATCH (n) WHERE n:Component OR n:Endpoint OR n:InterComponentDependency`, "n"),
 	)
 }

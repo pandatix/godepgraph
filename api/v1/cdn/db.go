@@ -83,7 +83,7 @@ func (ana *Analysis) Export(ctx context.Context, man *neo4jSvc.Manager) error {
 		if err := bulkUpsertSymbols(ctx, man, coreLib); err != nil {
 			return err
 		}
-		if err := bulkUpsertASTDependencies(ctx, man, coreLib); err != nil {
+		if err := bulkUpsertCallGraphDependencies(ctx, man, coreLib); err != nil {
 			return err
 		}
 	}
@@ -114,7 +114,7 @@ func (ana *Analysis) Export(ctx context.Context, man *neo4jSvc.Manager) error {
 	// Finally create all relationships
 	for lname := range createdLibs {
 		lib := ana.libraries[lname]
-		if err := bulkUpsertASTDependencies(ctx, man, lib); err != nil {
+		if err := bulkUpsertCallGraphDependencies(ctx, man, lib); err != nil {
 			return err
 		}
 	}
@@ -234,7 +234,7 @@ func upsertLibrary(ctx context.Context, man *neo4jSvc.Manager, lib *library) err
 	return multierr.Append(err, session.Close(ctx))
 }
 
-func bulkUpsertASTDependencies(ctx context.Context, man *neo4jSvc.Manager, lib *library) error {
+func bulkUpsertCallGraphDependencies(ctx context.Context, man *neo4jSvc.Manager, lib *library) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -246,28 +246,28 @@ func bulkUpsertASTDependencies(ctx context.Context, man *neo4jSvc.Manager, lib *
 		_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 			return tx.Run(ctx,
 				`
-				UNWIND $astDependencies AS astd
+				UNWIND $callGraphDependencies AS cgd
 					// Match the "from" and "to" Symbol nodes by their identity
-					MATCH (from:Symbol {identity: astd.from})
-					MATCH (to:Symbol {identity: astd.to})
+					MATCH (from:Symbol {identity: cgd.from})
+					MATCH (to:Symbol {identity: cgd.to})
 
-					// Check if an ASTDependency already exists for the given "from" Symbol
-					OPTIONAL MATCH (existingDep:ASTDependency)-[:CALLER]->(from)
+					// Check if an CallGraphDependency already exists for the given "from" Symbol
+					OPTIONAL MATCH (existingDep:CallGraphDependency)-[:CALLER]->(from)
 
-					// If no existing ASTDependency, create one and link it to both "from" and "to"
+					// If no existing CallGraphDependency, create one and link it to both "from" and "to"
 					FOREACH (_ IN CASE WHEN existingDep IS NULL THEN [1] ELSE [] END |
-						CREATE (a:ASTDependency)
+						CREATE (a:CallGraphDependency)
 						CREATE (a)-[:CALLER]->(from)
 						CREATE (a)-[:CALLEES]->(to)
 					)
 
-					// If an existing ASTDependency exists, ensure it is connected to the "to" Symbol
+					// If an existing CallGraphDependency exists, ensure it is connected to the "to" Symbol
 					FOREACH (_ IN CASE WHEN existingDep IS NOT NULL THEN [1] ELSE [] END |
 						MERGE (existingDep)-[:CALLEES]->(to)
 					)
 				`,
 				map[string]any{
-					"astDependencies": func() []map[string]string {
+					"callGraphDependencies": func() []map[string]string {
 						out := []map[string]string{}
 						// For all symbols from this package
 						for _, s := range p.Symbols {
@@ -341,7 +341,7 @@ func retrieveLibrary(ctx context.Context, man *neo4jSvc.Manager, name, version s
 	return res.(*Library), nil
 }
 
-func retrieveSymbolASTDependencies(ctx context.Context, man *neo4jSvc.Manager, sym *Symbol) (*SymbolDepGraph, error) {
+func retrieveSymbolCallGraphDependencies(ctx context.Context, man *neo4jSvc.Manager, sym *Symbol) (*SymbolDepGraph, error) {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return nil, err
@@ -352,7 +352,7 @@ func retrieveSymbolASTDependencies(ctx context.Context, man *neo4jSvc.Manager, s
 		res, err := tx.Run(ctx,
 			`
 			MATCH (from:Symbol {identity: $identity})
-			OPTIONAL MATCH (from:Symbol)<-[:FROM]-(:ASTDependency)-[:TO]->(s:Symbol)
+			OPTIONAL MATCH (from:Symbol)<-[:FROM]-(:CallGraphDependency)-[:TO]->(s:Symbol)
 			RETURN from, collect(s) AS to
 			`,
 			map[string]any{
@@ -393,8 +393,8 @@ func retrieveSymbolASTDependencies(ctx context.Context, man *neo4jSvc.Manager, s
 func reset(ctx context.Context, man *neo4jSvc.Manager) error {
 	return multierr.Combine(
 		common.Trash(ctx, man, `MATCH (:Library)-[r:PROVIDES]->(:Symbol)`, "r"),
-		common.Trash(ctx, man, `MATCH (:Symbol)<-[r:CALLER]-(:ASTDependency)`, "r"),
-		common.Trash(ctx, man, `MATCH (:Symbol)<-[r:CALLEES]-(:ASTDependency)`, "r"),
-		common.Trash(ctx, man, `MATCH (n) WHERE n:Library OR n:Symbol OR n:ASTDependency`, "n"),
+		common.Trash(ctx, man, `MATCH (:Symbol)<-[r:CALLER]-(:CallGraphDependency)`, "r"),
+		common.Trash(ctx, man, `MATCH (:Symbol)<-[r:CALLEES]-(:CallGraphDependency)`, "r"),
+		common.Trash(ctx, man, `MATCH (n) WHERE n:Library OR n:Symbol OR n:CallGraphDependency`, "n"),
 	)
 }

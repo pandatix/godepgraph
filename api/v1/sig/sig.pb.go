@@ -128,30 +128,30 @@ func (x *RetrieveComponentRequest) GetVersion() string {
 	return ""
 }
 
-type CreateNetworkDependencyRequest struct {
+type CreateInterComponentDependencyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The caller component.
-	Caller *CreateNetworkDependencyEndpointRequest `protobuf:"bytes,1,opt,name=caller,proto3" json:"caller,omitempty"`
+	Caller *CreateInterComponentDependencyEndpointRequest `protobuf:"bytes,1,opt,name=caller,proto3" json:"caller,omitempty"`
 	// The callees (API methods called by the component).
-	Callees       []*CreateNetworkDependencyEndpointRequest `protobuf:"bytes,2,rep,name=callees,proto3" json:"callees,omitempty"`
+	Callees       []*CreateInterComponentDependencyEndpointRequest `protobuf:"bytes,2,rep,name=callees,proto3" json:"callees,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateNetworkDependencyRequest) Reset() {
-	*x = CreateNetworkDependencyRequest{}
+func (x *CreateInterComponentDependencyRequest) Reset() {
+	*x = CreateInterComponentDependencyRequest{}
 	mi := &file_api_v1_sig_sig_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateNetworkDependencyRequest) String() string {
+func (x *CreateInterComponentDependencyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateNetworkDependencyRequest) ProtoMessage() {}
+func (*CreateInterComponentDependencyRequest) ProtoMessage() {}
 
-func (x *CreateNetworkDependencyRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateInterComponentDependencyRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_v1_sig_sig_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -163,49 +163,49 @@ func (x *CreateNetworkDependencyRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateNetworkDependencyRequest.ProtoReflect.Descriptor instead.
-func (*CreateNetworkDependencyRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateInterComponentDependencyRequest.ProtoReflect.Descriptor instead.
+func (*CreateInterComponentDependencyRequest) Descriptor() ([]byte, []int) {
 	return file_api_v1_sig_sig_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CreateNetworkDependencyRequest) GetCaller() *CreateNetworkDependencyEndpointRequest {
+func (x *CreateInterComponentDependencyRequest) GetCaller() *CreateInterComponentDependencyEndpointRequest {
 	if x != nil {
 		return x.Caller
 	}
 	return nil
 }
 
-func (x *CreateNetworkDependencyRequest) GetCallees() []*CreateNetworkDependencyEndpointRequest {
+func (x *CreateInterComponentDependencyRequest) GetCallees() []*CreateInterComponentDependencyEndpointRequest {
 	if x != nil {
 		return x.Callees
 	}
 	return nil
 }
 
-type CreateNetworkDependencyEndpointRequest struct {
+type CreateInterComponentDependencyEndpointRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Name of the Endpoint, for a Component.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	// The Component the Endpoint exposes.
-	Exposes       *CreateNetworkDependencyEndpointComponentRequest `protobuf:"bytes,2,opt,name=exposes,proto3" json:"exposes,omitempty"`
+	Exposes       *CreateInterComponentDependencyEndpointComponentRequest `protobuf:"bytes,2,opt,name=exposes,proto3" json:"exposes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateNetworkDependencyEndpointRequest) Reset() {
-	*x = CreateNetworkDependencyEndpointRequest{}
+func (x *CreateInterComponentDependencyEndpointRequest) Reset() {
+	*x = CreateInterComponentDependencyEndpointRequest{}
 	mi := &file_api_v1_sig_sig_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateNetworkDependencyEndpointRequest) String() string {
+func (x *CreateInterComponentDependencyEndpointRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateNetworkDependencyEndpointRequest) ProtoMessage() {}
+func (*CreateInterComponentDependencyEndpointRequest) ProtoMessage() {}
 
-func (x *CreateNetworkDependencyEndpointRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateInterComponentDependencyEndpointRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_v1_sig_sig_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -217,26 +217,26 @@ func (x *CreateNetworkDependencyEndpointRequest) ProtoReflect() protoreflect.Mes
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateNetworkDependencyEndpointRequest.ProtoReflect.Descriptor instead.
-func (*CreateNetworkDependencyEndpointRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateInterComponentDependencyEndpointRequest.ProtoReflect.Descriptor instead.
+func (*CreateInterComponentDependencyEndpointRequest) Descriptor() ([]byte, []int) {
 	return file_api_v1_sig_sig_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CreateNetworkDependencyEndpointRequest) GetName() string {
+func (x *CreateInterComponentDependencyEndpointRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateNetworkDependencyEndpointRequest) GetExposes() *CreateNetworkDependencyEndpointComponentRequest {
+func (x *CreateInterComponentDependencyEndpointRequest) GetExposes() *CreateInterComponentDependencyEndpointComponentRequest {
 	if x != nil {
 		return x.Exposes
 	}
 	return nil
 }
 
-type CreateNetworkDependencyEndpointComponentRequest struct {
+type CreateInterComponentDependencyEndpointComponentRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
@@ -244,20 +244,20 @@ type CreateNetworkDependencyEndpointComponentRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CreateNetworkDependencyEndpointComponentRequest) Reset() {
-	*x = CreateNetworkDependencyEndpointComponentRequest{}
+func (x *CreateInterComponentDependencyEndpointComponentRequest) Reset() {
+	*x = CreateInterComponentDependencyEndpointComponentRequest{}
 	mi := &file_api_v1_sig_sig_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateNetworkDependencyEndpointComponentRequest) String() string {
+func (x *CreateInterComponentDependencyEndpointComponentRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateNetworkDependencyEndpointComponentRequest) ProtoMessage() {}
+func (*CreateInterComponentDependencyEndpointComponentRequest) ProtoMessage() {}
 
-func (x *CreateNetworkDependencyEndpointComponentRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateInterComponentDependencyEndpointComponentRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_v1_sig_sig_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -269,19 +269,19 @@ func (x *CreateNetworkDependencyEndpointComponentRequest) ProtoReflect() protore
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateNetworkDependencyEndpointComponentRequest.ProtoReflect.Descriptor instead.
-func (*CreateNetworkDependencyEndpointComponentRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateInterComponentDependencyEndpointComponentRequest.ProtoReflect.Descriptor instead.
+func (*CreateInterComponentDependencyEndpointComponentRequest) Descriptor() ([]byte, []int) {
 	return file_api_v1_sig_sig_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CreateNetworkDependencyEndpointComponentRequest) GetName() string {
+func (x *CreateInterComponentDependencyEndpointComponentRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *CreateNetworkDependencyEndpointComponentRequest) GetVersion() string {
+func (x *CreateInterComponentDependencyEndpointComponentRequest) GetVersion() string {
 	if x != nil {
 		return x.Version
 	}
@@ -362,14 +362,14 @@ const file_api_v1_sig_sig_proto_rawDesc = "" +
 	"\x18RetrieveComponentRequest\x12-\n" +
 	"\x04name\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"some-component\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
-	"J\b\"v2.3.0\"\xe2A\x01\x02R\aversion\"\xba\x01\n" +
-	"\x1eCreateNetworkDependencyRequest\x12J\n" +
-	"\x06caller\x18\x01 \x01(\v22.api.v1.sig.CreateNetworkDependencyEndpointRequestR\x06caller\x12L\n" +
-	"\acallees\x18\x02 \x03(\v22.api.v1.sig.CreateNetworkDependencyEndpointRequestR\acallees\"\xcd\x01\n" +
-	"&CreateNetworkDependencyEndpointRequest\x120\n" +
-	"\x04name\x18\x01 \x01(\tB\x1c\x92A\x15J\x13\"api/vx.SomeMethod\"\xe2A\x01\x02R\x04name\x12q\n" +
-	"\aexposes\x18\x02 \x01(\v2;.api.v1.sig.CreateNetworkDependencyEndpointComponentRequestB\x1a\x92A\x13J\x11\"other-component\"\xe2A\x01\x02R\aexposes\"\x8d\x01\n" +
-	"/CreateNetworkDependencyEndpointComponentRequest\x12-\n" +
+	"J\b\"v2.3.0\"\xe2A\x01\x02R\aversion\"\xcf\x01\n" +
+	"%CreateInterComponentDependencyRequest\x12Q\n" +
+	"\x06caller\x18\x01 \x01(\v29.api.v1.sig.CreateInterComponentDependencyEndpointRequestR\x06caller\x12S\n" +
+	"\acallees\x18\x02 \x03(\v29.api.v1.sig.CreateInterComponentDependencyEndpointRequestR\acallees\"\xdb\x01\n" +
+	"-CreateInterComponentDependencyEndpointRequest\x120\n" +
+	"\x04name\x18\x01 \x01(\tB\x1c\x92A\x15J\x13\"api/vx.SomeMethod\"\xe2A\x01\x02R\x04name\x12x\n" +
+	"\aexposes\x18\x02 \x01(\v2B.api.v1.sig.CreateInterComponentDependencyEndpointComponentRequestB\x1a\x92A\x13J\x11\"other-component\"\xe2A\x01\x02R\aexposes\"\x94\x01\n" +
+	"6CreateInterComponentDependencyEndpointComponentRequest\x12-\n" +
 	"\x04name\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"some-component\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
 	"J\b\"v2.3.0\"\xe2A\x01\x02R\aversion\"\x85\x01\n" +
@@ -377,11 +377,11 @@ const file_api_v1_sig_sig_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"some-component\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
 	"J\b\"v2.3.0\"\xe2A\x01\x02R\aversion\x12\x1c\n" +
-	"\tendpoints\x18\x03 \x03(\tR\tendpoints2\xbf\x03\n" +
+	"\tendpoints\x18\x03 \x03(\tR\tendpoints2\xd5\x03\n" +
 	"\x03SIG\x12n\n" +
 	"\x0fCreateComponent\x12\".api.v1.sig.CreateComponentRequest\x1a\x15.api.v1.sig.Component\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/sig/component\x12o\n" +
-	"\x11RetrieveComponent\x12$.api.v1.sig.RetrieveComponentRequest\x1a\x15.api.v1.sig.Component\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/sig/component\x12\x88\x01\n" +
-	"\x17CreateNetworkDependency\x12*.api.v1.sig.CreateNetworkDependencyRequest\x1a\x16.google.protobuf.Empty\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/sig/network-dependency\x12L\n" +
+	"\x11RetrieveComponent\x12$.api.v1.sig.RetrieveComponentRequest\x1a\x15.api.v1.sig.Component\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/sig/component\x12\x9e\x01\n" +
+	"\x1eCreateInterComponentDependency\x121.api.v1.sig.CreateInterComponentDependencyRequest\x1a\x16.google.protobuf.Empty\"1\x82\xd3\xe4\x93\x02+:\x01*\"&/api/v1/sig/inter-component-dependency\x12L\n" +
 	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/sigBFZDgit.cvewatcher.la-ruche.fr/CVEWatcher/godepgraph/api/v1/sig;apiv1sigb\x06proto3"
 
 var (
@@ -398,25 +398,25 @@ func file_api_v1_sig_sig_proto_rawDescGZIP() []byte {
 
 var file_api_v1_sig_sig_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_api_v1_sig_sig_proto_goTypes = []any{
-	(*CreateComponentRequest)(nil),                          // 0: api.v1.sig.CreateComponentRequest
-	(*RetrieveComponentRequest)(nil),                        // 1: api.v1.sig.RetrieveComponentRequest
-	(*CreateNetworkDependencyRequest)(nil),                  // 2: api.v1.sig.CreateNetworkDependencyRequest
-	(*CreateNetworkDependencyEndpointRequest)(nil),          // 3: api.v1.sig.CreateNetworkDependencyEndpointRequest
-	(*CreateNetworkDependencyEndpointComponentRequest)(nil), // 4: api.v1.sig.CreateNetworkDependencyEndpointComponentRequest
-	(*Component)(nil),                                       // 5: api.v1.sig.Component
-	(*emptypb.Empty)(nil),                                   // 6: google.protobuf.Empty
+	(*CreateComponentRequest)(nil),                                 // 0: api.v1.sig.CreateComponentRequest
+	(*RetrieveComponentRequest)(nil),                               // 1: api.v1.sig.RetrieveComponentRequest
+	(*CreateInterComponentDependencyRequest)(nil),                  // 2: api.v1.sig.CreateInterComponentDependencyRequest
+	(*CreateInterComponentDependencyEndpointRequest)(nil),          // 3: api.v1.sig.CreateInterComponentDependencyEndpointRequest
+	(*CreateInterComponentDependencyEndpointComponentRequest)(nil), // 4: api.v1.sig.CreateInterComponentDependencyEndpointComponentRequest
+	(*Component)(nil),     // 5: api.v1.sig.Component
+	(*emptypb.Empty)(nil), // 6: google.protobuf.Empty
 }
 var file_api_v1_sig_sig_proto_depIdxs = []int32{
-	3, // 0: api.v1.sig.CreateNetworkDependencyRequest.caller:type_name -> api.v1.sig.CreateNetworkDependencyEndpointRequest
-	3, // 1: api.v1.sig.CreateNetworkDependencyRequest.callees:type_name -> api.v1.sig.CreateNetworkDependencyEndpointRequest
-	4, // 2: api.v1.sig.CreateNetworkDependencyEndpointRequest.exposes:type_name -> api.v1.sig.CreateNetworkDependencyEndpointComponentRequest
+	3, // 0: api.v1.sig.CreateInterComponentDependencyRequest.caller:type_name -> api.v1.sig.CreateInterComponentDependencyEndpointRequest
+	3, // 1: api.v1.sig.CreateInterComponentDependencyRequest.callees:type_name -> api.v1.sig.CreateInterComponentDependencyEndpointRequest
+	4, // 2: api.v1.sig.CreateInterComponentDependencyEndpointRequest.exposes:type_name -> api.v1.sig.CreateInterComponentDependencyEndpointComponentRequest
 	0, // 3: api.v1.sig.SIG.CreateComponent:input_type -> api.v1.sig.CreateComponentRequest
 	1, // 4: api.v1.sig.SIG.RetrieveComponent:input_type -> api.v1.sig.RetrieveComponentRequest
-	2, // 5: api.v1.sig.SIG.CreateNetworkDependency:input_type -> api.v1.sig.CreateNetworkDependencyRequest
+	2, // 5: api.v1.sig.SIG.CreateInterComponentDependency:input_type -> api.v1.sig.CreateInterComponentDependencyRequest
 	6, // 6: api.v1.sig.SIG.Reset:input_type -> google.protobuf.Empty
 	5, // 7: api.v1.sig.SIG.CreateComponent:output_type -> api.v1.sig.Component
 	5, // 8: api.v1.sig.SIG.RetrieveComponent:output_type -> api.v1.sig.Component
-	6, // 9: api.v1.sig.SIG.CreateNetworkDependency:output_type -> google.protobuf.Empty
+	6, // 9: api.v1.sig.SIG.CreateInterComponentDependency:output_type -> google.protobuf.Empty
 	6, // 10: api.v1.sig.SIG.Reset:output_type -> google.protobuf.Empty
 	7, // [7:11] is the sub-list for method output_type
 	3, // [3:7] is the sub-list for method input_type

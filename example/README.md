@@ -135,7 +135,7 @@ The following are example ciphers to use when analyzing the data.
 > It is one limitation of the current approach, which should be improved in future work with Data Flow Analysis (DFA) to narrow down the propagation.
 
 ```cypher
-MATCH (v1 {mark: true})<-[:CALLER]-(a1:ASTDependency)-[:CALLEES]->(v2 {mark: true})
+MATCH (v1 {mark: true})<-[:CALLER]-(a1:CallGraphDependency)-[:CALLEES]->(v2 {mark: true})
 RETURN v1, v2, a1
 ```
 
@@ -144,7 +144,7 @@ RETURN v1, v2, a1
 ```cypher
 MATCH (v:Vulnerability)
 MATCH (v)-[:THREATENS]->(s:Symbol)
-OPTIONAL MATCH (s2:Symbol)<-[:CALLER]-(a:ASTDependency)-[:CALLEES]->(s)
+OPTIONAL MATCH (s2:Symbol)<-[:CALLER]-(a:CallGraphDependency)-[:CALLEES]->(s)
 MATCH (l:Library)
 WHERE (l)-[:PROVIDES]->(s) OR (l)-[:PROVIDES]->(s2)
 OPTIONAL MATCH (c:Component)<-[:SPECIALIZES_INTO]-(b:Binding)-[:SPECIALIZES_INTO]->(l)
@@ -165,7 +165,7 @@ MATCH (v)-[:THREATENS]->(s:Symbol)
 
 // Then the symbols that calls it (Chall-Manager has no wrapper around it,
 // so 1 hop is enough -> it is not a generic query)
-OPTIONAL MATCH (s2:Symbol)<-[:CALLER]-(a:ASTDependency)-[:CALLEES]->(s)
+OPTIONAL MATCH (s2:Symbol)<-[:CALLER]-(a:CallGraphDependency)-[:CALLEES]->(s)
 
 // Get the vulnerable library that provides the threatened symbols
 MATCH (l:Library)
@@ -180,7 +180,7 @@ OPTIONAL MATCH (e:Endpoint)
 WHERE (e)-[:SERVES]->(s) OR (e)-[:SERVES]->(s2)
 
 // Then get the adjacent components that interacts with these endpoints
-OPTIONAL MATCH (c2:Component)<-[:EXPOSES]-(e2:Endpoint)<-[:CALLER]-(n:NetworkDependency)-[:CALLEES]->(e)
+OPTIONAL MATCH (c2:Component)<-[:EXPOSES]-(e2:Endpoint)<-[:CALLER]-(n:InterComponentDependency)-[:CALLEES]->(e)
 
 // Return everything
 RETURN v, s, a, s2, l, b, c, e, c2, n, e2
@@ -188,11 +188,11 @@ RETURN v, s, a, s2, l, b, c, e, c2, n, e2
 
 ### All objects that are potentially vulnerable
 
-We filter out `Library` objects that are not `Component` objects, and avoid `Symbol` and `ASTDependency` objects to simplify understanding of the potential blast radius of the vulnerability.
+We filter out `Library` objects that are not `Component` objects, and avoid `Symbol` and `CallGraphDependency` objects to simplify understanding of the potential blast radius of the vulnerability.
 
 ```cypher
 MATCH (n {mark: true})
-WHERE NOT (n:Symbol OR n:ASTDependency)
+WHERE NOT (n:Symbol OR n:CallGraphDependency)
   AND (NOT n:Library OR EXISTS {
     MATCH (:Binding)-[:SPECIALIZES_INTO]->(n)
   })
@@ -204,6 +204,30 @@ Using the simulation, you should end up with something like the following image.
 <div align="center">
     <img src="res/cypher-blast.png" width="800px">
 </div>
+
+### Example vulnerability propagation
+
+This cypher is tied to our example vulnerability propagation analysis.
+It returns something similar to [the previous cypher](#all-objects-that-are-potentially-vulnerable), but also the vulnerability and the symbols it affects and which are reachable through endpoints.
+
+```cypher
+// Get all nodes, reduce noise by not returning CDN data ...
+MATCH (n {mark: true})
+WHERE NOT (n:Symbol OR n:CallGraphDependency)
+  AND (NOT n:Library OR EXISTS {
+    MATCH (:Binding)-[:SPECIALIZES_INTO]->(n)
+  })
+
+// ... and select the vulnerable symbol then the endpoint that calls it (in 1 hop) ...
+MATCH (s:Symbol{identity: "github.com/ctfer-io/chall-manager/pkg/scenario.DecodeOCI"})
+OPTIONAL MATCH (e:Symbol{mark: true}) WHERE (n:Endpoint)-[:SERVES]->(e)
+OPTIONAL MATCH (d:CallGraphDependency) WHERE (s)<-[:CALLEES]-(d:CallGraphDependency)-[:CALLER]->(e)
+
+// ... and of course the vulnerability
+MATCH (v:Vulnerability)
+
+RETURN n, s, e, d, v
+```
 
 ## Troubleshoot
 
