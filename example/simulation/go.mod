@@ -3,11 +3,11 @@ module github.com/pandatix/godepgraph/example/simulation
 go 1.24.5
 
 require (
-	github.com/ctfer-io/chall-manager/deploy v0.5.1
+	github.com/ctfer-io/chall-manager/deploy v0.5.3
 	github.com/pkg/errors v0.9.1
 	github.com/pulumi/pulumi-kubernetes/sdk/v4 v4.23.0
 	github.com/pulumi/pulumi-random/sdk/v4 v4.18.3
-	github.com/pulumi/pulumi/sdk/v3 v3.189.0
+	github.com/pulumi/pulumi/sdk/v3 v3.192.0
 	go.uber.org/multierr v1.11.0
 )
 
@@ -94,8 +94,8 @@ require (
 	golang.org/x/text v0.27.0 // indirect
 	golang.org/x/tools v0.35.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250728155136-f173205681a0 // indirect
-	google.golang.org/grpc v1.74.2 // indirect
-	google.golang.org/protobuf v1.36.7 // indirect
+	google.golang.org/grpc v1.75.0 // indirect
+	google.golang.org/protobuf v1.36.8 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	lukechampine.com/frand v1.4.2 // indirect
