@@ -135,7 +135,9 @@ message Component {
 message Endpoint {
   Component exposes = 1;
 
-  string name = 2 [
+  string serves = 2;
+
+  string name = 3 [
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-endpoint\""},
     (google.api.field_behavior) = REQUIRED
   ];

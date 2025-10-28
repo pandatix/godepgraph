@@ -328,6 +328,9 @@
         "exposes": {
           "$ref": "#/definitions/sigComponent"
         },
+        "serves": {
+          "type": "string"
+        },
         "name": {
           "type": "string",
           "example": "some-endpoint"

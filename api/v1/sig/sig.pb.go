@@ -448,7 +448,8 @@ func (x *Component) GetEndpoints() []string {
 type Endpoint struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Exposes       *Component             `protobuf:"bytes,1,opt,name=exposes,proto3" json:"exposes,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Serves        string                 `protobuf:"bytes,2,opt,name=serves,proto3" json:"serves,omitempty"`
+	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -488,6 +489,13 @@ func (x *Endpoint) GetExposes() *Component {
 		return x.Exposes
 	}
 	return nil
+}
+
+func (x *Endpoint) GetServes() string {
+	if x != nil {
+		return x.Serves
+	}
+	return ""
 }
 
 func (x *Endpoint) GetName() string {
@@ -574,10 +582,11 @@ const file_api_v1_sig_sig_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"some-component\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
 	"J\b\"v2.3.0\"\xe2A\x01\x02R\aversion\x12\x1c\n" +
-	"\tendpoints\x18\x03 \x03(\tR\tendpoints\"i\n" +
+	"\tendpoints\x18\x03 \x03(\tR\tendpoints\"\x81\x01\n" +
 	"\bEndpoint\x12/\n" +
-	"\aexposes\x18\x01 \x01(\v2\x15.api.v1.sig.ComponentR\aexposes\x12,\n" +
-	"\x04name\x18\x02 \x01(\tB\x18\x92A\x11J\x0f\"some-endpoint\"\xe2A\x01\x02R\x04name\"C\n" +
+	"\aexposes\x18\x01 \x01(\v2\x15.api.v1.sig.ComponentR\aexposes\x12\x16\n" +
+	"\x06serves\x18\x02 \x01(\tR\x06serves\x12,\n" +
+	"\x04name\x18\x03 \x01(\tB\x18\x92A\x11J\x0f\"some-endpoint\"\xe2A\x01\x02R\x04name\"C\n" +
 	"\n" +
 	"Components\x125\n" +
 	"\n" +

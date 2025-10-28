@@ -248,10 +248,13 @@ func queryICDS(ctx context.Context, man *neo4jSvc.Manager) (*InterComponentDepen
 		res, err := tx.Run(ctx,
 			`
 			MATCH (caller:Component)<-[:EXPOSES]-(ecaller:Endpoint)<-[:CALLER]-(icd:InterComponentDependency)-[:CALLEES]->(ecallee:Endpoint)-[:EXPOSES]->(callee:Component)
+			OPTIONAL MATCH (scaller:Symbol)<-[:SERVES]-(ecaller)
+			OPTIONAL MATCH (scallee:Symbol)<-[:SERVES]-(ecallee)
 			RETURN
 				caller,
 				ecaller,
-				collect(DISTINCT { endpoint: ecallee, component: callee }) AS callees
+				collect(DISTINCT { endpoint: ecallee, serves: scallee, component: callee }) AS callees,
+				scaller
 			`,
 			nil,
 		)
@@ -273,21 +276,36 @@ func queryICDS(ctx context.Context, man *neo4jSvc.Manager) (*InterComponentDepen
 			for _, cr := range callees {
 				comp := cr.(map[string]any)["component"]
 				edp := cr.(map[string]any)["endpoint"]
+				serves := cr.(map[string]any)["serves"]
+
 				c = append(c, &Endpoint{
 					Exposes: &Component{
 						Name:    comp.(dbtype.Node).Props["name"].(string),
 						Version: comp.(dbtype.Node).Props["version"].(string),
 					},
+					Serves: func() string {
+						if serves != nil {
+							return serves.(dbtype.Node).Props["identity"].(string)
+						}
+						return "" // is OK due to incomplete analyses
+					}(),
 					Name: edp.(dbtype.Node).Props["name"].(string),
 				})
 			}
 
+			scaller := rec.Values[3]
 			iedps = append(iedps, &InterComponentDependency{
 				Caller: &Endpoint{
 					Exposes: &Component{
 						Name:    caller.Props["name"].(string),
 						Version: caller.Props["version"].(string),
 					},
+					Serves: func() string {
+						if scaller != nil {
+							return scaller.(dbtype.Node).Props["identity"].(string)
+						}
+						return "" // is OK due to incomplete analyses
+					}(),
 					Name: ecaller.Props["name"].(string),
 				},
 				Callees: c,
