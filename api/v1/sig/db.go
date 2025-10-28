@@ -237,6 +237,70 @@ func upsertInterComponentDependencies(ctx context.Context, man *neo4jSvc.Manager
 	return multierr.Append(err, session.Close(ctx))
 }
 
+func queryICDS(ctx context.Context, man *neo4jSvc.Manager) (*InterComponentDependencies, error) {
+	session, err := man.NewSession(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer session.Close(ctx)
+
+	res, err := session.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		res, err := tx.Run(ctx,
+			`
+			MATCH (caller:Component)<-[:EXPOSES]-(ecaller:Endpoint)<-[:CALLER]-(icd:InterComponentDependency)-[:CALLEES]->(ecallee:Endpoint)-[:EXPOSES]->(callee:Component)
+			RETURN
+				caller,
+				ecaller,
+				collect(DISTINCT { endpoint: ecallee, component: callee }) AS callees
+			`,
+			nil,
+		)
+		if err != nil {
+			return nil, err
+		}
+		r, err := res.Collect(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		iedps := make([]*InterComponentDependency, 0, len(r))
+		for _, rec := range r {
+			caller := rec.Values[0].(dbtype.Node)
+			ecaller := rec.Values[1].(dbtype.Node)
+
+			callees := rec.Values[2].([]any)
+			c := make([]*Endpoint, 0, len(callees))
+			for _, cr := range callees {
+				comp := cr.(map[string]any)["component"]
+				edp := cr.(map[string]any)["endpoint"]
+				c = append(c, &Endpoint{
+					Exposes: &Component{
+						Name:    comp.(dbtype.Node).Props["name"].(string),
+						Version: comp.(dbtype.Node).Props["version"].(string),
+					},
+					Name: edp.(dbtype.Node).Props["name"].(string),
+				})
+			}
+
+			iedps = append(iedps, &InterComponentDependency{
+				Caller: &Endpoint{
+					Exposes: &Component{
+						Name:    caller.Props["name"].(string),
+						Version: caller.Props["version"].(string),
+					},
+					Name: ecaller.Props["name"].(string),
+				},
+				Callees: c,
+			})
+		}
+		return iedps, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &InterComponentDependencies{Icds: res.([]*InterComponentDependency)}, nil
+}
+
 func reset(ctx context.Context, man *neo4jSvc.Manager) error {
 	return multierr.Combine(
 		common.Trash(ctx, man, `MATCH (:Component)<-[r:EXPOSES]-(:Endpoint)`, "r"),

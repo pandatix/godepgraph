@@ -36,6 +36,14 @@ service SIG {
     };
   }
 
+  // Query all existing Inter-Component Dependency known in the system under observation.
+  // The results are grouped per endpoints, thus represents the interactions through
+  // functional dependencies as observed at runtime.
+  // Ordering is not guaranteed.
+  rpc QueryInterComponentDependency(google.protobuf.Empty) returns (InterComponentDependencies) {
+    option (google.api.http) = {get: "/api/v1/sig/inter-component-dependency"};
+  }
+
   // Reset the global knowledge of the system under observation.
   rpc Reset(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/sig"};
@@ -100,6 +108,15 @@ message CreateInterComponentDependencyEndpointComponentRequest {
   ];
 }
 
+message InterComponentDependencies {
+  repeated InterComponentDependency icds = 1;
+}
+
+message InterComponentDependency {
+  Endpoint caller = 1;
+  repeated Endpoint callees = 2;
+}
+
 message Component {
   string name = 1 [
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-component\""},
@@ -113,6 +130,15 @@ message Component {
 
   // The list of all known endpoints of the Component.
   repeated string endpoints = 3;
+}
+
+message Endpoint {
+  Component exposes = 1;
+
+  string name = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"some-endpoint\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 message Components {

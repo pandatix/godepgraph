@@ -24,6 +24,7 @@ const (
 	SIG_RetrieveComponent_FullMethodName              = "/api.v1.sig.SIG/RetrieveComponent"
 	SIG_QueryComponent_FullMethodName                 = "/api.v1.sig.SIG/QueryComponent"
 	SIG_CreateInterComponentDependency_FullMethodName = "/api.v1.sig.SIG/CreateInterComponentDependency"
+	SIG_QueryInterComponentDependency_FullMethodName  = "/api.v1.sig.SIG/QueryInterComponentDependency"
 	SIG_Reset_FullMethodName                          = "/api.v1.sig.SIG/Reset"
 )
 
@@ -39,7 +40,12 @@ type SIGClient interface {
 	QueryComponent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Components, error)
 	// Create an Inter-Component Dependency between Endpoints that exposes Components together.
 	CreateInterComponentDependency(ctx context.Context, in *CreateInterComponentDependencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Reset the global knowledge of the system under observation.
+	// Query all existing Inter-Component Dependency known in the system under observation.
+	// The results are grouped per endpoints, thus represents the interactions through
+	// functional dependencies as observed at runtime.
+	// Ordering is not guaranteed.
+	QueryInterComponentDependency(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InterComponentDependencies, error)
+	// Reset the global knowlemadge of the system under observation.
 	Reset(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -91,6 +97,16 @@ func (c *sIGClient) CreateInterComponentDependency(ctx context.Context, in *Crea
 	return out, nil
 }
 
+func (c *sIGClient) QueryInterComponentDependency(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InterComponentDependencies, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InterComponentDependencies)
+	err := c.cc.Invoke(ctx, SIG_QueryInterComponentDependency_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sIGClient) Reset(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -113,7 +129,12 @@ type SIGServer interface {
 	QueryComponent(context.Context, *emptypb.Empty) (*Components, error)
 	// Create an Inter-Component Dependency between Endpoints that exposes Components together.
 	CreateInterComponentDependency(context.Context, *CreateInterComponentDependencyRequest) (*emptypb.Empty, error)
-	// Reset the global knowledge of the system under observation.
+	// Query all existing Inter-Component Dependency known in the system under observation.
+	// The results are grouped per endpoints, thus represents the interactions through
+	// functional dependencies as observed at runtime.
+	// Ordering is not guaranteed.
+	QueryInterComponentDependency(context.Context, *emptypb.Empty) (*InterComponentDependencies, error)
+	// Reset the global knowlemadge of the system under observation.
 	Reset(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedSIGServer()
 }
@@ -136,6 +157,9 @@ func (UnimplementedSIGServer) QueryComponent(context.Context, *emptypb.Empty) (*
 }
 func (UnimplementedSIGServer) CreateInterComponentDependency(context.Context, *CreateInterComponentDependencyRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateInterComponentDependency not implemented")
+}
+func (UnimplementedSIGServer) QueryInterComponentDependency(context.Context, *emptypb.Empty) (*InterComponentDependencies, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryInterComponentDependency not implemented")
 }
 func (UnimplementedSIGServer) Reset(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Reset not implemented")
@@ -233,6 +257,24 @@ func _SIG_CreateInterComponentDependency_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SIG_QueryInterComponentDependency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SIGServer).QueryInterComponentDependency(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SIG_QueryInterComponentDependency_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SIGServer).QueryInterComponentDependency(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SIG_Reset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -273,6 +315,10 @@ var SIG_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateInterComponentDependency",
 			Handler:    _SIG_CreateInterComponentDependency_Handler,
+		},
+		{
+			MethodName: "QueryInterComponentDependency",
+			Handler:    _SIG_QueryInterComponentDependency_Handler,
 		},
 		{
 			MethodName: "Reset",
