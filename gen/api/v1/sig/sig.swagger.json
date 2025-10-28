@@ -42,13 +42,13 @@
     },
     "/api/v1/sig/component": {
       "get": {
-        "summary": "Retrieve the current knowledge state of a Component of the system under observation.",
-        "operationId": "SIG_RetrieveComponent",
+        "summary": "Query the current knowledge state of all Components involved in the system under observation.",
+        "operationId": "SIG_QueryComponent",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/sigComponent"
+              "$ref": "#/definitions/sigComponents"
             }
           },
           "default": {
@@ -58,20 +58,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "version",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
         "tags": [
           "SIG"
         ]
@@ -101,6 +87,43 @@
             "schema": {
               "$ref": "#/definitions/sigCreateComponentRequest"
             }
+          }
+        ],
+        "tags": [
+          "SIG"
+        ]
+      }
+    },
+    "/api/v1/sig/component/{name}/{version}": {
+      "get": {
+        "summary": "Retrieve the current knowledge state of a Component of the system under observation.",
+        "operationId": "SIG_RetrieveComponent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sigComponent"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
@@ -195,6 +218,18 @@
         "name",
         "version"
       ]
+    },
+    "sigComponents": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/sigComponent"
+          }
+        }
+      }
     },
     "sigCreateComponentRequest": {
       "type": "object",

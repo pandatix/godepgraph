@@ -349,6 +349,50 @@ func (x *Component) GetEndpoints() []string {
 	return nil
 }
 
+type Components struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Components    []*Component           `protobuf:"bytes,1,rep,name=components,proto3" json:"components,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Components) Reset() {
+	*x = Components{}
+	mi := &file_api_v1_sig_sig_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Components) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Components) ProtoMessage() {}
+
+func (x *Components) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_sig_sig_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Components.ProtoReflect.Descriptor instead.
+func (*Components) Descriptor() ([]byte, []int) {
+	return file_api_v1_sig_sig_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *Components) GetComponents() []*Component {
+	if x != nil {
+		return x.Components
+	}
+	return nil
+}
+
 var File_api_v1_sig_sig_proto protoreflect.FileDescriptor
 
 const file_api_v1_sig_sig_proto_rawDesc = "" +
@@ -377,10 +421,16 @@ const file_api_v1_sig_sig_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"some-component\"\xe2A\x01\x02R\x04name\x12+\n" +
 	"\aversion\x18\x02 \x01(\tB\x11\x92A\n" +
 	"J\b\"v2.3.0\"\xe2A\x01\x02R\aversion\x12\x1c\n" +
-	"\tendpoints\x18\x03 \x03(\tR\tendpoints2\xd5\x03\n" +
+	"\tendpoints\x18\x03 \x03(\tR\tendpoints\"C\n" +
+	"\n" +
+	"Components\x125\n" +
+	"\n" +
+	"components\x18\x01 \x03(\v2\x15.api.v1.sig.ComponentR\n" +
+	"components2\xc8\x04\n" +
 	"\x03SIG\x12n\n" +
-	"\x0fCreateComponent\x12\".api.v1.sig.CreateComponentRequest\x1a\x15.api.v1.sig.Component\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/sig/component\x12o\n" +
-	"\x11RetrieveComponent\x12$.api.v1.sig.RetrieveComponentRequest\x1a\x15.api.v1.sig.Component\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/sig/component\x12\x9e\x01\n" +
+	"\x0fCreateComponent\x12\".api.v1.sig.CreateComponentRequest\x1a\x15.api.v1.sig.Component\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/sig/component\x12\x80\x01\n" +
+	"\x11RetrieveComponent\x12$.api.v1.sig.RetrieveComponentRequest\x1a\x15.api.v1.sig.Component\".\x82\xd3\xe4\x93\x02(\x12&/api/v1/sig/component/{name}/{version}\x12_\n" +
+	"\x0eQueryComponent\x12\x16.google.protobuf.Empty\x1a\x16.api.v1.sig.Components\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/sig/component\x12\x9e\x01\n" +
 	"\x1eCreateInterComponentDependency\x121.api.v1.sig.CreateInterComponentDependencyRequest\x1a\x16.google.protobuf.Empty\"1\x82\xd3\xe4\x93\x02+:\x01*\"&/api/v1/sig/inter-component-dependency\x12L\n" +
 	"\x05Reset\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r*\v/api/v1/sigB4Z2github.com/pandatix/godepgraph/api/v1/sig;apiv1sigb\x06proto3"
 
@@ -396,7 +446,7 @@ func file_api_v1_sig_sig_proto_rawDescGZIP() []byte {
 	return file_api_v1_sig_sig_proto_rawDescData
 }
 
-var file_api_v1_sig_sig_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_api_v1_sig_sig_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_api_v1_sig_sig_proto_goTypes = []any{
 	(*CreateComponentRequest)(nil),                                 // 0: api.v1.sig.CreateComponentRequest
 	(*RetrieveComponentRequest)(nil),                               // 1: api.v1.sig.RetrieveComponentRequest
@@ -404,25 +454,29 @@ var file_api_v1_sig_sig_proto_goTypes = []any{
 	(*CreateInterComponentDependencyEndpointRequest)(nil),          // 3: api.v1.sig.CreateInterComponentDependencyEndpointRequest
 	(*CreateInterComponentDependencyEndpointComponentRequest)(nil), // 4: api.v1.sig.CreateInterComponentDependencyEndpointComponentRequest
 	(*Component)(nil),     // 5: api.v1.sig.Component
-	(*emptypb.Empty)(nil), // 6: google.protobuf.Empty
+	(*Components)(nil),    // 6: api.v1.sig.Components
+	(*emptypb.Empty)(nil), // 7: google.protobuf.Empty
 }
 var file_api_v1_sig_sig_proto_depIdxs = []int32{
 	3, // 0: api.v1.sig.CreateInterComponentDependencyRequest.caller:type_name -> api.v1.sig.CreateInterComponentDependencyEndpointRequest
 	3, // 1: api.v1.sig.CreateInterComponentDependencyRequest.callees:type_name -> api.v1.sig.CreateInterComponentDependencyEndpointRequest
 	4, // 2: api.v1.sig.CreateInterComponentDependencyEndpointRequest.exposes:type_name -> api.v1.sig.CreateInterComponentDependencyEndpointComponentRequest
-	0, // 3: api.v1.sig.SIG.CreateComponent:input_type -> api.v1.sig.CreateComponentRequest
-	1, // 4: api.v1.sig.SIG.RetrieveComponent:input_type -> api.v1.sig.RetrieveComponentRequest
-	2, // 5: api.v1.sig.SIG.CreateInterComponentDependency:input_type -> api.v1.sig.CreateInterComponentDependencyRequest
-	6, // 6: api.v1.sig.SIG.Reset:input_type -> google.protobuf.Empty
-	5, // 7: api.v1.sig.SIG.CreateComponent:output_type -> api.v1.sig.Component
-	5, // 8: api.v1.sig.SIG.RetrieveComponent:output_type -> api.v1.sig.Component
-	6, // 9: api.v1.sig.SIG.CreateInterComponentDependency:output_type -> google.protobuf.Empty
-	6, // 10: api.v1.sig.SIG.Reset:output_type -> google.protobuf.Empty
-	7, // [7:11] is the sub-list for method output_type
-	3, // [3:7] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	5, // 3: api.v1.sig.Components.components:type_name -> api.v1.sig.Component
+	0, // 4: api.v1.sig.SIG.CreateComponent:input_type -> api.v1.sig.CreateComponentRequest
+	1, // 5: api.v1.sig.SIG.RetrieveComponent:input_type -> api.v1.sig.RetrieveComponentRequest
+	7, // 6: api.v1.sig.SIG.QueryComponent:input_type -> google.protobuf.Empty
+	2, // 7: api.v1.sig.SIG.CreateInterComponentDependency:input_type -> api.v1.sig.CreateInterComponentDependencyRequest
+	7, // 8: api.v1.sig.SIG.Reset:input_type -> google.protobuf.Empty
+	5, // 9: api.v1.sig.SIG.CreateComponent:output_type -> api.v1.sig.Component
+	5, // 10: api.v1.sig.SIG.RetrieveComponent:output_type -> api.v1.sig.Component
+	6, // 11: api.v1.sig.SIG.QueryComponent:output_type -> api.v1.sig.Components
+	7, // 12: api.v1.sig.SIG.CreateInterComponentDependency:output_type -> google.protobuf.Empty
+	7, // 13: api.v1.sig.SIG.Reset:output_type -> google.protobuf.Empty
+	9, // [9:14] is the sub-list for method output_type
+	4, // [4:9] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_sig_sig_proto_init() }
@@ -436,7 +490,7 @@ func file_api_v1_sig_sig_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_sig_sig_proto_rawDesc), len(file_api_v1_sig_sig_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

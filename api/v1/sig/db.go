@@ -125,6 +125,53 @@ func retrieveComponent(ctx context.Context, man *neo4jSvc.Manager, name, version
 	return res.(*Component), nil
 }
 
+func queryComponents(ctx context.Context, man *neo4jSvc.Manager) (*Components, error) {
+	session, err := man.NewSession(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer session.Close(ctx)
+
+	res, err := session.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		res, err := tx.Run(ctx,
+			`
+			MATCH (c:Component)
+			OPTIONAL MATCH (c)<-[:EXPOSES]-(e:Endpoint)
+			RETURN c, collect(e) AS endpoints
+			`,
+			nil,
+		)
+		if err != nil {
+			return nil, err
+		}
+		r, err := res.Collect(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		comps := make([]*Component, 0, len(r))
+		for _, rec := range r {
+			edpItfs := rec.Values[1].([]any)
+			edps := make([]string, 0, len(edpItfs))
+			for _, edpIt := range edpItfs {
+				edps = append(edps, edpIt.(dbtype.Node).Props["name"].(string))
+			}
+
+			c := rec.Values[0].(dbtype.Node)
+			comps = append(comps, &Component{
+				Name:      c.Props["name"].(string),
+				Version:   c.Props["version"].(string),
+				Endpoints: edps,
+			})
+		}
+		return comps, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &Components{Components: res.([]*Component)}, nil
+}
+
 func upsertEndpoint(ctx context.Context, man *neo4jSvc.Manager, component *CreateInterComponentDependencyEndpointComponentRequest, edp string) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {

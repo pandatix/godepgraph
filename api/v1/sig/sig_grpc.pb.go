@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	SIG_CreateComponent_FullMethodName                = "/api.v1.sig.SIG/CreateComponent"
 	SIG_RetrieveComponent_FullMethodName              = "/api.v1.sig.SIG/RetrieveComponent"
+	SIG_QueryComponent_FullMethodName                 = "/api.v1.sig.SIG/QueryComponent"
 	SIG_CreateInterComponentDependency_FullMethodName = "/api.v1.sig.SIG/CreateInterComponentDependency"
 	SIG_Reset_FullMethodName                          = "/api.v1.sig.SIG/Reset"
 )
@@ -34,6 +35,8 @@ type SIGClient interface {
 	CreateComponent(ctx context.Context, in *CreateComponentRequest, opts ...grpc.CallOption) (*Component, error)
 	// Retrieve the current knowledge state of a Component of the system under observation.
 	RetrieveComponent(ctx context.Context, in *RetrieveComponentRequest, opts ...grpc.CallOption) (*Component, error)
+	// Query the current knowledge state of all Components involved in the system under observation.
+	QueryComponent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Components, error)
 	// Create an Inter-Component Dependency between Endpoints that exposes Components together.
 	CreateInterComponentDependency(ctx context.Context, in *CreateInterComponentDependencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Reset the global knowledge of the system under observation.
@@ -68,6 +71,16 @@ func (c *sIGClient) RetrieveComponent(ctx context.Context, in *RetrieveComponent
 	return out, nil
 }
 
+func (c *sIGClient) QueryComponent(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*Components, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Components)
+	err := c.cc.Invoke(ctx, SIG_QueryComponent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *sIGClient) CreateInterComponentDependency(ctx context.Context, in *CreateInterComponentDependencyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
@@ -96,6 +109,8 @@ type SIGServer interface {
 	CreateComponent(context.Context, *CreateComponentRequest) (*Component, error)
 	// Retrieve the current knowledge state of a Component of the system under observation.
 	RetrieveComponent(context.Context, *RetrieveComponentRequest) (*Component, error)
+	// Query the current knowledge state of all Components involved in the system under observation.
+	QueryComponent(context.Context, *emptypb.Empty) (*Components, error)
 	// Create an Inter-Component Dependency between Endpoints that exposes Components together.
 	CreateInterComponentDependency(context.Context, *CreateInterComponentDependencyRequest) (*emptypb.Empty, error)
 	// Reset the global knowledge of the system under observation.
@@ -115,6 +130,9 @@ func (UnimplementedSIGServer) CreateComponent(context.Context, *CreateComponentR
 }
 func (UnimplementedSIGServer) RetrieveComponent(context.Context, *RetrieveComponentRequest) (*Component, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RetrieveComponent not implemented")
+}
+func (UnimplementedSIGServer) QueryComponent(context.Context, *emptypb.Empty) (*Components, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryComponent not implemented")
 }
 func (UnimplementedSIGServer) CreateInterComponentDependency(context.Context, *CreateInterComponentDependencyRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateInterComponentDependency not implemented")
@@ -179,6 +197,24 @@ func _SIG_RetrieveComponent_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SIG_QueryComponent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SIGServer).QueryComponent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SIG_QueryComponent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SIGServer).QueryComponent(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _SIG_CreateInterComponentDependency_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateInterComponentDependencyRequest)
 	if err := dec(in); err != nil {
@@ -229,6 +265,10 @@ var SIG_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RetrieveComponent",
 			Handler:    _SIG_RetrieveComponent_Handler,
+		},
+		{
+			MethodName: "QueryComponent",
+			Handler:    _SIG_QueryComponent_Handler,
 		},
 		{
 			MethodName: "CreateInterComponentDependency",

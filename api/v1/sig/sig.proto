@@ -20,6 +20,11 @@ service SIG {
 
   // Retrieve the current knowledge state of a Component of the system under observation.
   rpc RetrieveComponent(RetrieveComponentRequest) returns (Component) {
+    option (google.api.http) = {get: "/api/v1/sig/component/{name}/{version}"};
+  }
+
+  // Query the current knowledge state of all Components involved in the system under observation.
+  rpc QueryComponent(google.protobuf.Empty) returns (Components) {
     option (google.api.http) = {get: "/api/v1/sig/component"};
   }
 
@@ -108,4 +113,8 @@ message Component {
 
   // The list of all known endpoints of the Component.
   repeated string endpoints = 3;
+}
+
+message Components {
+  repeated Component components = 1;
 }
