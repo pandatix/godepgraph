@@ -26,6 +26,11 @@ service Alg4 {
     option (google.api.http) = {get: "/api/v1/alg4/vulnerability"};
   }
 
+  // Retrieves the vulnerabilities of a given symbol, if any.
+  rpc RetrieveSymbolVulnerabilities(RetrieveSymbolVulnerabilitiesRequest) returns (Vulnerabilities) {
+    option (google.api.http) = {get: "/api/v1/alg4/vulnerability/{symbol}"};
+  }
+
   rpc DeleteVulnerability(DeleteVulnerabilityRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {delete: "/api/v1/alg4/vulnerability"};
   }
@@ -64,6 +69,14 @@ message RetrieveVulnerabilityRequest {
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"CVE-1000-01234\""},
     (google.api.field_behavior) = REQUIRED
   ];
+}
+
+message RetrieveSymbolVulnerabilitiesRequest {
+  string symbol = 1;
+}
+
+message Vulnerabilities {
+  repeated string vulnerabilities = 1;
 }
 
 message DeleteVulnerabilityRequest {

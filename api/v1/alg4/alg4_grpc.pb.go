@@ -20,11 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Alg4_CreateVulnerability_FullMethodName   = "/api.v1.alg4.Alg4/CreateVulnerability"
-	Alg4_RetrieveVulnerability_FullMethodName = "/api.v1.alg4.Alg4/RetrieveVulnerability"
-	Alg4_DeleteVulnerability_FullMethodName   = "/api.v1.alg4.Alg4/DeleteVulnerability"
-	Alg4_CreateBinding_FullMethodName         = "/api.v1.alg4.Alg4/CreateBinding"
-	Alg4_CreateServes_FullMethodName          = "/api.v1.alg4.Alg4/CreateServes"
+	Alg4_CreateVulnerability_FullMethodName           = "/api.v1.alg4.Alg4/CreateVulnerability"
+	Alg4_RetrieveVulnerability_FullMethodName         = "/api.v1.alg4.Alg4/RetrieveVulnerability"
+	Alg4_RetrieveSymbolVulnerabilities_FullMethodName = "/api.v1.alg4.Alg4/RetrieveSymbolVulnerabilities"
+	Alg4_DeleteVulnerability_FullMethodName           = "/api.v1.alg4.Alg4/DeleteVulnerability"
+	Alg4_CreateBinding_FullMethodName                 = "/api.v1.alg4.Alg4/CreateBinding"
+	Alg4_CreateServes_FullMethodName                  = "/api.v1.alg4.Alg4/CreateServes"
 )
 
 // Alg4Client is the client API for Alg4 service.
@@ -39,6 +40,8 @@ type Alg4Client interface {
 	// consists of its blast radius. This last represents the potential propagation
 	// through algorithm 4.
 	RetrieveVulnerability(ctx context.Context, in *RetrieveVulnerabilityRequest, opts ...grpc.CallOption) (*Vulnerability, error)
+	// Retrieves the vulnerabilities of a given symbol, if any.
+	RetrieveSymbolVulnerabilities(ctx context.Context, in *RetrieveSymbolVulnerabilitiesRequest, opts ...grpc.CallOption) (*Vulnerabilities, error)
 	DeleteVulnerability(ctx context.Context, in *DeleteVulnerabilityRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Create a binding between specializations of a Library, given the model
 	// of Figure 1.
@@ -68,6 +71,16 @@ func (c *alg4Client) RetrieveVulnerability(ctx context.Context, in *RetrieveVuln
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Vulnerability)
 	err := c.cc.Invoke(ctx, Alg4_RetrieveVulnerability_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *alg4Client) RetrieveSymbolVulnerabilities(ctx context.Context, in *RetrieveSymbolVulnerabilitiesRequest, opts ...grpc.CallOption) (*Vulnerabilities, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Vulnerabilities)
+	err := c.cc.Invoke(ctx, Alg4_RetrieveSymbolVulnerabilities_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -116,6 +129,8 @@ type Alg4Server interface {
 	// consists of its blast radius. This last represents the potential propagation
 	// through algorithm 4.
 	RetrieveVulnerability(context.Context, *RetrieveVulnerabilityRequest) (*Vulnerability, error)
+	// Retrieves the vulnerabilities of a given symbol, if any.
+	RetrieveSymbolVulnerabilities(context.Context, *RetrieveSymbolVulnerabilitiesRequest) (*Vulnerabilities, error)
 	DeleteVulnerability(context.Context, *DeleteVulnerabilityRequest) (*emptypb.Empty, error)
 	// Create a binding between specializations of a Library, given the model
 	// of Figure 1.
@@ -136,6 +151,9 @@ func (UnimplementedAlg4Server) CreateVulnerability(context.Context, *CreateVulne
 }
 func (UnimplementedAlg4Server) RetrieveVulnerability(context.Context, *RetrieveVulnerabilityRequest) (*Vulnerability, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RetrieveVulnerability not implemented")
+}
+func (UnimplementedAlg4Server) RetrieveSymbolVulnerabilities(context.Context, *RetrieveSymbolVulnerabilitiesRequest) (*Vulnerabilities, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RetrieveSymbolVulnerabilities not implemented")
 }
 func (UnimplementedAlg4Server) DeleteVulnerability(context.Context, *DeleteVulnerabilityRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteVulnerability not implemented")
@@ -199,6 +217,24 @@ func _Alg4_RetrieveVulnerability_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(Alg4Server).RetrieveVulnerability(ctx, req.(*RetrieveVulnerabilityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Alg4_RetrieveSymbolVulnerabilities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RetrieveSymbolVulnerabilitiesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Alg4Server).RetrieveSymbolVulnerabilities(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Alg4_RetrieveSymbolVulnerabilities_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Alg4Server).RetrieveSymbolVulnerabilities(ctx, req.(*RetrieveSymbolVulnerabilitiesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -271,6 +307,10 @@ var Alg4_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RetrieveVulnerability",
 			Handler:    _Alg4_RetrieveVulnerability_Handler,
+		},
+		{
+			MethodName: "RetrieveSymbolVulnerabilities",
+			Handler:    _Alg4_RetrieveSymbolVulnerabilities_Handler,
 		},
 		{
 			MethodName: "DeleteVulnerability",

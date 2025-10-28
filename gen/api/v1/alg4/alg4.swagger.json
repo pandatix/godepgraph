@@ -172,6 +172,37 @@
           "Alg4"
         ]
       }
+    },
+    "/api/v1/alg4/vulnerability/{symbol}": {
+      "get": {
+        "summary": "Retrieves the vulnerabilities of a given symbol, if any.",
+        "operationId": "Alg4_RetrieveSymbolVulnerabilities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/alg4Vulnerabilities"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "symbol",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Alg4"
+        ]
+      }
     }
   },
   "definitions": {
@@ -289,6 +320,17 @@
         "name",
         "version"
       ]
+    },
+    "alg4Vulnerabilities": {
+      "type": "object",
+      "properties": {
+        "vulnerabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "alg4Vulnerability": {
       "type": "object",

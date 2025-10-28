@@ -45,7 +45,7 @@ type SIGClient interface {
 	// functional dependencies as observed at runtime.
 	// Ordering is not guaranteed.
 	QueryInterComponentDependency(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InterComponentDependencies, error)
-	// Reset the global knowlemadge of the system under observation.
+	// Reset the global knowledge of the system under observation.
 	Reset(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -134,7 +134,7 @@ type SIGServer interface {
 	// functional dependencies as observed at runtime.
 	// Ordering is not guaranteed.
 	QueryInterComponentDependency(context.Context, *emptypb.Empty) (*InterComponentDependencies, error)
-	// Reset the global knowlemadge of the system under observation.
+	// Reset the global knowledge of the system under observation.
 	Reset(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedSIGServer()
 }

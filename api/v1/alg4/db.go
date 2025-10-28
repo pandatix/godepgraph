@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	"github.com/neo4j/neo4j-go-driver/v5/neo4j/dbtype"
 	"go.uber.org/multierr"
 
 	"github.com/pandatix/godepgraph/global"
@@ -186,6 +187,49 @@ func retrieveVulnerability(ctx context.Context, man *neo4jSvc.Manager, identity 
 		return nil, err
 	}
 	return res.(*Vulnerability), nil
+}
+
+func retrieveSymbolVulnerabilities(ctx context.Context, man *neo4jSvc.Manager, identity string) (*Vulnerabilities, error) {
+	session, err := man.NewSession(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer session.Close(ctx)
+
+	res, err := session.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		res, err := tx.Run(ctx,
+			`
+			MATCH (:Symbol{identity: $identity})<-[:THREATENS]-(v:Vulnerability)
+			RETURN v
+			`,
+			map[string]any{
+				"identity": identity,
+			},
+		)
+		if err != nil {
+			return nil, err
+		}
+		if !res.Next(ctx) {
+			return nil, errors.New("symbol not found")
+		}
+		rec := res.Record()
+
+		if node, ok := rec.Values[0].(dbtype.Node); ok {
+			return []string{node.Props["identity"].(string)}, nil
+		}
+
+		vnodes := rec.Values[0].([]any)
+		vulns := make([]string, 0, len(vnodes))
+		for _, v := range vnodes {
+			vulns = append(vulns, v.(dbtype.Node).Props["identity"].(string))
+		}
+
+		return vulns, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &Vulnerabilities{Vulnerabilities: res.([]string)}, nil
 }
 
 func deleteVulnerability(ctx context.Context, man *neo4jSvc.Manager, req *DeleteVulnerabilityRequest) error {

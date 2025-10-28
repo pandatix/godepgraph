@@ -132,6 +132,27 @@
       }
     },
     "/api/v1/sig/inter-component-dependency": {
+      "get": {
+        "summary": "Query all existing Inter-Component Dependency known in the system under observation.\nThe results are grouped per endpoints, thus represents the interactions through\nfunctional dependencies as observed at runtime.\nOrdering is not guaranteed.",
+        "operationId": "SIG_QueryInterComponentDependency",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sigInterComponentDependencies"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "SIG"
+        ]
+      },
       "post": {
         "summary": "Create an Inter-Component Dependency between Endpoints that exposes Components together.",
         "operationId": "SIG_CreateInterComponentDependency",
@@ -298,6 +319,48 @@
             "$ref": "#/definitions/sigCreateInterComponentDependencyEndpointRequest"
           },
           "description": "The callees (API methods called by the component)."
+        }
+      }
+    },
+    "sigEndpoint": {
+      "type": "object",
+      "properties": {
+        "exposes": {
+          "$ref": "#/definitions/sigComponent"
+        },
+        "name": {
+          "type": "string",
+          "example": "some-endpoint"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "sigInterComponentDependencies": {
+      "type": "object",
+      "properties": {
+        "icds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/sigInterComponentDependency"
+          }
+        }
+      }
+    },
+    "sigInterComponentDependency": {
+      "type": "object",
+      "properties": {
+        "caller": {
+          "$ref": "#/definitions/sigEndpoint"
+        },
+        "callees": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/sigEndpoint"
+          }
         }
       }
     }
