@@ -140,7 +140,8 @@ The following are example ciphers to use when analyzing the data.
 > It is one limitation of the current approach, which should be improved in future work with Data Flow Analysis (DFA) to narrow down the propagation.
 
 ```cypher
-MATCH (v1 {mark: true})<-[:CALLER]-(a1:CallGraphDependency)-[:CALLEES]->(v2 {mark: true})
+MATCH (v1)<-[:CALLER]-(a1:CallGraphDependency)-[:CALLEES]->(v2)
+WHERE (:Vulnerability)-[:MARKS]->(v1) AND (:Vulnerability)-[:MARKS]->(v2)
 RETURN v1, v2, a1
 ```
 
@@ -196,7 +197,7 @@ RETURN v, s, a, s2, l, b, c, e, c2, n, e2
 We filter out `Library` objects that are not `Component` objects, and avoid `Symbol` and `CallGraphDependency` objects to simplify understanding of the potential blast radius of the vulnerability.
 
 ```cypher
-MATCH (n {mark: true})
+MATCH (n)<-[:MARKS]-(:Vulnerability)
 WHERE NOT (n:Symbol OR n:CallGraphDependency)
   AND (NOT n:Library OR EXISTS {
     MATCH (:Binding)-[:SPECIALIZES_INTO]->(n)
@@ -217,7 +218,7 @@ It returns something similar to [the previous cypher](#all-objects-that-are-pote
 
 ```cypher
 // Get all nodes, reduce noise by not returning CDN data ...
-MATCH (n {mark: true})
+MATCH (n)<-[:MARKS]-(:Vulnerability)
 WHERE NOT (n:Symbol OR n:CallGraphDependency)
   AND (NOT n:Library OR EXISTS {
     MATCH (:Binding)-[:SPECIALIZES_INTO]->(n)
@@ -225,7 +226,7 @@ WHERE NOT (n:Symbol OR n:CallGraphDependency)
 
 // ... and select the vulnerable symbol then the endpoint that calls it (in 1 hop) ...
 MATCH (s:Symbol{identity: "github.com/ctfer-io/chall-manager/pkg/scenario.DecodeOCI"})
-OPTIONAL MATCH (e:Symbol{mark: true}) WHERE (n:Endpoint)-[:SERVES]->(e)
+OPTIONAL MATCH (e:Symbol) WHERE (n:Endpoint)-[:SERVES]->(e) AND (:Vulnerability)-[:MARKS]->(e)
 OPTIONAL MATCH (d:CallGraphDependency) WHERE (s)<-[:CALLEES]-(d:CallGraphDependency)-[:CALLER]->(e)
 
 // ... and of course the vulnerability

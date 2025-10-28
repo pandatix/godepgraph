@@ -76,6 +76,146 @@ func (x *CreateVulnerabilityRequest) GetTreatens() string {
 	return ""
 }
 
+type RetrieveVulnerabilityRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Identity      string                 `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RetrieveVulnerabilityRequest) Reset() {
+	*x = RetrieveVulnerabilityRequest{}
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RetrieveVulnerabilityRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RetrieveVulnerabilityRequest) ProtoMessage() {}
+
+func (x *RetrieveVulnerabilityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RetrieveVulnerabilityRequest.ProtoReflect.Descriptor instead.
+func (*RetrieveVulnerabilityRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *RetrieveVulnerabilityRequest) GetIdentity() string {
+	if x != nil {
+		return x.Identity
+	}
+	return ""
+}
+
+type DeleteVulnerabilityRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Identity      string                 `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteVulnerabilityRequest) Reset() {
+	*x = DeleteVulnerabilityRequest{}
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteVulnerabilityRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteVulnerabilityRequest) ProtoMessage() {}
+
+func (x *DeleteVulnerabilityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteVulnerabilityRequest.ProtoReflect.Descriptor instead.
+func (*DeleteVulnerabilityRequest) Descriptor() ([]byte, []int) {
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *DeleteVulnerabilityRequest) GetIdentity() string {
+	if x != nil {
+		return x.Identity
+	}
+	return ""
+}
+
+type Vulnerability struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Identity      string                 `protobuf:"bytes,1,opt,name=identity,proto3" json:"identity,omitempty"`
+	Treatens      string                 `protobuf:"bytes,2,opt,name=treatens,proto3" json:"treatens,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Vulnerability) Reset() {
+	*x = Vulnerability{}
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Vulnerability) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Vulnerability) ProtoMessage() {}
+
+func (x *Vulnerability) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Vulnerability.ProtoReflect.Descriptor instead.
+func (*Vulnerability) Descriptor() ([]byte, []int) {
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Vulnerability) GetIdentity() string {
+	if x != nil {
+		return x.Identity
+	}
+	return ""
+}
+
+func (x *Vulnerability) GetTreatens() string {
+	if x != nil {
+		return x.Treatens
+	}
+	return ""
+}
+
 type CreateServesRequest struct {
 	state         protoimpl.MessageState       `protogen:"open.v1"`
 	Symbol        *CreateServesSymbolRequest   `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
@@ -86,7 +226,7 @@ type CreateServesRequest struct {
 
 func (x *CreateServesRequest) Reset() {
 	*x = CreateServesRequest{}
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[1]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -98,7 +238,7 @@ func (x *CreateServesRequest) String() string {
 func (*CreateServesRequest) ProtoMessage() {}
 
 func (x *CreateServesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[1]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -111,7 +251,7 @@ func (x *CreateServesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateServesRequest.ProtoReflect.Descriptor instead.
 func (*CreateServesRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{1}
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreateServesRequest) GetSymbol() *CreateServesSymbolRequest {
@@ -138,7 +278,7 @@ type CreateServesSymbolRequest struct {
 
 func (x *CreateServesSymbolRequest) Reset() {
 	*x = CreateServesSymbolRequest{}
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[2]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -150,7 +290,7 @@ func (x *CreateServesSymbolRequest) String() string {
 func (*CreateServesSymbolRequest) ProtoMessage() {}
 
 func (x *CreateServesSymbolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[2]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -163,7 +303,7 @@ func (x *CreateServesSymbolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateServesSymbolRequest.ProtoReflect.Descriptor instead.
 func (*CreateServesSymbolRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{2}
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *CreateServesSymbolRequest) GetIdentity() string {
@@ -183,7 +323,7 @@ type CreateServesEndpointRequest struct {
 
 func (x *CreateServesEndpointRequest) Reset() {
 	*x = CreateServesEndpointRequest{}
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[3]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -195,7 +335,7 @@ func (x *CreateServesEndpointRequest) String() string {
 func (*CreateServesEndpointRequest) ProtoMessage() {}
 
 func (x *CreateServesEndpointRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[3]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -208,7 +348,7 @@ func (x *CreateServesEndpointRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateServesEndpointRequest.ProtoReflect.Descriptor instead.
 func (*CreateServesEndpointRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{3}
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *CreateServesEndpointRequest) GetName() string {
@@ -235,7 +375,7 @@ type CreateServesComponentRequest struct {
 
 func (x *CreateServesComponentRequest) Reset() {
 	*x = CreateServesComponentRequest{}
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[4]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -247,7 +387,7 @@ func (x *CreateServesComponentRequest) String() string {
 func (*CreateServesComponentRequest) ProtoMessage() {}
 
 func (x *CreateServesComponentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[4]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -260,7 +400,7 @@ func (x *CreateServesComponentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateServesComponentRequest.ProtoReflect.Descriptor instead.
 func (*CreateServesComponentRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{4}
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CreateServesComponentRequest) GetName() string {
@@ -287,7 +427,7 @@ type LibraryOrRefinement struct {
 
 func (x *LibraryOrRefinement) Reset() {
 	*x = LibraryOrRefinement{}
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[5]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -299,7 +439,7 @@ func (x *LibraryOrRefinement) String() string {
 func (*LibraryOrRefinement) ProtoMessage() {}
 
 func (x *LibraryOrRefinement) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[5]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -312,7 +452,7 @@ func (x *LibraryOrRefinement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LibraryOrRefinement.ProtoReflect.Descriptor instead.
 func (*LibraryOrRefinement) Descriptor() ([]byte, []int) {
-	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{5}
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *LibraryOrRefinement) GetName() string {
@@ -340,7 +480,7 @@ type CreateBindingRequest struct {
 
 func (x *CreateBindingRequest) Reset() {
 	*x = CreateBindingRequest{}
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[6]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -352,7 +492,7 @@ func (x *CreateBindingRequest) String() string {
 func (*CreateBindingRequest) ProtoMessage() {}
 
 func (x *CreateBindingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[6]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -365,7 +505,7 @@ func (x *CreateBindingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBindingRequest.ProtoReflect.Descriptor instead.
 func (*CreateBindingRequest) Descriptor() ([]byte, []int) {
-	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{6}
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateBindingRequest) GetLibrary() *LibraryOrRefinement {
@@ -404,7 +544,7 @@ type Binding struct {
 
 func (x *Binding) Reset() {
 	*x = Binding{}
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[7]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -416,7 +556,7 @@ func (x *Binding) String() string {
 func (*Binding) ProtoMessage() {}
 
 func (x *Binding) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_alg4_alg4_proto_msgTypes[7]
+	mi := &file_api_v1_alg4_alg4_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -429,7 +569,7 @@ func (x *Binding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Binding.ProtoReflect.Descriptor instead.
 func (*Binding) Descriptor() ([]byte, []int) {
-	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{7}
+	return file_api_v1_alg4_alg4_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Binding) GetLibrary() *LibraryOrRefinement {
@@ -459,6 +599,13 @@ const file_api_v1_alg4_alg4_proto_rawDesc = "" +
 	"\n" +
 	"\x16api/v1/alg4/alg4.proto\x12\vapi.v1.alg4\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x94\x01\n" +
 	"\x1aCreateVulnerabilityRequest\x125\n" +
+	"\bidentity\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"CVE-1000-01234\"\xe2A\x01\x02R\bidentity\x12?\n" +
+	"\btreatens\x18\x02 \x01(\tB#\x92A\x1cJ\x1a\"internal/stringslite.Cut\"\xe2A\x01\x02R\btreatens\"U\n" +
+	"\x1cRetrieveVulnerabilityRequest\x125\n" +
+	"\bidentity\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"CVE-1000-01234\"\xe2A\x01\x02R\bidentity\"S\n" +
+	"\x1aDeleteVulnerabilityRequest\x125\n" +
+	"\bidentity\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"CVE-1000-01234\"\xe2A\x01\x02R\bidentity\"\x87\x01\n" +
+	"\rVulnerability\x125\n" +
 	"\bidentity\x18\x01 \x01(\tB\x19\x92A\x12J\x10\"CVE-1000-01234\"\xe2A\x01\x02R\bidentity\x12?\n" +
 	"\btreatens\x18\x02 \x01(\tB#\x92A\x1cJ\x1a\"internal/stringslite.Cut\"\xe2A\x01\x02R\btreatens\"\x9b\x01\n" +
 	"\x13CreateServesRequest\x12>\n" +
@@ -494,9 +641,11 @@ const file_api_v1_alg4_alg4_proto_rawDesc = "" +
 	"\b_libraryB\f\n" +
 	"\n" +
 	"_componentB\b\n" +
-	"\x06_asset2\xda\x02\n" +
+	"\x06_asset2\xdb\x04\n" +
 	"\x04Alg4\x12}\n" +
-	"\x13CreateVulnerability\x12'.api.v1.alg4.CreateVulnerabilityRequest\x1a\x16.google.protobuf.Empty\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/alg4/vulnerability\x12i\n" +
+	"\x13CreateVulnerability\x12'.api.v1.alg4.CreateVulnerabilityRequest\x1a\x16.google.protobuf.Empty\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/alg4/vulnerability\x12\x82\x01\n" +
+	"\x15RetrieveVulnerability\x12).api.v1.alg4.RetrieveVulnerabilityRequest\x1a\x1a.api.v1.alg4.Vulnerability\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/api/v1/alg4/vulnerability\x12z\n" +
+	"\x13DeleteVulnerability\x12'.api.v1.alg4.DeleteVulnerabilityRequest\x1a\x16.google.protobuf.Empty\"\"\x82\xd3\xe4\x93\x02\x1c*\x1a/api/v1/alg4/vulnerability\x12i\n" +
 	"\rCreateBinding\x12!.api.v1.alg4.CreateBindingRequest\x1a\x14.api.v1.alg4.Binding\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/api/v1/alg4/binding\x12h\n" +
 	"\fCreateServes\x12 .api.v1.alg4.CreateServesRequest\x1a\x16.google.protobuf.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/alg4/servesB6Z4github.com/pandatix/godepgraph/api/v1/alg4;apiv1alg4b\x06proto3"
 
@@ -512,36 +661,43 @@ func file_api_v1_alg4_alg4_proto_rawDescGZIP() []byte {
 	return file_api_v1_alg4_alg4_proto_rawDescData
 }
 
-var file_api_v1_alg4_alg4_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_api_v1_alg4_alg4_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_api_v1_alg4_alg4_proto_goTypes = []any{
 	(*CreateVulnerabilityRequest)(nil),   // 0: api.v1.alg4.CreateVulnerabilityRequest
-	(*CreateServesRequest)(nil),          // 1: api.v1.alg4.CreateServesRequest
-	(*CreateServesSymbolRequest)(nil),    // 2: api.v1.alg4.CreateServesSymbolRequest
-	(*CreateServesEndpointRequest)(nil),  // 3: api.v1.alg4.CreateServesEndpointRequest
-	(*CreateServesComponentRequest)(nil), // 4: api.v1.alg4.CreateServesComponentRequest
-	(*LibraryOrRefinement)(nil),          // 5: api.v1.alg4.LibraryOrRefinement
-	(*CreateBindingRequest)(nil),         // 6: api.v1.alg4.CreateBindingRequest
-	(*Binding)(nil),                      // 7: api.v1.alg4.Binding
-	(*emptypb.Empty)(nil),                // 8: google.protobuf.Empty
+	(*RetrieveVulnerabilityRequest)(nil), // 1: api.v1.alg4.RetrieveVulnerabilityRequest
+	(*DeleteVulnerabilityRequest)(nil),   // 2: api.v1.alg4.DeleteVulnerabilityRequest
+	(*Vulnerability)(nil),                // 3: api.v1.alg4.Vulnerability
+	(*CreateServesRequest)(nil),          // 4: api.v1.alg4.CreateServesRequest
+	(*CreateServesSymbolRequest)(nil),    // 5: api.v1.alg4.CreateServesSymbolRequest
+	(*CreateServesEndpointRequest)(nil),  // 6: api.v1.alg4.CreateServesEndpointRequest
+	(*CreateServesComponentRequest)(nil), // 7: api.v1.alg4.CreateServesComponentRequest
+	(*LibraryOrRefinement)(nil),          // 8: api.v1.alg4.LibraryOrRefinement
+	(*CreateBindingRequest)(nil),         // 9: api.v1.alg4.CreateBindingRequest
+	(*Binding)(nil),                      // 10: api.v1.alg4.Binding
+	(*emptypb.Empty)(nil),                // 11: google.protobuf.Empty
 }
 var file_api_v1_alg4_alg4_proto_depIdxs = []int32{
-	2,  // 0: api.v1.alg4.CreateServesRequest.symbol:type_name -> api.v1.alg4.CreateServesSymbolRequest
-	3,  // 1: api.v1.alg4.CreateServesRequest.endpoint:type_name -> api.v1.alg4.CreateServesEndpointRequest
-	4,  // 2: api.v1.alg4.CreateServesEndpointRequest.exposes:type_name -> api.v1.alg4.CreateServesComponentRequest
-	5,  // 3: api.v1.alg4.CreateBindingRequest.library:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 4: api.v1.alg4.CreateBindingRequest.component:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 5: api.v1.alg4.CreateBindingRequest.asset:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 6: api.v1.alg4.Binding.library:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 7: api.v1.alg4.Binding.component:type_name -> api.v1.alg4.LibraryOrRefinement
-	5,  // 8: api.v1.alg4.Binding.asset:type_name -> api.v1.alg4.LibraryOrRefinement
+	5,  // 0: api.v1.alg4.CreateServesRequest.symbol:type_name -> api.v1.alg4.CreateServesSymbolRequest
+	6,  // 1: api.v1.alg4.CreateServesRequest.endpoint:type_name -> api.v1.alg4.CreateServesEndpointRequest
+	7,  // 2: api.v1.alg4.CreateServesEndpointRequest.exposes:type_name -> api.v1.alg4.CreateServesComponentRequest
+	8,  // 3: api.v1.alg4.CreateBindingRequest.library:type_name -> api.v1.alg4.LibraryOrRefinement
+	8,  // 4: api.v1.alg4.CreateBindingRequest.component:type_name -> api.v1.alg4.LibraryOrRefinement
+	8,  // 5: api.v1.alg4.CreateBindingRequest.asset:type_name -> api.v1.alg4.LibraryOrRefinement
+	8,  // 6: api.v1.alg4.Binding.library:type_name -> api.v1.alg4.LibraryOrRefinement
+	8,  // 7: api.v1.alg4.Binding.component:type_name -> api.v1.alg4.LibraryOrRefinement
+	8,  // 8: api.v1.alg4.Binding.asset:type_name -> api.v1.alg4.LibraryOrRefinement
 	0,  // 9: api.v1.alg4.Alg4.CreateVulnerability:input_type -> api.v1.alg4.CreateVulnerabilityRequest
-	6,  // 10: api.v1.alg4.Alg4.CreateBinding:input_type -> api.v1.alg4.CreateBindingRequest
-	1,  // 11: api.v1.alg4.Alg4.CreateServes:input_type -> api.v1.alg4.CreateServesRequest
-	8,  // 12: api.v1.alg4.Alg4.CreateVulnerability:output_type -> google.protobuf.Empty
-	7,  // 13: api.v1.alg4.Alg4.CreateBinding:output_type -> api.v1.alg4.Binding
-	8,  // 14: api.v1.alg4.Alg4.CreateServes:output_type -> google.protobuf.Empty
-	12, // [12:15] is the sub-list for method output_type
-	9,  // [9:12] is the sub-list for method input_type
+	1,  // 10: api.v1.alg4.Alg4.RetrieveVulnerability:input_type -> api.v1.alg4.RetrieveVulnerabilityRequest
+	2,  // 11: api.v1.alg4.Alg4.DeleteVulnerability:input_type -> api.v1.alg4.DeleteVulnerabilityRequest
+	9,  // 12: api.v1.alg4.Alg4.CreateBinding:input_type -> api.v1.alg4.CreateBindingRequest
+	4,  // 13: api.v1.alg4.Alg4.CreateServes:input_type -> api.v1.alg4.CreateServesRequest
+	11, // 14: api.v1.alg4.Alg4.CreateVulnerability:output_type -> google.protobuf.Empty
+	3,  // 15: api.v1.alg4.Alg4.RetrieveVulnerability:output_type -> api.v1.alg4.Vulnerability
+	11, // 16: api.v1.alg4.Alg4.DeleteVulnerability:output_type -> google.protobuf.Empty
+	10, // 17: api.v1.alg4.Alg4.CreateBinding:output_type -> api.v1.alg4.Binding
+	11, // 18: api.v1.alg4.Alg4.CreateServes:output_type -> google.protobuf.Empty
+	14, // [14:19] is the sub-list for method output_type
+	9,  // [9:14] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
 	9,  // [9:9] is the sub-list for extension extendee
 	0,  // [0:9] is the sub-list for field type_name
@@ -552,15 +708,15 @@ func file_api_v1_alg4_alg4_proto_init() {
 	if File_api_v1_alg4_alg4_proto != nil {
 		return
 	}
-	file_api_v1_alg4_alg4_proto_msgTypes[6].OneofWrappers = []any{}
-	file_api_v1_alg4_alg4_proto_msgTypes[7].OneofWrappers = []any{}
+	file_api_v1_alg4_alg4_proto_msgTypes[9].OneofWrappers = []any{}
+	file_api_v1_alg4_alg4_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_alg4_alg4_proto_rawDesc), len(file_api_v1_alg4_alg4_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

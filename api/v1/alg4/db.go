@@ -2,6 +2,7 @@ package apiv1alg4
 
 import (
 	"context"
+	"errors"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"go.uber.org/multierr"
@@ -135,10 +136,9 @@ func upsertVulnerability(ctx context.Context, man *neo4jSvc.Manager, req *Create
 		return tx.Run(ctx,
 			`
 			MATCH (s:Symbol {identity: $threatens})
-			SET s.mark = true
-			WITH s
 			MERGE (v:Vulnerability {identity: $identity})
 			MERGE (v)-[:THREATENS]->(s)
+			MERGE (v)-[:MARKS]->(s)
 			`,
 			map[string]any{
 				"identity":  req.GetIdentity(),
@@ -149,7 +149,65 @@ func upsertVulnerability(ctx context.Context, man *neo4jSvc.Manager, req *Create
 	return multierr.Combine(err, session.Close(ctx))
 }
 
-func allReachingSymbols(ctx context.Context, man *neo4jSvc.Manager) error {
+func retrieveVulnerability(ctx context.Context, man *neo4jSvc.Manager, identity string) (*Vulnerability, error) {
+	session, err := man.NewSession(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer session.Close(ctx)
+
+	res, err := session.ExecuteRead(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		res, err := tx.Run(ctx,
+			`
+			MATCH (v:Vulnerability {identity: $identity})
+			OPTIONAL MATCH (s:Symbol)<-[:THREATENS]-(v)
+			RETURN s
+			`, // TODO catch all other labeled nodes that are marked by this vulnerability
+			map[string]any{
+				"identity": identity,
+			},
+		)
+		if err != nil {
+			return nil, err
+		}
+		if !res.Next(ctx) {
+			return nil, errors.New("vulnerability not found")
+		}
+		rec := res.Record()
+
+		symNode := rec.Values[0].(neo4j.Node)
+
+		return &Vulnerability{
+			Identity: identity,
+			Treatens: symNode.Props["identity"].(string),
+		}, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return res.(*Vulnerability), nil
+}
+
+func deleteVulnerability(ctx context.Context, man *neo4jSvc.Manager, req *DeleteVulnerabilityRequest) error {
+	session, err := man.NewSession(ctx)
+	if err != nil {
+		return err
+	}
+	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
+		_, err := tx.Run(ctx,
+			`
+		MATCH (v:Vulnerability{identity: $identity})-[t:THREATENS]->(s)
+		OPTIONAL MATCH (v)-[m:MARKS]->(n)
+		DELETE t, m, v
+		`, map[string]any{
+				"identity": req.GetIdentity(),
+			})
+		return nil, err
+	})
+	return err
+}
+
+func allReachingSymbols(ctx context.Context, man *neo4jSvc.Manager, req *CreateVulnerabilityRequest) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -159,14 +217,16 @@ func allReachingSymbols(ctx context.Context, man *neo4jSvc.Manager) error {
 		res, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 			res, err := tx.Run(ctx,
 				`
-				MATCH (s:Symbol {mark: true})
+				MATCH (v:Vulnerability{identity: $identity})
+				MATCH (s:Symbol)<-[:MARKS]-(v)
 				MATCH (s2:Symbol)<-[:CALLER]-(a:CallGraphDependency)-[:CALLEES]->(s)
-				WHERE s2.mark <> true OR s2.mark IS NULL
-				SET a.mark = true
-				SET s2.mark = true
-				RETURN count(*) AS newlyMarked
+				WHERE NOT (v)-[:MARKS]->(s2)
+				MERGE (v)-[:MARKS]->(s2)
+				RETURN count(s2) AS newlyMarked
 				`,
-				nil,
+				map[string]any{
+					"identity": req.GetIdentity(),
+				},
 			)
 			if err != nil {
 				return nil, err
@@ -190,7 +250,7 @@ func allReachingSymbols(ctx context.Context, man *neo4jSvc.Manager) error {
 	return multierr.Combine(err, session.Close(ctx))
 }
 
-func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr error) {
+func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager, req *CreateVulnerabilityRequest) (merr error) {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -200,12 +260,14 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (l:Library)
-			MATCH (l)-[:PROVIDES]->(s:Symbol {mark: true})
-			WITH DISTINCT l
-			SET l.mark = true
+			MATCH (v:Vulnerability{identity: $identity})
+			MATCH (l:Library)-[:PROVIDES]->(s:Symbol)<-[:MARKS]-(v)
+			WITH DISTINCT v, l
+			MERGE (v)-[:MARKS]->(l)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	merr = multierr.Append(merr, err)
@@ -215,14 +277,17 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (l:Library {mark: true})
+			MATCH (v:Vulnerability{identity: $identity})
+			MATCH (l:Library)<-[:MARKS]-(v)
 			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(l)
 			MATCH (b)-[:SPECIALIZES_INTO]->(c:Component)
-			WITH DISTINCT b, c
-			SET b.mark = true
-			SET c.mark = true
+			WITH DISTINCT v, b, c
+			MERGE (v)-[:MARKS]->(b)
+			MERGE (v)-[:MARKS]->(c)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	merr = multierr.Append(merr, err)
@@ -231,14 +296,17 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (l:Library {mark: true})
+			MATCH (v:Vulnerability{identity: $identity})
+			MATCH (l:Library)<-[:MARKS]-(v)
 			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(l)
 			MATCH (b)-[:SPECIALIZES_INTO]->(a:Asset)
-			WITH DISTINCT b, a
-			SET b.mark = true
-			SET a.mark = true
+			WITH DISTINCT v, b, a
+			MERGE (v)-[:MARKS]->(b)
+			MERGE (v)-[:MARKS]->(a)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	merr = multierr.Append(merr, err)
@@ -248,14 +316,17 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (c:Component {mark: true})
+			MATCH (v:Vulnerability{identity: $identity})
+			MATCH (c:Component)<-[:MARKS]-(v)
 			MATCH (b:Binding)-[:SPECIALIZES_INTO]->(c)
 			MATCH (b)-[:SPECIALIZES_INTO]->(a:Asset)
-			WITH DISTINCT b, a
-			SET b.mark = true
-			SET a.mark = true
+			WITH DISTINCT v, b, a
+			MERGE (v)-[:MARKS]->(b)
+			MERGE (v)-[:MARKS]->(a)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	merr = multierr.Append(merr, err)
@@ -263,7 +334,7 @@ func allProvidingLibraries(ctx context.Context, man *neo4jSvc.Manager) (merr err
 	return multierr.Combine(merr, session.Close(ctx))
 }
 
-func allReachingComponents(ctx context.Context, man *neo4jSvc.Manager) error {
+func allReachingComponents(ctx context.Context, man *neo4jSvc.Manager, req *CreateVulnerabilityRequest) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -272,32 +343,36 @@ func allReachingComponents(ctx context.Context, man *neo4jSvc.Manager) error {
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (s:Symbol {mark: true})
+			MATCH (v:Vulnerability{identity: $identity})
+
+			MATCH (s:Symbol)<-[:MARKS]-(v)
 			// Find all Endpoints serving vulnerable Symbols
 			MATCH (e:Endpoint)-[:SERVES]->(s)
-			SET e.mark = true
+			MERGE (v)-[:MARKS]->(e)
 
 			// Find NetworkDependencies that call these Endpoints
-			WITH e
+			WITH v, e
 			OPTIONAL MATCH (d:InterComponentDependency)-[:CALLEES]->(e)
-			SET d.mark = true
+			MERGE (v)-[:MARKS]->(d)
 
 			// Find Components exposed by Endpoints called by these NetworkDependencies
-			WITH d
+			WITH v, d
 			OPTIONAL MATCH (d)-[:CALLER]->(e2:Endpoint)
-			SET e2.mark = true
+			MERGE (v)-[:MARKS]->(e2)
 
-			WITH e2
+			WITH v, e2
 			OPTIONAL MATCH (e2)-[:EXPOSES]->(c:Component)
-			SET c.mark = true
+			MERGE (v)-[:MARKS]->(c)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	return multierr.Combine(err, session.Close(ctx))
 }
 
-func allHostingAssets(ctx context.Context, man *neo4jSvc.Manager) error {
+func allHostingAssets(ctx context.Context, man *neo4jSvc.Manager, req *CreateVulnerabilityRequest) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -306,17 +381,20 @@ func allHostingAssets(ctx context.Context, man *neo4jSvc.Manager) error {
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (c:Component {mark: true})
+			MATCH (v:Vulnerability{identity: $identity})
+			MATCH (c:Component)<-[:MARKS]-(s)
 			MATCH (a:Asset)<-[:HOSTED_BY]-(c)
-			SET a.mark = true
+			MERGE (v)-[:MARKS]->(a)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	return multierr.Combine(err, session.Close(ctx))
 }
 
-func lateralMovement(ctx context.Context, man *neo4jSvc.Manager) error {
+func lateralMovement(ctx context.Context, man *neo4jSvc.Manager, req *CreateVulnerabilityRequest) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -325,17 +403,20 @@ func lateralMovement(ctx context.Context, man *neo4jSvc.Manager) error {
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (a:Asset{mark: true})
+			MATCH (v:Vulnerability{identity: $identity})
+			MATCH (a:Asset)<-[:MARKS]-(v)
 			MATCH (c:Component)-[:HOSTED_BY]->(a)
-			SET c.mark = true
+			MERGE (v)-[:MARKS]->(c)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	return multierr.Combine(err, session.Close(ctx))
 }
 
-func allSystems(ctx context.Context, man *neo4jSvc.Manager) error {
+func allSystems(ctx context.Context, man *neo4jSvc.Manager, req *CreateVulnerabilityRequest) error {
 	session, err := man.NewSession(ctx)
 	if err != nil {
 		return err
@@ -344,11 +425,14 @@ func allSystems(ctx context.Context, man *neo4jSvc.Manager) error {
 	_, err = session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (any, error) {
 		return tx.Run(ctx,
 			`
-			MATCH (c:Component{mark: true})
+			MATCH (v:Vulnerability{identity: $identity})
+			MATCH (c:Component)<-[:MARKS]-(v)
 			MATCH (s:System)-[:COMPOSED_OF]->(c)
-			SET s.mark = true
+			MERGE (v)-[:MARKS]->(s)
 			`,
-			nil,
+			map[string]any{
+				"identity": req.GetIdentity(),
+			},
 		)
 	})
 	return multierr.Combine(err, session.Close(ctx))

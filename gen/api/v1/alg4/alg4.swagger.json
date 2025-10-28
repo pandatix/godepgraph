@@ -83,6 +83,64 @@
       }
     },
     "/api/v1/alg4/vulnerability": {
+      "get": {
+        "summary": "Retrieves the vulnerability and the corresponding subgraph of the SoSBOM that\nconsists of its blast radius. This last represents the potential propagation\nthrough algorithm 4.",
+        "operationId": "Alg4_RetrieveVulnerability",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/alg4Vulnerability"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "identity",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Alg4"
+        ]
+      },
+      "delete": {
+        "operationId": "Alg4_DeleteVulnerability",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "identity",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Alg4"
+        ]
+      },
       "post": {
         "operationId": "Alg4_CreateVulnerability",
         "responses": {
@@ -230,6 +288,23 @@
       "required": [
         "name",
         "version"
+      ]
+    },
+    "alg4Vulnerability": {
+      "type": "object",
+      "properties": {
+        "identity": {
+          "type": "string",
+          "example": "CVE-1000-01234"
+        },
+        "treatens": {
+          "type": "string",
+          "example": "internal/stringslite.Cut"
+        }
+      },
+      "required": [
+        "identity",
+        "treatens"
       ]
     },
     "protobufAny": {

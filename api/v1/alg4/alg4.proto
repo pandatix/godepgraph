@@ -19,6 +19,17 @@ service Alg4 {
     };
   }
 
+  // Retrieves the vulnerability and the corresponding subgraph of the SoSBOM that
+  // consists of its blast radius. This last represents the potential propagation
+  // through algorithm 4.
+  rpc RetrieveVulnerability(RetrieveVulnerabilityRequest) returns (Vulnerability) {
+    option (google.api.http) = {get: "/api/v1/alg4/vulnerability"};
+  }
+
+  rpc DeleteVulnerability(DeleteVulnerabilityRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/alg4/vulnerability"};
+  }
+
   // Create a binding between specializations of a Library, given the model
   // of Figure 1.
   rpc CreateBinding(CreateBindingRequest) returns (Binding) {
@@ -37,6 +48,32 @@ service Alg4 {
 }
 
 message CreateVulnerabilityRequest {
+  string identity = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"CVE-1000-01234\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  string treatens = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"internal/stringslite.Cut\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message RetrieveVulnerabilityRequest {
+  string identity = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"CVE-1000-01234\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message DeleteVulnerabilityRequest {
+  string identity = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"CVE-1000-01234\""},
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message Vulnerability {
   string identity = 1 [
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example: "\"CVE-1000-01234\""},
     (google.api.field_behavior) = REQUIRED

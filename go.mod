@@ -18,22 +18,22 @@ require (
 	github.com/slsa-framework/slsa-verifier/v2 v2.7.0
 	github.com/soheilhy/cmux v0.1.5
 	github.com/sony/gobreaker/v2 v2.1.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/urfave/cli/v3 v3.4.1
 	go.opentelemetry.io/collector/pdata v1.34.0
 	go.opentelemetry.io/contrib/bridges/otelzap v0.10.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.60.0
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.60.0
-	go.opentelemetry.io/otel v1.36.0
+	go.opentelemetry.io/otel v1.38.0
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.12.2
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.35.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.35.0
 	go.opentelemetry.io/otel/log v0.12.2
-	go.opentelemetry.io/otel/metric v1.36.0
+	go.opentelemetry.io/otel/metric v1.38.0
 	go.opentelemetry.io/otel/sdk v1.36.0
 	go.opentelemetry.io/otel/sdk/log v0.12.2
 	go.opentelemetry.io/otel/sdk/metric v1.35.0
-	go.opentelemetry.io/otel/trace v1.36.0
+	go.opentelemetry.io/otel/trace v1.38.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/mod v0.24.0
